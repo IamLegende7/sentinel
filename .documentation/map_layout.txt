@@ -1,0 +1,17 @@
+layout:
+    - tilestruct = {id, texture, size}   texture and size not needed, it will use texture from resources/textures/defaults/texture_tile_defaults.json and uses the default size.
+        - default size = 100
+    - list_x = [tilestruct]
+    - list_y = [list_x, list_x, ...]
+
+example:
+[
+    [
+        {id, texture, size}, // x = 0, y = 0
+        {id, texture, size} // x = 1, y = 0
+    ],
+    [
+        {id, texture, size}, // x = 0, y = 1
+        {id, texture, size} // x = 1, y = 1
+    ]
+]

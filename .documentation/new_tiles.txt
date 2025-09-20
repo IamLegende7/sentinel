@@ -1,0 +1,6 @@
+Adding new tiles:
+    - add texture to resources/textures/tiles (doesnt need to be /tiles, but it recommended)
+    - add "namespace:id": "/path/to/texture.png" to resources/textures/defaults/texture_tile_defaults.json
+    WATCH OUT:
+        - instead of using the vanilla namespace (sentinel) use $vanilla$  (yes, with the "$")
+        - DO NOT add "/resources/textures/" at the beginning. Example: BAD: "/resources/textures/tiles/my_tile.png", GOOD: "/tiles/my_tile.png"  // TODO : fallback to make possible to do this too

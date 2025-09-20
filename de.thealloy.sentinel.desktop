@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=
+Type=Game
+Terminal=false
+Exec=bin/sentinel
+Name=Sentinel
+Comment=A nostalgic 2D action shooter.
+Icon=resources/icons/icon.png

@@ -1,9 +1,23 @@
 TODO: keyboard
-TODO: keyboard key redefinging
+TODO: make background texture system
+TODO: keyboard keybinds  --> list of SDL_Keycode
+TODO: don't render tiles outside of view
+TODO: add hitboxes
+
+FIXME: add better error handeling
+
 TODO: Add build.sh & build.bat
-TODO: add git wiki
+TODO: update git wiki
+TODO: add .documentation to wiki
+TODO: better documentation in-code (see inputs.cpp, ~ line 15)
+TODO: change ids from string to int pointing to string
+
+TODO: translation framework
 
 TODO: logging
 TODO: ui & mapselector
+TODO: make player not spawn as a new unit, but choose a unit to control
+            --> IDEA: player spawns with limeted time as a particle cloud inviseble to enemys. them takes a host form this mode
+
 
 TODO: add controller support

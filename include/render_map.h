@@ -68,8 +68,9 @@ class Map {
             // load the map data form the map.json
             nlohmann::json json_data;
             file >> json_data;
+            nlohmann::json json_map_data = json_data["tiles"];
             map_data.clear();
-            for (const auto& row : json_data) {
+            for (const auto& row : json_map_data) {
                 std::vector<Tile> row_tiles;
                 for (const auto& tile : row) {
                     Tile new_tile;
@@ -96,13 +97,13 @@ class Map {
             }
         }
 
-        void render_map() {
+        void render_map(int player_x, int player_y) {
             int y_tile = 0;
             for (std::vector<Tile> vector_1d : map_data) {
-                int final_y = (y_tile * (DEFAULT_SIZE_TILE * ZOOM)) - PLAYER_Y;
+                int final_y = (y_tile * (DEFAULT_SIZE_TILE * ZOOM)) - player_y;
                 int x_tile = 0;
                 for (Tile& tile_data : vector_1d) {
-                    int final_x = (x_tile * (DEFAULT_SIZE_TILE * ZOOM)) - PLAYER_X;
+                    int final_x = (x_tile * (DEFAULT_SIZE_TILE * ZOOM)) - player_x;
                     map_textures_manager.render_texture(tile_data.id, final_x, final_y, DEFAULT_SIZE_TILE);
                     x_tile++;
                 }

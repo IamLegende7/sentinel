@@ -11,10 +11,10 @@ int render_map_inital(std::string map_name, SDL_Renderer* renderer) {
     return 0;
 }
 
-int render_map_main(SDL_Renderer* renderer) {
+int render_map_main(SDL_Renderer* renderer, int player_x, int player_y) {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
-    main_map.render_map();
+    main_map.render_map(player_x, player_y);
     SDL_RenderPresent(renderer);
     return 0;
 }

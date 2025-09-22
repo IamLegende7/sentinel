@@ -66,7 +66,6 @@ class Unit {
                     speed_y = walk_speed_max;
                 }
                 y += direction.y * ceil(speed_y);
-                printf("X: %d  Y: %d\n", x, y);
             } else {
                 printf("NO RUNNING LOGIC YET!\n");
             }

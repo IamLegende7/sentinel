@@ -6,17 +6,6 @@
 #include "enemy.h"
 #include "helper_utils.h"
 
-struct KeyState {
-    bool up = false;
-    bool down = false;
-    bool left = false;
-    bool right = false;
-
-    bool key_pressed() {
-        return up || down || left || right;
-    }
-};
-
 struct MoveState {
     int x_direction = 0;
     int y_direction = 0;
@@ -30,20 +19,20 @@ struct MoveState {
     }
 };
 
-XY init_move(KeyState key_state) {
+XY init_move() {
     XY direction;
     direction.x = 0;
     direction.y = 0;
-    if (key_state.up) {
+    if (KEY_STATE.up) {
         direction.y--;
     }
-    if (key_state.down) {
+    if (KEY_STATE.down) {
         direction.y++;
     }
-    if (key_state.left) {
+    if (KEY_STATE.left) {
         direction.x--;
     }
-    if (key_state.right) {
+    if (KEY_STATE.right) {
         direction.x++;
     }
     return direction;
@@ -55,23 +44,22 @@ XY init_move(KeyState key_state) {
 
 
 */
-bool movement_player(const SDL_Event& e) {
+void inputs_player(const SDL_Event& e) {
     SDL_PumpEvents();
-    KeyState key_state;
     //const bool* state = SDL_GetKeyboardState(NULL);
     if (e.type == SDL_EVENT_KEY_DOWN) {  // TODO: add keybinds
         switch (e.key.scancode) {
             case SDL_SCANCODE_W: 
-                key_state.up = true;
+                KEY_STATE.up = true;
                 break;
             case SDL_SCANCODE_S: 
-                key_state.down = true;
+                KEY_STATE.down = true;
                 break;
             case SDL_SCANCODE_A: 
-                key_state.left = true;
+                KEY_STATE.left = true;
                 break;
             case SDL_SCANCODE_D: 
-                key_state.right = true;
+                KEY_STATE.right = true;
                 break;
             default:
                 break;
@@ -81,27 +69,28 @@ bool movement_player(const SDL_Event& e) {
     if (e.type == SDL_EVENT_KEY_UP) {
         switch (e.key.scancode) {
             case SDL_SCANCODE_W:
-                printf("[W] up\n");
-                key_state.up = false;
+                KEY_STATE.up = false;
                 break;
             case SDL_SCANCODE_S:
-                key_state.down = false;
+                KEY_STATE.down = false;
                 break;
             case SDL_SCANCODE_A: 
-                key_state.left = false;
+                KEY_STATE.left = false;
                 break;
             case SDL_SCANCODE_D:
-                key_state.right = false;
+                KEY_STATE.right = false;
                 break;
             default:
                 break;
             // case (SDL_SCANCODE_LCTRL): PLAYER_RUNNING = false;
         }
     }
-    if (key_state.key_pressed()) {
-        XY move_direction = init_move(key_state);
+}
+    
+bool move_player() {
+    if (KEY_STATE.key_pressed()) {
+        XY move_direction = init_move();
         PLAYER.move(move_direction);
-
         return true;
     } else {
         return false;

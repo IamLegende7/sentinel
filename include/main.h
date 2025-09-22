@@ -9,11 +9,15 @@ int setup();
 // rendering
 void cleanup(SDL_Renderer* renderer, SDL_Window* window);
 int render_map_inital(std::string map_name, SDL_Renderer* renderer);
-int render_map_main(SDL_Renderer* renderer, int player_x, int player_y);
+int render_map_main(int player_x, int player_y);
 // movement & input
-bool movement_player(const SDL_Event& e);
+void inputs_player(const SDL_Event& e);
+bool move_player();
 //int controls_keyboard(const SDL_Event& e);
 
+
+const int TARGET_FPS = 60;
+const float TIME_STEP = 1.0f / TARGET_FPS;
 
 inline SDL_Window* MAIN_WIN = nullptr;
 inline SDL_Renderer* MAIN_REN = nullptr;

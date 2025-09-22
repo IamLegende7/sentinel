@@ -1,10 +1,15 @@
-TODO: keyboard
-TODO: make background texture system
+TODO: make background texture system (fuse background into one texture)
+TODO: add sprint
+TODO: add a tick clock
 TODO: keyboard keybinds  --> list of SDL_Keycode
 TODO: don't render tiles outside of view
 TODO: add hitboxes
 
-FIXME: add better error handeling
+FIXME: causing events wihile moving (such as moving the mouse) causes you to move extremly quickly
+FIXME: walkspeed depends on framerate
+FIXME: moving diagagonaly is faster then strait
+
+TODO: add better error handeling
 
 TODO: Add build.sh & build.bat
 TODO: update git wiki
@@ -19,5 +24,7 @@ TODO: ui & mapselector
 TODO: make player not spawn as a new unit, but choose a unit to control
             --> IDEA: player spawns with limeted time as a particle cloud inviseble to enemys. them takes a host form this mode
 
+
+TODO: add on-screen coords  done, but make better + add debug mode
 
 TODO: add controller support

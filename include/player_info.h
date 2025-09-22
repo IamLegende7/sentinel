@@ -14,4 +14,17 @@ inline int PLAYER_WALK_ACCELERATION = 15;  // modifier to base unit acceleration
 inline int PLAYER_RUNN_ACCELERATION = 15;  // modifier to base unit acceleration
 inline Unit PLAYER;
 
+struct KeyState {
+    bool up = false;
+    bool down = false;
+    bool left = false;
+    bool right = false;
+
+    bool key_pressed() {
+        return up || down || left || right;
+    }
+};
+
+inline KeyState KEY_STATE;
+
 #endif

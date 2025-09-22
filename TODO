@@ -1,6 +1,5 @@
 TODO: make background texture system (fuse background into one texture)
 TODO: add sprint
-TODO: add a tick clock
 TODO: keyboard keybinds  --> list of SDL_Keycode
 TODO: don't render tiles outside of view
 TODO: add hitboxes

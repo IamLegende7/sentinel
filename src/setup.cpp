@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <stdio.h>
+
 #include "main.h"
 #include "locations.h"
 #include "info.h"
@@ -25,6 +26,7 @@ int setup() {
         return 1;
     } else {
         MAIN_REN = SDL_CreateRenderer(MAIN_WIN, NULL);
+        // background_ren = SDL_CreateRenderer(MAIN_WIN, NULL);
         std::string icon_path = std::string(RESOURCE_DIR) + "/icons/icon.png";
         SDL_Surface* icon = IMG_Load(icon_path.c_str());
         if ( !SDL_SetWindowIcon(MAIN_WIN, icon) ) {

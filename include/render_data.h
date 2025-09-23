@@ -20,9 +20,10 @@ struct TextureData {
 class TextureManager {
     public:
         // Sets the renderer of the ```TextureManager``` class. Is required once before doing anything else with the ```TexturManager```.
-        void set_renderer(SDL_Renderer* renderer_to_set_to) {
+        bool set_renderer(SDL_Renderer* renderer_to_set_to) {
             renderer = renderer_to_set_to;
             missing_texture = load_texture_old(PATH_MISSING_TEXTURE_TILE.c_str());
+            return true;
         }
 
         // Checks if a texture with the name ```name``` exists in ```textures```

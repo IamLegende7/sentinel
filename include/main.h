@@ -8,8 +8,6 @@
 int setup();
 // rendering
 void cleanup(SDL_Renderer* renderer, SDL_Window* window);
-int render_map_inital(std::string map_name, SDL_Renderer* renderer);
-int render_map_main(int player_x, int player_y);
 // movement & input
 void inputs_player(const SDL_Event& e);
 bool move_player();
@@ -21,6 +19,7 @@ const float TIME_STEP = 1.0f / TARGET_FPS;
 
 inline SDL_Window* MAIN_WIN = nullptr;
 inline SDL_Renderer* MAIN_REN = nullptr;
+// inline SDL_Renderer* background_ren = nullptr;  // the render for making the map texture
 
 // 0: main menu; 1: in game, out of combat; 2: in "combat", in the map; 3: pause menu
 inline int MODE = 2;  // TODO: when main menu is added: change to 0

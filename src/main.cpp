@@ -7,14 +7,13 @@
 #include "input.h"
 #include "enemy.h"
 #include "player_info.h"
+#include "render_map.h"
 
 int main(int argc, char *argv[]) {
     if ( !setup() ) {
-        render_map_inital("campain/debug", MAIN_REN);
+        render_map_inital("campain/debug");
         PLAYER = init_player_unit(0, 0);
-        render_map_main(PLAYER.x, PLAYER.y);
-        SDL_RenderPresent(MAIN_REN);
-
+        bool update_map = true;
         float accumulator = 0.0f;
         Uint64 previous = SDL_GetTicks();
 
@@ -25,7 +24,6 @@ int main(int argc, char *argv[]) {
             Uint64 current = SDL_GetTicks();
             float elapsed = (current - previous) / 1000.0f;
             previous = current;
-
             accumulator += elapsed;
 
             // Process updates at a fixed rate
@@ -36,24 +34,26 @@ int main(int argc, char *argv[]) {
                         SCREEN_WIDTH = e.window.data1;
                         SCREEN_HEIGHT = e.window.data2;
                         SDL_SetRenderViewport(MAIN_REN, NULL);
-                        render_map_main(PLAYER.x, PLAYER.y);
-                        SDL_RenderPresent(MAIN_REN);
                     }
                     inputs_player(e);
                 }
                 if (move_player()) {
-                    render_map_main(PLAYER.x, PLAYER.y);
-                        std::ostringstream oss;
-                        oss << "X: " << PLAYER.x << " Y: " << PLAYER.y;
-                        std::string coords = oss.str();
-                    SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);
-                    SDL_RenderDebugText(MAIN_REN, 5, 5, coords.c_str());
-                    SDL_RenderPresent(MAIN_REN);
+                    update_map = true;
                 }
                 accumulator -= TIME_STEP;
             }
 
             //rendering here vv
+            SDL_SetRenderDrawColor(MAIN_REN, 0, 0, 0, 255);
+            SDL_RenderClear(MAIN_REN);
+            render_main(MAIN_REN, PLAYER.x, PLAYER.y, update_map);
+            update_map = false;
+                std::ostringstream oss;
+                oss << "X: " << PLAYER.x << " Y " << PLAYER.y;
+                std::string coords = oss.str();
+            SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);
+            SDL_RenderDebugText(MAIN_REN, 5, 5, coords.c_str());
+            SDL_RenderPresent(MAIN_REN);
 
             float sleepTime = (1.0f / TARGET_FPS) - accumulator;
             if (sleepTime > 0) {

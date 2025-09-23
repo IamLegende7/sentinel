@@ -4,6 +4,8 @@ TODO: keyboard keybinds  --> list of SDL_Keycode
 TODO: don't render tiles outside of view
 TODO: add hitboxes
 
+
+FIXME: taking up like 6 GB RAM running now
 FIXME: moving diagagonaly is faster then strait
 
 TODO: add better error handeling

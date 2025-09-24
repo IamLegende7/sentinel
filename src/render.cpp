@@ -114,37 +114,32 @@ class Map {
             return map_data.size();
         }
         
+        ~Map() {
+            // Clean up
+        }
     private:
         TextureManager map_textures_manager;
         Tile invalid = {INFO_NAMESPACE + "INVALID", "background/not_found.png", DEFAULT_SIZE_TILE, {}};
         std::vector<std::vector<Tile>> map_data;
+
 };
 
-/* 
+/*
     ### VARIBLES ###
 */
 Map main_map;                                       // the main map class handeling tiles
 SDL_Texture* background_texture;                    // the background (the main map) as a single texture
 SDL_Renderer* background_ren = nullptr;
 
-SDL_Texture* make_background_texture(SDL_Renderer* renderer, int player_x, int player_y) {
-    // Create a texture to hold the background
-    SDL_Texture* backgroundTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
-    
-    // Set the texture as the render target
-    SDL_SetRenderTarget(renderer, backgroundTexture);
-    
-    // Clear the texture
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
+bool make_background_texture(SDL_Renderer* renderer, int player_x, int player_y) {
+    SDL_DestroyTexture(background_texture);
+    background_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_SetRenderTarget(renderer, background_texture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);   // Black background
     SDL_RenderClear(renderer);
-    
-    // Render your tiles to the background texture
     main_map.render_map(player_x, player_y);
-    
-    // Reset the render target to the default
     SDL_SetRenderTarget(renderer, nullptr);
-    
-    return backgroundTexture;
+    return true;
 }
 
 bool render_map_inital(std::string map_name) {
@@ -159,7 +154,7 @@ bool render_main(SDL_Renderer* renderer, int player_x, int player_y, bool update
     // background (a.k.a the map)
     SDL_FRect dst = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
     if (update_background) {
-        background_texture = make_background_texture(MAIN_REN, player_x, player_y);
+        make_background_texture(MAIN_REN, player_x, player_y);
     }
     SDL_RenderTexture(renderer, background_texture, NULL, &dst);
     return true;

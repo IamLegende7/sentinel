@@ -45,7 +45,6 @@ int main(int argc, char *argv[]) {
 
             //rendering here vv
             SDL_SetRenderDrawColor(MAIN_REN, 0, 0, 0, 255);
-            SDL_RenderClear(MAIN_REN);
             render_main(MAIN_REN, PLAYER.x, PLAYER.y, update_map);
             update_map = false;
                 std::ostringstream oss;

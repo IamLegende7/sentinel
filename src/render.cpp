@@ -149,12 +149,13 @@ bool render_map_inital(std::string map_name) {
     return true;
 }
 
-bool render_main(SDL_Renderer* renderer, int player_x, int player_y, bool update_background) {
+bool render_main(SDL_Renderer* renderer, int player_x, int player_y) {
 
     // background (a.k.a the map)
     SDL_FRect dst = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
-    if (update_background) {
+    if (NEED_MAP_UPDATE) {
         make_background_texture(MAIN_REN, player_x, player_y);
+        NEED_MAP_UPDATE = false;
     }
     SDL_RenderTexture(renderer, background_texture, NULL, &dst);
     return true;

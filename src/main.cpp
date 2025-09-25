@@ -13,7 +13,6 @@ int main(int argc, char *argv[]) {
     if ( !setup() ) {
         render_map_inital("campain/debug");
         PLAYER = init_player_unit(0, 0);
-        bool update_map = true;
         float accumulator = 0.0f;
         Uint64 previous = SDL_GetTicks();
 
@@ -37,21 +36,25 @@ int main(int argc, char *argv[]) {
                     }
                     inputs_player(e);
                 }
-                if (move_player()) {
-                    update_map = true;
-                }
+                move_player();
                 accumulator -= TIME_STEP;
             }
 
             //rendering here vv
             SDL_SetRenderDrawColor(MAIN_REN, 0, 0, 0, 255);
-            render_main(MAIN_REN, PLAYER.x, PLAYER.y, update_map);
-            update_map = false;
-                std::ostringstream oss;
-                oss << "X: " << PLAYER.x << " Y " << PLAYER.y;
-                std::string coords = oss.str();
+            render_main(MAIN_REN, PLAYER.x, PLAYER.y);
+            
+            std::ostringstream coords;
+            coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
+            std::ostringstream t_old;
+            t_old << "up: " << PLAYER.t_up_old << " down: " << PLAYER.t_down_old;
+            std::ostringstream t;
+            t << "up: " << PLAYER.t_up << " down: " << PLAYER.t_down;
             SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);
-            SDL_RenderDebugText(MAIN_REN, 5, 5, coords.c_str());
+            SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
+            SDL_RenderDebugText(MAIN_REN, 5, 20, t_old.str().c_str());
+            SDL_RenderDebugText(MAIN_REN, 5, 35, t.str().c_str());
+            
             SDL_RenderPresent(MAIN_REN);
 
             float sleepTime = (1.0f / TARGET_FPS) - accumulator;

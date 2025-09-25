@@ -23,17 +23,19 @@ XY init_move() {
     XY direction;
     direction.x = 0;
     direction.y = 0;
-    if (KEY_STATE.up) {
-        direction.y--;
-    }
-    if (KEY_STATE.down) {
-        direction.y++;
-    }
-    if (KEY_STATE.left) {
-        direction.x--;
-    }
-    if (KEY_STATE.right) {
-        direction.x++;
+    if (KEY_STATE.key_pressed()) {
+        if (KEY_STATE.up) {
+            direction.y--;
+        }
+        if (KEY_STATE.down) {
+            direction.y++;
+        }
+        if (KEY_STATE.left) {
+            direction.x--;
+        }
+        if (KEY_STATE.right) {
+            direction.x++;
+        }
     }
     return direction;
 }
@@ -46,7 +48,6 @@ XY init_move() {
 */
 void inputs_player(const SDL_Event& e) {
     SDL_PumpEvents();
-    //const bool* state = SDL_GetKeyboardState(NULL);
     if (e.type == SDL_EVENT_KEY_DOWN) {  // TODO: add keybinds
         switch (e.key.scancode) {
             case SDL_SCANCODE_W: 
@@ -87,13 +88,8 @@ void inputs_player(const SDL_Event& e) {
     }
 }
     
-bool move_player() {
-    if (KEY_STATE.key_pressed()) {
-        XY move_direction = init_move();
-        PLAYER.move(move_direction);
-        return true;
-    } else {
-        return false;
-    }
+void move_player() {
+    XY move_direction = init_move();
+    PLAYER.move(move_direction);
 }
 // PLAYER_SPEED_Y = PLAYER_SPEED_Y + PLAYER_BASE_SPEED;

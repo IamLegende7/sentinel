@@ -4,10 +4,11 @@
 #include <string>
 
 inline int DEFAULT_SIZE_TILE = 100;
+inline bool NEED_MAP_UPDATE = true;
 
 
 bool render_map_inital(std::string map_name);
-bool render_main(SDL_Renderer* renderer, int player_x, int player_y, bool update_background);
+bool render_main(SDL_Renderer* renderer, int player_x, int player_y);
 
 struct TileMetadata {
 

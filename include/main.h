@@ -10,7 +10,7 @@ int setup();
 void cleanup(SDL_Renderer* renderer, SDL_Window* window);
 // movement & input
 void inputs_player(const SDL_Event& e);
-bool move_player();
+void move_player();
 //int controls_keyboard(const SDL_Event& e);
 
 

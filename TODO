@@ -1,12 +1,11 @@
-FIXME: fix memory leak in map rendering  --> add memory management
 FIXME: wierd map rendering at first (before moving)
 TODO: add sprint
 TODO: keyboard keybinds  --> list of SDL_Keycode
 TODO: don't render tiles outside of view
 TODO: add hitboxes
+TODO: make camera follow the player, not be stuck to it
 
-FIXME: moving arround slowly takes up a lot of ram
-FIXME: moving diagagonaly is faster then strait
+FIXME: moving sometimes gets stuck in one direction, making the player move in that direction indefenetly.
 
 TODO: add better error handeling
 
@@ -16,7 +15,7 @@ TODO: add .documentation to wiki
 TODO: better documentation in-code (see inputs.cpp, ~ line 15)
 TODO: change ids from string to int pointing to string
 
-TODO: translation framework
+TODO: translation framework (multilang framework)
 
 TODO: logging
 TODO: ui & mapselector

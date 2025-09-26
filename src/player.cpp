@@ -62,9 +62,11 @@ void inputs_player(const SDL_Event& e) {
             case SDL_SCANCODE_D: 
                 KEY_STATE.right = true;
                 break;
+            case (SDL_SCANCODE_LCTRL): 
+                PLAYER.running = true;
+                break;
             default:
                 break;
-            // case (SDL_SCANCODE_LCTRL): PLAYER_RUNNING = true; TODO: add in later
         }
     }
     if (e.type == SDL_EVENT_KEY_UP) {
@@ -81,9 +83,11 @@ void inputs_player(const SDL_Event& e) {
             case SDL_SCANCODE_D:
                 KEY_STATE.right = false;
                 break;
+            case (SDL_SCANCODE_LCTRL): 
+                PLAYER.running = false;
+                break;
             default:
                 break;
-            // case (SDL_SCANCODE_LCTRL): PLAYER_RUNNING = false;
         }
     }
 }

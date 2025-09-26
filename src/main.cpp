@@ -46,11 +46,11 @@ int main(int argc, char *argv[]) {
             
             std::ostringstream coords;
             coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
-            std::ostringstream t;
-            t << "Y: " << PLAYER.t_y << " X: " << PLAYER.t_x;
+            std::ostringstream speed;
+            speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
             SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);
             SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
-            SDL_RenderDebugText(MAIN_REN, 5, 20, t.str().c_str());
+            SDL_RenderDebugText(MAIN_REN, 5, 20, speed.str().c_str());
             
             SDL_RenderPresent(MAIN_REN);
 

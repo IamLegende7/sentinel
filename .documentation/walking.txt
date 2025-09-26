@@ -1,2 +1,10 @@
 Walking	    Linear (or a gentle quadratic)      v(t) = a * t² (up to the cap of c)     !! t cant be negative
 Sprinting	Exponential                         v(t) = v_max * (1 - e^-at)  (e being eulers number)
+
+y = v_max * (1 - e^-at)                     | / v_max
+y / v_max = 1 - e^-at                       | - 1
+(y / v_max) - 1 = - e^-at                   | * (-1)
+-1 * ((y / v_max) - 1) = e^-at              | ln()
+ln(-((y / v_max) - 1)) = -1 * a * t         | * -1
+-1 * ln(-1 * ((y / v_max) - 1)) = a * t     | / at
+(-1 * ln(-1 * ((y / v_max) - 1))) / a = t

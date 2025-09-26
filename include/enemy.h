@@ -23,6 +23,7 @@ class Unit {
         int hp = 1;
 
         // walking stuff
+        float slow_down = 1;                // how quickly the player loses speed, when slowing down // TODO: make slowing down when sprinting slower, but faster, when key in other direction
         bool running = false;               // true = running, false = walking
         int walk_speed_max = 10;            // maximum walk speed
         int run_speed_max = 20;             // maximum run speed
@@ -30,21 +31,12 @@ class Unit {
         float run_acceleration = 0.8;       // ```walk_acceleration``` and ```run_acceleration``` are not 1:1
         float speed_x = 0;                  // speed in x direction
         float speed_y = 0;                  // speed in y direction
-        int t_up = 0;                       // The ticks that this unit has been moving is this direction
-        int t_down = 0;                     // The ticks that this unit has been moving is this direction
-        int t_left = 0;                     // The ticks that this unit has been moving is this direction
-        int t_right = 0;                    // The ticks that this unit has been moving is this direction
-        int t_up_old = 0;                   // The ticks that this unit has been moving is this direction before stopping to do so
-        int t_down_old = 0;                 // The ticks that this unit has been moving is this direction before stopping to do so
-        int t_left_old = 0;                 // The ticks that this unit has been moving is this direction before stopping to do so
-        int t_right_old = 0;                // The ticks that this unit has been moving is this direction before stopping to do so
-        int slow_down_ticks = 10;            // The ticks that this unit needs to slow down
-        int directional_modifier_x = 1;     // -1 if moving left, 1 if moving right
-        int directional_modifier_y = 1;     // -1 if moving up, 1 if moving down
-        int step_y = 0;
-        int step_x = 0;
+        int t_y = 0;
+        int t_x = 0;
+        int directional_modifier_y = 0;
+        int directional_modifier_x = 0;
 
-        int control_res = 0;  // ```-1```, if impossible
+        int control_resistance = 0;  // ```-1```, if impossible to control
         bool is_player = false;
 
         /* This unit becomes controlled by the player by calling this function
@@ -56,92 +48,55 @@ class Unit {
 
         void loose_player() {
             is_player = false;
-            control_res = -1;
+            control_resistance = -1;
         }
 
         void move(XY direction) {
-            // slow down
-            if (direction.y != -1 && t_up != 0 ) {
-                if (t_up_old == 0) { t_up_old = t_up; }
-                if (direction.y == 0) {
-                    t_up -= ceil(t_up_old / slow_down_ticks);
-                } else {
-                    t_up -= ceil(t_up_old / slow_down_ticks) * 2;       // slow down faster if going in oppesite direction
-                }
-                if (t_up <= 0) { t_up = 0; t_up_old = 0; }
-            }
-            if (direction.y != 1 && t_down != 0 ) {
-                if (t_down_old == 0) { t_down_old = t_down; }
-                if (direction.y == 0) {
-                    t_down -= ceil(t_down_old / slow_down_ticks);
-                } else {
-                    t_down -= ceil(t_down_old / slow_down_ticks) * 2;       // slow down faster if going in oppesite direction
-                }
-                if (t_down <= 0) { t_down = 0; t_down_old = 0; }
-            }
-            if (direction.x != -1 && t_left != 0 ) {
-                if (t_left_old == 0) { t_left_old = t_left; }
-                if (direction.x == 0) {
-                    t_left -= ceil(t_left_old / slow_down_ticks);
-                } else {
-                    t_left -= ceil(t_left_old / slow_down_ticks) * 2;       // slow down faster if going in oppesite direction
-                }
-                if (t_left <= 0) { t_left = 0; t_left_old = 0; }
-            }
-            if (direction.x != 1 && t_right != 0 ) {
-                if (t_right_old == 0) { t_right_old = t_right; }
-                if (direction.x == 0) {
-                    t_right -= ceil(t_right_old / slow_down_ticks);
-                } else {
-                    t_right -= ceil(t_right_old / slow_down_ticks) * 2;       // slow down faster if going in oppesite direction
-                }
-                if (t_right <= 0) { t_right = 0; t_right_old = 0; }
-            }
-
             if (!running) {
-                // increment t
-                if (direction.y == -1 && t_down == 0) {
-                    t_up_old = 0;
-                    t_up += 1;
+                // Y
+                if (directional_modifier_y == 0) {
+                    directional_modifier_y = direction.y;
                 }
-                if (direction.y == 1 and t_up == 0) {
-                    t_down_old = 0;
-                    t_down += 1;
+                if (directional_modifier_y != direction.y) {    // slow down
+                    speed_y -= slow_down;
+                    if (speed_y <= 0) {
+                        speed_y = 0;
+                        directional_modifier_y = 0;
+                    }
+                } else if (direction.y != 0) {                                      // speed up
+                    t_y = ceil(sqrt(speed_y / walk_acceleration)) + 1;              // get t from the speed
+                    speed_y = walk_acceleration * pow(t_y, 2);
+                    // printf("SpeedY: %f\n", speed_y);
+                    if (speed_y > walk_speed_max) { speed_y = walk_speed_max; }     // enforce max speed cap
                 }
-                if (direction.x == -1 and t_right == 0) {
-                    t_left_old = 0;
-                    t_left += 1;
+
+                // X
+                if (directional_modifier_x == 0) {
+                    directional_modifier_x = direction.x;
                 }
-                if (direction.x == 1 and t_left == 0) {
-                    t_right_old = 0;
-                    t_right += 1;
+                if (directional_modifier_x != direction.x) {    // slow down
+                    speed_x -= slow_down;
+                    if (speed_x <= 0) {
+                        speed_x = 0;
+                        directional_modifier_x = 0;
+                    }
+                } else if (direction.x != 0) {                                      // speed up
+                    t_x = ceil(sqrt(speed_x / walk_acceleration)) + 1;              // get t from the speed
+                    speed_x = walk_acceleration * pow(t_x, 2);
+                    // printf("SpeedX: %f\n", speed_x);
+                    if (speed_x > walk_speed_max) { speed_x = walk_speed_max; }     // enforce max speed cap
                 }
-                // add speed
-                if (direction.x == 0) { speed_y = walk_acceleration * pow(t_up + t_down, 2); }           // diagonal == false
-                else                  { speed_y = walk_acceleration * pow(t_up + t_down, 2) / sqrt(2); } // diagonal == true
-                if (direction.y == 0) { speed_x = walk_acceleration * pow(t_right+ t_left, 2); }
-                else                  { speed_x = walk_acceleration * pow(t_right + t_left, 2) / sqrt(2); }
-                if (speed_y > walk_speed_max) { speed_y = walk_speed_max; }                     // enforce max speed cap
-                if (speed_x > walk_speed_max) { speed_x = walk_speed_max; }
+
             } else {
                 printf("NO RUNNING LOGIC YET!\n");
             }
+
             // move
-            if (t_up != 0) {
-                directional_modifier_y = -1;
-            } else if (t_down != 0) {
-                directional_modifier_y = 1;
-            }
-            if (t_left != 0) {
-                directional_modifier_x = -1;
-            } else if (t_right != 0) {
-                directional_modifier_x = 1;
-            }
-            step_y = ceil(speed_y) * directional_modifier_y;
-            step_x = ceil(speed_x) * directional_modifier_x;
-            if (step_y != 0 || step_x != 0) {
-                y += step_y;
-                x += step_x;
+            if (speed_y != 0 || speed_x != 0) {
+                if (direction.x == 0) { y += ceil(speed_y) * directional_modifier_y; }              // diagonal = false
+                else                  { y += ceil(speed_y / sqrt(2)) * directional_modifier_y; }    // diagonal = true
+                if (direction.y == 0) { x += ceil(speed_x) * directional_modifier_x; }
+                else                  { x += ceil(speed_x / sqrt(2)) * directional_modifier_x; }
                 NEED_MAP_UPDATE = true;
             }
         }

@@ -103,9 +103,6 @@ class Unit {
                         t_y = ceil((-1 * log(-1 * ((speed_y / run_speed_max) - 1))) / run_acceleration) + 1;    // get t from the speed (& increment)
                     }
                     speed_y = run_speed_max * (1 - pow(eulers_constant, -1 * run_acceleration * t_y));
-                    if (speed_y < 0) {
-                        printf("Speed smaller than 0!\n");
-                    }
                     // printf("SpeedY: %f\n", speed_y);
                     if (speed_y > run_speed_max) { speed_y = run_speed_max; }                                   // enforce max speed cap
                 }

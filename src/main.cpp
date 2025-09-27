@@ -1,7 +1,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <stdio.h>
-#include <sstream>
 
 #include "main.h"
 #include "input.h"
@@ -11,10 +10,12 @@
 
 int main(int argc, char *argv[]) {
     if ( !setup() ) {
-        render_map_inital("campain/debug");
-        PLAYER = init_player_unit(0, 0);
         float accumulator = 0.0f;
         Uint64 previous = SDL_GetTicks();
+
+        // move to a ```start_combat``` function or something
+        render_combat_inital("campain/debug");
+        PLAYER = init_player_unit(0, 0);
 
         // main game loop
         bool quit;
@@ -33,26 +34,27 @@ int main(int argc, char *argv[]) {
                         SCREEN_WIDTH = e.window.data1;
                         SCREEN_HEIGHT = e.window.data2;
                         SDL_SetRenderViewport(MAIN_REN, NULL);
+                        if (MODE == 2) {
+                            NEED_MAP_UPDATE = true;
+                        }
                     }
-                    inputs_player(e);
+                    if (MODE == 2) {
+                        inputs_player(e);
+                    }
                 }
-                move_player();
+                if (MODE == 2) {
+                    move_player();
+                }
                 accumulator -= TIME_STEP;
             }
 
             //rendering here vv
             SDL_SetRenderDrawColor(MAIN_REN, 0, 0, 0, 255);
-            render_main(MAIN_REN, PLAYER.x, PLAYER.y);
-            
-            std::ostringstream coords;
-            coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
-            std::ostringstream speed;
-            speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
-            SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);
-            SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
-            SDL_RenderDebugText(MAIN_REN, 5, 20, speed.str().c_str());
-            
+            if (MODE == 2) {
+                render_combat(MAIN_REN, PLAYER.x, PLAYER.y);
+            }
             SDL_RenderPresent(MAIN_REN);
+
 
             float sleepTime = (1.0f / TARGET_FPS) - accumulator;
             if (sleepTime > 0) {

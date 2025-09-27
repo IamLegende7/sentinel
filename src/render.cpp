@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "render_map.h"
 #include "main.h"
@@ -142,21 +143,38 @@ bool make_background_texture(SDL_Renderer* renderer, int player_x, int player_y)
     return true;
 }
 
-bool render_map_inital(std::string map_name) {
+bool render_combat_inital(std::string map_name) {
     background_ren = SDL_CreateRenderer(MAIN_WIN, NULL);
     main_map.pass_renderer(MAIN_REN);
     main_map.load_map(map_name);
     return true;
 }
 
-bool render_main(SDL_Renderer* renderer, int player_x, int player_y) {
+bool render_combat(SDL_Renderer* renderer, int player_x, int player_y) {
 
     // background (a.k.a the map)
-    SDL_FRect dst = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
+    SDL_FRect full_window_rect = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
     if (NEED_MAP_UPDATE) {
-        make_background_texture(MAIN_REN, player_x, player_y);
+        make_background_texture(MAIN_REN, player_x - (SCREEN_WIDTH / 2) + 50, player_y - (SCREEN_HEIGHT / 2) + 50);
         NEED_MAP_UPDATE = false;
     }
-    SDL_RenderTexture(renderer, background_texture, NULL, &dst);
+    SDL_RenderTexture(renderer, background_texture, NULL, &full_window_rect);
+    
+    if (DEBUG) {  // debug info
+        std::string picture_path_full = TEXTURE_DIR + "/crosshair_debug.png";
+        SDL_Texture* crosshair_texture = IMG_LoadTexture(renderer, picture_path_full.c_str());
+        SDL_SetTextureScaleMode(crosshair_texture, SDL_SCALEMODE_NEAREST);
+        SDL_FRect crosshair_rect = { (float)(ceil(SCREEN_WIDTH / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)((SCREEN_HEIGHT / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)(DEFAULT_SIZE_TILE * ZOOM / 2), (float)(DEFAULT_SIZE_TILE * ZOOM / 2) };
+        SDL_RenderTexture(MAIN_REN, crosshair_texture, NULL, &crosshair_rect);
+
+            // render debug information   // TODO: change to actual text, not SDL debug text
+        std::ostringstream coords;
+        coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
+        std::ostringstream speed;
+        speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
+        SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);  // set coulor to white
+        SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
+        SDL_RenderDebugText(MAIN_REN, 5, 20, speed.str().c_str());
+    }
     return true;
 }

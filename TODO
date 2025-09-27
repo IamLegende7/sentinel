@@ -1,4 +1,3 @@
-FIXME: wierd map rendering at first (before moving)
 TODO: keyboard keybinds  --> list of SDL_Keycode
 TODO: don't render tiles outside of view
 TODO: add hitboxes

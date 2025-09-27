@@ -14,6 +14,7 @@
 #include "info.h"
 #include "render_data.h"
 #include "helper_utils.h"
+#include "debug.h"
 
 class Map {
     public:
@@ -84,11 +85,31 @@ class Map {
         }
 
         void render_map(int player_x, int player_y) {
+            int min_x = (player_x / (DEFAULT_SIZE_TILE * ZOOM));
+            int max_x = (player_x + SCREEN_WIDTH) / (DEFAULT_SIZE_TILE * ZOOM);
+            int min_y = (player_y / (DEFAULT_SIZE_TILE * ZOOM));
+            int max_y = (player_y + SCREEN_HEIGHT) / (DEFAULT_SIZE_TILE * ZOOM);
+
+            if (DEBUG_SHOW_TILE_HIDING) {
+                min_x += 1;
+                max_x -= 1;
+                min_y += 1;
+                max_y -= 1;
+            }
+
             int y_tile = 0;
             for (std::vector<Tile> vector_1d : map_data) {
+                if (y_tile < min_y || y_tile > max_y) {
+                    y_tile++;
+                    continue;
+                }
                 int final_y = (y_tile * (DEFAULT_SIZE_TILE * ZOOM)) - player_y;
                 int x_tile = 0;
                 for (Tile& tile_data : vector_1d) {
+                    if (x_tile < min_x || x_tile > max_x) {
+                        x_tile++;
+                        continue;
+                    }
                     int final_x = (x_tile * (DEFAULT_SIZE_TILE * ZOOM)) - player_x;
                     map_textures_manager.render_texture(tile_data.id, final_x, final_y, DEFAULT_SIZE_TILE);
                     x_tile++;

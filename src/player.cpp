@@ -95,5 +95,7 @@ void inputs_player(const SDL_Event& e) {
 void move_player() {
     XY move_direction = init_move();
     PLAYER.move(move_direction);
+    PLAYER.move_box.x = PLAYER.x + PLAYER.move_box.x_offset;
+    PLAYER.move_box.y = PLAYER.y + PLAYER.move_box.y_offset;
 }
 // PLAYER_SPEED_Y = PLAYER_SPEED_Y + PLAYER_BASE_SPEED;

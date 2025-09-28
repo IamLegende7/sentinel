@@ -12,6 +12,17 @@ struct Effect {
     int strength;
 };
 
+struct Hitbox {
+    int type; // 0: none; 1: collides with walls & stuff; 2: takes damage from attacks
+    int x, y;
+    int x_offset, y_offset;
+    int width, height;
+
+bool colliding(const Hitbox& B) {
+    return !(x + width < B.x || x > B.x + B.width || y + height < B.y || y > B.y + B.height);
+}
+};
+
 /* This class manages uints (such as the enemys or the player)
 
 */
@@ -21,6 +32,8 @@ class Unit {
         int y = 0;
         int hp_max = 1;
         int hp = 1;
+
+        Hitbox move_box = {1, 0, 0, 0, 80, 100, 20};
 
         // walking stuff
         float slow_down = 1;                // how quickly the player loses speed, when slowing down // TODO: make slowing down when sprinting slower, but faster, when key in other direction
@@ -49,6 +62,16 @@ class Unit {
         void loose_player() {
             is_player = false;
             control_resistance = -1;
+        }
+
+        void tick() {
+            if (!is_player) {
+                // unit ai here
+                XY direction = {0, 0}; // delete later
+                move(direction);
+                move_box.x = x + move_box.x_offset;
+                move_box.y = y + move_box.y_offset;
+            }
         }
 
         void move(XY direction) {

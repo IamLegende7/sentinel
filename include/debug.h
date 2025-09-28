@@ -6,5 +6,7 @@
 */
 
 inline bool DEBUG_SHOW_TILE_HIDING = false;
+inline bool DEBUG_SHOW_CROSSHAIR = false;
+inline bool DEBUG_SHOW_HITBOXES = false;
 
 #endif

@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 #include "main.h"
-#include "input.h"
 #include "enemy.h"
 #include "player_info.h"
 #include "render_map.h"

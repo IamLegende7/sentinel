@@ -1,7 +1,13 @@
 TODO: keyboard keybinds  --> list of SDL_Keycode
-TODO: add hitboxes
+TODO: fix rendering of hitboxes
+TODO: add multi layer maps
+TODO: add walls
 TODO: add enemys
 TODO: add enemy ai
+
+TODO: ajust speed to zoom
+FIXME: crosshair is at slight offset
+FIXME: resizing the window is really laggy
 
 TODO: make camera follow the player, not be stuck to it
 
@@ -20,8 +26,5 @@ TODO: logging
 TODO: ui & mapselector
 TODO: make player not spawn as a new unit, but choose a unit to control
             --> IDEA: player spawns with limeted time as a particle cloud inviseble to enemys. them takes a host form this mode
-
-
-TODO: add on-screen coords  --> done, but make better + add debug mode
 
 TODO: add controller support

@@ -111,7 +111,7 @@ class Map {
                         continue;
                     }
                     int final_x = (x_tile * (DEFAULT_SIZE_TILE * ZOOM)) - player_x;
-                    map_textures_manager.render_texture(tile_data.id, final_x, final_y, DEFAULT_SIZE_TILE);
+                    map_textures_manager.render_texture(tile_data.id, final_x, final_y, DEFAULT_SIZE_TILE * ZOOM);
                     x_tile++;
                 }
             y_tile++;
@@ -182,13 +182,23 @@ bool render_combat(SDL_Renderer* renderer, int player_x, int player_y) {
     SDL_RenderTexture(renderer, background_texture, NULL, &full_window_rect);
     
     if (DEBUG) {  // debug info
-        std::string picture_path_full = TEXTURE_DIR + "/crosshair_debug.png";
-        SDL_Texture* crosshair_texture = IMG_LoadTexture(renderer, picture_path_full.c_str());
-        SDL_SetTextureScaleMode(crosshair_texture, SDL_SCALEMODE_NEAREST);
-        SDL_FRect crosshair_rect = { (float)(ceil(SCREEN_WIDTH / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)((SCREEN_HEIGHT / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)(DEFAULT_SIZE_TILE * ZOOM / 2), (float)(DEFAULT_SIZE_TILE * ZOOM / 2) };
-        SDL_RenderTexture(MAIN_REN, crosshair_texture, NULL, &crosshair_rect);
+        if (DEBUG_SHOW_CROSSHAIR) {
+            std::string picture_path_full = TEXTURE_DIR + "/crosshair_debug.png";
+            SDL_Texture* crosshair_texture = IMG_LoadTexture(renderer, picture_path_full.c_str());
+            SDL_SetTextureScaleMode(crosshair_texture, SDL_SCALEMODE_NEAREST);
+            SDL_FRect crosshair_rect = { (float)(ceil(SCREEN_WIDTH / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)((SCREEN_HEIGHT / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)(DEFAULT_SIZE_TILE * ZOOM / 2), (float)(DEFAULT_SIZE_TILE * ZOOM / 2) };
+            SDL_RenderTexture(MAIN_REN, crosshair_texture, NULL, &crosshair_rect);
+        }
 
-            // render debug information   // TODO: change to actual text, not SDL debug text
+        if (DEBUG_SHOW_HITBOXES) {
+            // for (Unit current_unit : UNITS) {
+                // moveboxes
+                SDL_SetRenderDrawColor(MAIN_REN, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
+                SDL_FRect hitbox_rect = { (float)(SCREEN_WIDTH / 2) - 50, (float)(SCREEN_HEIGHT / 2) - 50, (float)PLAYER.move_box.width, (float)PLAYER.move_box.height };
+                SDL_RenderRect(MAIN_REN, &hitbox_rect);
+        }
+
+        // render debug information   // TODO: change to actual text, not SDL debug text
         std::ostringstream coords;
         coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
         std::ostringstream speed;

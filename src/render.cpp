@@ -153,6 +153,11 @@ Map main_map;                                       // the main map class handel
 SDL_Texture* background_texture;                    // the background (the main map) as a single texture
 SDL_Renderer* background_ren = nullptr;
 
+/*  This function bakes all tiles of the map into one texture
+    ### Inputs: 
+    ```SLD_Renderer``` for renderring the texture. Can be the main renderer.
+    ```player_x```, ```player_y``` for the locations of wich to render
+*/
 bool make_background_texture(SDL_Renderer* renderer, int player_x, int player_y) {
     SDL_DestroyTexture(background_texture);
     background_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -199,13 +204,17 @@ bool render_combat(SDL_Renderer* renderer, int player_x, int player_y) {
         }
 
         // render debug information   // TODO: change to actual text, not SDL debug text
-        std::ostringstream coords;
-        coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
-        std::ostringstream speed;
-        speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
         SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);  // set coulor to white
-        SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
-        SDL_RenderDebugText(MAIN_REN, 5, 20, speed.str().c_str());
+        if (DEBUG_SHOW_COORDS) {
+            std::ostringstream coords;
+            coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
+            SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
+        }
+        if (DEBUG_SHOW_SPEED) {
+            std::ostringstream speed;
+            speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
+            SDL_RenderDebugText(MAIN_REN, 5, 20, speed.str().c_str());
+        }
     }
     return true;
 }

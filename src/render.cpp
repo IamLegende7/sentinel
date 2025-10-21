@@ -1,5 +1,4 @@
 #include <SDL3/SDL.h>
-#include <stdio.h>
 #include <vector>
 #include <string>
 #include <nlohmann/json.hpp>
@@ -18,50 +17,41 @@
 
 class Map {
     public:
-        // Passes the renderer to ```TextureManager.set_renderer()```. Is required once before doing anything else with the ```TexturManager```
+        // Passes the renderer to ```TextureManager.set_renderer()```. Is required once before doing anything else with the ```TextureManager```
         void pass_renderer(SDL_Renderer* renderer) {
             map_textures_manager.set_renderer(renderer);
         }
 
         // Gets the default texture for a tile from the tile ´´´id´´´
         std::string get_default_texture(std::string id) {
-            std::string id_sterile = replaceSubstring(id, INFO_NAMESPACE, "$vanilla$");
+            std::string id_sterile = replace_substring(id, INFO_NAMESPACE, "$vanilla$");
             std::string default_textures_path_full = TEXTURE_DIR + PATH_DEFAULT_TEXTURE_TILES_JSON;
-            std::ifstream file(default_textures_path_full);
-            if (!file.is_open()) {
-                std::cerr << "Failed to open json file: " << default_textures_path_full << std::endl;
+            
+            nlohmann::json json_data = get_json(default_textures_path_full);
+            if ( json_data.is_null() ) {
                 return PATH_MISSING_TEXTURE_TILE;
-            }
-            nlohmann::json json_data;
-            file >> json_data;
-            if ( json_data.contains(id_sterile) ) {
+            } else if ( json_data.contains(id_sterile) ) {
                 std::string texture_path = json_data[id_sterile].get<std::string>();
-                file.close();
                 return texture_path;
             }
             return PATH_MISSING_TEXTURE_TILE;
         }
 
         // Loads a map. Example usage: ```map.load_map(campain/debug)```
-        // DO NOT add the .json file extention
+        // DO NOT add the .jsonc file extention
         void load_map(const std::string& mapname) {
-            std::string filename = mapname + ".json";
-            std::ifstream file(MAP_DIR + "/" + filename);
-            if (!file.is_open()) {
-                std::cerr << "Failed to open map file: " << filename << std::endl;
-                return;
+            std::string filename = mapname + ".jsonc";
+            nlohmann::json json_data = get_json(MAP_DIR + "/" + filename);
+            if ( json_data.is_null() ) {
+                // Error handeling here
             }
-
-            // load the map data form the map.json
-            nlohmann::json json_data;
-            file >> json_data;
             nlohmann::json json_map_data = json_data["tiles"];
             map_data.clear();
             for (const auto& row : json_map_data) {
                 std::vector<Tile> row_tiles;
                 for (const auto& tile : row) {
                     Tile new_tile;
-                    new_tile.id = replaceSubstring(tile["id"].get<std::string>(), "$vanilla$", INFO_NAMESPACE);
+                    new_tile.id = replace_substring(tile["id"].get<std::string>(), "$vanilla$", INFO_NAMESPACE);
                     if ( tile.contains("texture") ) {
                         new_tile.texture = tile["texture"].get<std::string>();
                     } else {
@@ -75,7 +65,6 @@ class Map {
                 }
                 map_data.push_back(row_tiles);
             }
-            file.close();
 
             for (std::vector<Tile> vector_1d : map_data) {
                 for (Tile& tile_data : vector_1d) {
@@ -186,35 +175,33 @@ bool render_combat(SDL_Renderer* renderer, int player_x, int player_y) {
     }
     SDL_RenderTexture(renderer, background_texture, NULL, &full_window_rect);
     
-    if (DEBUG) {  // debug info
-        if (DEBUG_SHOW_CROSSHAIR) {
-            std::string picture_path_full = TEXTURE_DIR + "/crosshair_debug.png";
-            SDL_Texture* crosshair_texture = IMG_LoadTexture(renderer, picture_path_full.c_str());
-            SDL_SetTextureScaleMode(crosshair_texture, SDL_SCALEMODE_NEAREST);
-            SDL_FRect crosshair_rect = { (float)(ceil(SCREEN_WIDTH / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)((SCREEN_HEIGHT / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)(DEFAULT_SIZE_TILE * ZOOM / 2), (float)(DEFAULT_SIZE_TILE * ZOOM / 2) };
-            SDL_RenderTexture(MAIN_REN, crosshair_texture, NULL, &crosshair_rect);
-        }
+    if (DEBUG_SHOW_CROSSHAIR) {
+        std::string picture_path_full = TEXTURE_DIR + "/crosshair_debug.png";
+        SDL_Texture* crosshair_texture = IMG_LoadTexture(renderer, picture_path_full.c_str());
+        SDL_SetTextureScaleMode(crosshair_texture, SDL_SCALEMODE_NEAREST);
+        SDL_FRect crosshair_rect = { (float)(ceil(SCREEN_WIDTH / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)((SCREEN_HEIGHT / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)(DEFAULT_SIZE_TILE * ZOOM / 2), (float)(DEFAULT_SIZE_TILE * ZOOM / 2) };
+        SDL_RenderTexture(MAIN_REN, crosshair_texture, NULL, &crosshair_rect);
+    }
 
-        if (DEBUG_SHOW_HITBOXES) {
-            // for (Unit current_unit : UNITS) {
-                // moveboxes
-                SDL_SetRenderDrawColor(MAIN_REN, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
-                SDL_FRect hitbox_rect = { (float)(SCREEN_WIDTH / 2) - 50, (float)(SCREEN_HEIGHT / 2) - 50, (float)PLAYER.move_box.width, (float)PLAYER.move_box.height };
-                SDL_RenderRect(MAIN_REN, &hitbox_rect);
-        }
+    if (DEBUG_SHOW_HITBOXES) {
+        // for (Unit current_unit : UNITS) {
+            // moveboxes
+            SDL_SetRenderDrawColor(MAIN_REN, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
+            SDL_FRect hitbox_rect = { (float)(SCREEN_WIDTH / 2) - 50, (float)(SCREEN_HEIGHT / 2) - 50, (float)PLAYER.move_box.width, (float)PLAYER.move_box.height };
+            SDL_RenderRect(MAIN_REN, &hitbox_rect);
+    }
 
-        // render debug information   // TODO: change to actual text, not SDL debug text
-        SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);  // set coulor to white
-        if (DEBUG_SHOW_COORDS) {
-            std::ostringstream coords;
-            coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
-            SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
-        }
-        if (DEBUG_SHOW_SPEED) {
-            std::ostringstream speed;
-            speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
-            SDL_RenderDebugText(MAIN_REN, 5, 20, speed.str().c_str());
-        }
+    // render debug information   // TODO: change to actual text, not SDL debug text
+    SDL_SetRenderDrawColor(MAIN_REN, 255, 255, 255, 255);  // set coulor to white
+    if (DEBUG_SHOW_COORDS) {
+        std::ostringstream coords;
+        coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
+        SDL_RenderDebugText(MAIN_REN, 5, 5, coords.str().c_str());
+    }
+    if (DEBUG_SHOW_SPEED) {
+        std::ostringstream speed;
+        speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
+        SDL_RenderDebugText(MAIN_REN, 5, 20, speed.str().c_str());
     }
     return true;
 }

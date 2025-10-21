@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "locations.h"
+#include "main.h"
 
 struct TextureData {
     std::string texture_name;
@@ -57,7 +58,7 @@ class TextureManager {
                 std::string picture_path_full = TEXTURE_DIR + picture_path;
                 SDL_Texture* texture = IMG_LoadTexture(renderer, picture_path_full.c_str());
                 if (!texture) {
-                    printf("[load_texture] Failed to load texture: %s\n", SDL_GetError());
+                    LOGGER.log(LogLevel::WARNING, "[render_data.h:load_texture] Failed to load texture: %s", SDL_GetError());
                     return 1;
                 } else {
                     SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
@@ -77,7 +78,7 @@ class TextureManager {
             std::string picture_path_full = TEXTURE_DIR + picture_path;
             SDL_Texture* texture = IMG_LoadTexture(renderer, picture_path_full.c_str());
             if (!texture) {
-                printf("[load_texture_old] Failed to load texture: %s\n", SDL_GetError());
+                LOGGER.log(LogLevel::WARNING, "[render_data.h:load_texture_old] Failed to load texture: %s", SDL_GetError());
                 return missing_texture;
             } else {
                 SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
@@ -106,7 +107,7 @@ class TextureManager {
         void render_texture(std::string texture_name, float x_pos, float y_pos, float size) {
             int texture_index = findTextureIndex(texture_name);
             if (texture_index == 0) {
-                printf("[renderTexture] Something went wrong! Could not find Texture with name %s\n", texture_name.c_str());
+                LOGGER.log(LogLevel::WARNING,"[render_data.h:render_texture] Could not find Texture with name '%s'", texture_name.c_str());
             }
             TextureData data = textures[texture_index];
             if (data.texture) {

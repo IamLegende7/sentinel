@@ -14,12 +14,12 @@ struct Version {
     }
 };
 
-inline const std::string INFO_NAMESPACE = "sentinel";
-inline const std::string INFO_DOMAIN = "de.thealloy.sentinel";
-inline const std::string INFO_URL = "https://github.com/IamLegende7/sentinel";
-inline const std::string INFO_NAME = "The Sentinel: Rampage";
-inline const std::string INFO_AUTHOR = "Legende_7";
-inline const std::string INFO_COPYRIGHT = "(c) Legende_7 2025";
-inline const Version INFO_VERSION = {0, 0, 0, "01 - ALPHA"};
+const std::string INFO_NAMESPACE = "sentinel";
+const std::string INFO_DOMAIN = "de.thealloy.sentinel";
+const std::string INFO_URL = "https://github.com/IamLegende7/sentinel";
+const std::string INFO_NAME = "The Sentinel";
+const std::string INFO_AUTHOR = "Legende_7";
+const std::string INFO_COPYRIGHT = "(c) Legende_7 2025";
+const Version INFO_VERSION = {0, 0, 0, "01 - ALPHA"};
 
 #endif

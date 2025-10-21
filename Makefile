@@ -1,7 +1,7 @@
 # Compiler and flags
 CXX = g++
 CXXFLAGS = -Iinclude -Wall -Wextra -std=c++17
-LDFLAGS = -lSDL3 -lSDL3_image
+LDFLAGS = -Wl,-rpath=$(shell pwd)/lib/SDL3 -Wl,-rpath=$(shell pwd)/lib/SDL3_image -lSDL3 -lSDL3_image
 
 # Directories
 SRC_DIR = src
@@ -42,6 +42,6 @@ clean:
 	rm -rf $(OBJ_DIR)/*.o $(TARGET)
 
 run: $(TARGET)
-	./$(TARGET)
+	clear && ./$(TARGET)
 
-.PHONY: all clean run new
+.PHONY: all clean run

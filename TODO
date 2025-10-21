@@ -1,4 +1,7 @@
 TODO: keyboard keybinds  --> list of SDL_Keycode
+
+TODO: add log handeling logic (getting rid of unused logs)
+
 TODO: fix rendering of hitboxes
 TODO: add multi layer maps
 TODO: add walls
@@ -17,11 +20,9 @@ TODO: Add build.bat
 TODO: update git wiki
 TODO: add .documentation to wiki
 TODO: better documentation in-code (see inputs.cpp, ~ line 15)
-TODO: change ids from string to int pointing to string
+TODO: change ids (Like Tile IDs or something) from string to int pointing to string
 
 TODO: translation framework (multilang framework)
-
-TODO: logging
 
 TODO: ui & mapselector
 TODO: make player not spawn as a new unit, but choose a unit to control

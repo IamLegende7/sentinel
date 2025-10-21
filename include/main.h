@@ -3,28 +3,42 @@
 
 #include <string>
 
-// this is where most functions are included
+#include "helper_utils.h"
+
+/* this is where most functions are included
+
+*/
 
 int setup();
-// rendering
+
+// Rendering //
 void cleanup(SDL_Renderer* renderer, SDL_Window* window);
-// movement & input
+
+// Movement & Input //
 void inputs_player(const SDL_Event& e);
 void move_player();
-//int controls_keyboard(const SDL_Event& e);
 
+/*
+    SOME VARS BELOW
+*/
+
+// Logging //
+inline FileLogger LOGGER;
+
+// Renderring //
 inline int DEFAULT_SIZE_TILE = 100;
 
+// Time & Frames //
 const int TARGET_FPS = 60;
 const float TIME_STEP = 1.0f / TARGET_FPS;
 
+// Renderers & Windows //
 inline SDL_Window* MAIN_WIN = nullptr;
 inline SDL_Renderer* MAIN_REN = nullptr;
 // inline SDL_Renderer* background_ren = nullptr;  // the render for making the map texture
 
 // 0: main menu; 1: in game, out of combat; 2: in "combat", in the map; 3: pause menu
 inline int MODE = 2;  // TODO: when main menu is added: change to 0
-inline bool DEBUG = true;
 
 inline int SCREEN_WIDTH = 640;
 inline int SCREEN_HEIGHT = 480;

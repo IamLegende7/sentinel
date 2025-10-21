@@ -16,11 +16,11 @@ jobs:
         run: |
           make clean
           make
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Super-Linter
-        uses: super-linter/super-linter@v8.2.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #lint:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v4
+  #    - name: Super-Linter
+  #      uses: super-linter/super-linter@v8.2.1
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

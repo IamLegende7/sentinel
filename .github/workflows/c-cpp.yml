@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      run: make clean, make
+      run: make
   lint:
     runs-on: ubuntu-latest
     steps:

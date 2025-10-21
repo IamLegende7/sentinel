@@ -41,7 +41,7 @@ std::string strip_comments(const std::string& input) {
 nlohmann::json get_json(std::string path_json_file) {
     std::ifstream json_file(path_json_file);
     if (!json_file.is_open()) {
-        LOGGER.log(LogLevel::ERROR, "Failed to open json file: %s", path_json_file)
+        LOGGER.log(LogLevel::ERROR, "Failed to open json file: %s", path_json_file);
         return nlohmann::json{};
     }
 

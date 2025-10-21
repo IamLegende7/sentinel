@@ -159,7 +159,6 @@ bool make_background_texture(SDL_Renderer* renderer, int player_x, int player_y)
 }
 
 bool render_combat_inital(std::string map_name) {
-    background_ren = SDL_CreateRenderer(MAIN_WIN, NULL);
     main_map.pass_renderer(MAIN_REN);
     main_map.load_map(map_name);
     return true;

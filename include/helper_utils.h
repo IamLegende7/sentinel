@@ -72,7 +72,6 @@ class FileLogger {
             if (logFile.is_open()) {
                 logFile << prefix << ": " << message << std::endl;
             }
-            //SDL_Log("%s%s\033[0m", colorCode.c_str(), prefix.c_str(), message.c_str());
             std::string fullLog = colorCode + prefix + "\033[0m" + ": " + message;
             SDL_Log("%s", fullLog.c_str());
         }
@@ -80,7 +79,7 @@ class FileLogger {
         bool set_logfile(const std::string& filename) {
             logFile.open(filename, std::ios::out | std::ios::app);
             if (!logFile.is_open()) {
-                //SDL_LogError("\033[0m", "ERROR: Could not open log file: %s", filename.c_str());
+                SDL_Log("\033[31mERROR\033[0m: Could not open log file: %s", filename.c_str());
                 return false;
             }
             return true;

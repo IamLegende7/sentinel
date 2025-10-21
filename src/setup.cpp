@@ -16,10 +16,10 @@ int setup() {
     SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_TYPE_STRING, "game");
 
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-        printf("[setup.cpp:setup] SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        printf("\033[41;37mCRITICAL\033[0m: [setup.cpp:setup] SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
     } else {
-        SDL_Log("SDL initialized successfully.");
+        SDL_Log("INFO: SDL initialized successfully.");
     }
     LOGGER.set_logfile(PATH_LOG_FILE); // Logger function has its own error handeling
 

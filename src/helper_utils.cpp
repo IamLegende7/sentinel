@@ -6,6 +6,7 @@
 
 #include "helper_utils.h"
 #include "main.h"
+#include "logger.hpp"
 
 
 std::string replace_substring(const std::string& original, const std::string& toReplace, const std::string& replaceWith) {

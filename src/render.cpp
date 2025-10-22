@@ -15,6 +15,8 @@
 #include "helper_utils.h"
 #include "debug.h"
 
+#include "render_agent.hpp"
+
 class Map {
     public:
         // Passes the renderer to ```TextureManager.set_renderer()```. Is required once before doing anything else with the ```TextureManager```
@@ -43,7 +45,7 @@ class Map {
             std::string filename = mapname + ".jsonc";
             nlohmann::json json_data = get_json(MAP_DIR + "/" + filename);
             if ( json_data.is_null() ) {
-                // Error handeling here
+                // Error handelling here
             }
             nlohmann::json json_map_data = json_data["tiles"];
             map_data.clear();
@@ -129,10 +131,9 @@ class Map {
             // Clean up
         }
     private:
-        TextureManager map_textures_manager;
+        TextureAgent map_textures_manager; // TODO: update renderMap
         Tile invalid = {INFO_NAMESPACE + "INVALID", "background/not_found.png", DEFAULT_SIZE_TILE, {}};
         std::vector<std::vector<Tile>> map_data;
-
 };
 
 /*

@@ -2,6 +2,7 @@
 #include <SDL3_image/SDL_image.h>
 
 #include "main.h"
+#include "logger.hpp"
 #include "locations.h"
 #include "info.h"
 #include "debug.h"

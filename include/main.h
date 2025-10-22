@@ -22,9 +22,6 @@ void move_player();
     SOME VARS BELOW
 */
 
-// Logging //
-inline FileLogger LOGGER;
-
 // Renderring //
 inline int DEFAULT_SIZE_TILE = 100;
 

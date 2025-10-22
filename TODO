@@ -1,6 +1,6 @@
 TODO: keyboard keybinds  --> list of SDL_Keycode
 
-TODO: add log handeling logic (getting rid of unused logs)
+TODO: add logfile handeling logic (getting rid of unused logs)
 
 TODO: fix rendering of hitboxes
 TODO: add multi layer maps

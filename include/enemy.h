@@ -4,7 +4,6 @@
 #include <cmath>
 
 #include "helper_utils.h"
-#include "render_map.h"
 
 struct Effect {
     std::string id;
@@ -156,7 +155,6 @@ class Unit {
                 else                  { y += ceil(speed_y / sqrt(2)) * directional_modifier_y; }    // diagonal = true
                 if (direction.y == 0) { x += ceil(speed_x) * directional_modifier_x; }
                 else                  { x += ceil(speed_x / sqrt(2)) * directional_modifier_x; }
-                NEED_MAP_UPDATE = true;
             }
         }
 };

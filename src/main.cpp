@@ -4,7 +4,7 @@
 #include "main.h"
 #include "enemy.h"
 #include "player_info.h"
-#include "render_map.h"
+#include "render_map.hpp"
 
 int main(int argc, char *argv[]) {
     if ( !setup() ) {

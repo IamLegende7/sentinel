@@ -5,7 +5,9 @@
 #include <nlohmann/json.hpp>
 #include <SDL3/SDL.h>
 
+// String ops //
 std::string replace_substring(const std::string& original, const std::string& toReplace, const std::string& replaceWith);
+std::vector<std::string> split(const std::string& str, char delimiter);
 
 // File Ops //
 std::string strip_comments(const std::string& input);

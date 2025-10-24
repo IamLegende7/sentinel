@@ -1,4 +1,4 @@
-{  // $vanilla$ will be replaced by INFO_NAMESPACE from info.h
-    "$vanilla$:dirt": "/tiles/dirt.png",
-    "$vanilla$:concrete": "/tiles/concrete.png"
+{
+    "sentinel:dirt": "/tiles/dirt.png",
+    "sentinel:concrete": "/tiles/concrete.png"
 }

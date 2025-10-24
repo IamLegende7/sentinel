@@ -11,7 +11,7 @@ BIN_DIR = bin
 LIB_DIR = lib
 
 # Source files and object files
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+SRC_FILES = $(shell find $(SRC_DIR) -name '*.cpp')
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 
 INCLUDES = $(shell find $(INC_DIR) -type d)
@@ -34,7 +34,7 @@ $(TARGET): $(OBJ_FILES)
 
 # Compile source files into object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean up build files

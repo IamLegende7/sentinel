@@ -111,7 +111,7 @@ class TextureAgent {
           /*
              Returns the amount of textures in ```agent_textures```
           */
-          size_t get_texture_count() const {
+          size_t get_texture_count() {
                return agent_textures.size();
           }
 

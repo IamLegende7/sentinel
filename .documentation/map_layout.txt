@@ -1,5 +1,5 @@
 layout:
-    - tilestruct = {id, texture, size}   texture and size not needed, it will use texture from resources/textures/defaults/texture_tile_defaults.json and uses the default size.
+    - tilestruct = {id, texture, size, metadata}   texture and size not needed, it will use texture from resources/textures/defaults/texture_tile_defaults.json and uses the default size.
         - default size = 100
     - list_x = [tilestruct]
     - list_y = [list_x, list_x, ...]

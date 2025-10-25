@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 
 #include "debug.h"
-#include "locations.h"
+#include "locations.hpp"
 #include "info.h"
 #include "player_info.h"
 #include "helper_utils.h"

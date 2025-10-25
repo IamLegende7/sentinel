@@ -1,5 +1,6 @@
 #include "render_map.hpp"
 #include <iostream>
+#include <random>
 
 /* This class handels renderring of the maps
    Use one instance for each map
@@ -12,7 +13,7 @@
 
 Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_texture_agent = new TextureAgent(renderer);
-    map_texture_agent->load_texture(PATH_MISSING_TEXTURE_TILE.c_str(), "missing");
+    map_texture_agent->load_texture(PATH_MISSING_TEXTURE_TILE.c_str(), PATH_MISSING_TEXTURE_TILE);
     // LOAD MAP //
     LOGGER.log(LogLevel::DEBUG, "NOW LOADING THE MAP %s!", map_name.c_str());
     // TODO: remove + ".jsonc" vvv
@@ -28,53 +29,71 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
         // GET TILES IN ROW //
         for (const auto& tile : row) {
             Tile new_tile;
+            try {
+                // GET ID //
+                new_tile.id = tile["id"].get<std::string>();
 
-            // GET ID //
-            new_tile.id = tile["id"].get<std::string>();
-
-            // GET PATH //
-            if (tile.contains("texture")) {
-                // Use the given texture path //
-                new_tile.path = tile["texture"].get<std::string>();
-            } else {
-                // Get tile path from texture_tile_defaults.json //
-
-                // first partial
-                std::string tile_path_prefix = "";
-                std::string tile_namespace = split(new_tile.id, ':')[0];
-                nlohmann::json json_namespaces = get_json(PATH_NAMESPACES);
-                if (json_namespaces.contains(tile_namespace)) {
-                    tile_path_prefix = json_namespaces[tile_namespace].get<std::string>();
-                    tile_path_prefix = replace_substring(tile_path_prefix, "$textures$", TEXTURE_DIR);
-                    tile_path_prefix = replace_substring(tile_path_prefix, "$resources$", RESOURCE_DIR);
+                // GET PATH //
+                if (tile.contains("texture")) {
+                    // Use the given texture path //
+                    new_tile.path = tile["texture"].get<std::string>();
                 } else {
-                    LOGGER.log(LogLevel::WARNING, "[render/render_map.cpp:Map] Failed to load tile: Could not find namespace '%s' in '%s'", tile_namespace, PATH_NAMESPACES);
+                    // Get tile path from texture_tile_defaults.json //
+
+                    // first partial
+                    std::string tile_path_prefix = "";
+                    std::string tile_namespace = split(new_tile.id, ':')[0];
+                    nlohmann::json json_namespaces = get_json(PATH_NAMESPACES);
+                    if (json_namespaces.contains(tile_namespace)) {
+                        tile_path_prefix = json_namespaces[tile_namespace].get<std::string>();
+                        tile_path_prefix = replace_substring(tile_path_prefix, "$textures$", TEXTURE_DIR);
+                        tile_path_prefix = replace_substring(tile_path_prefix, "$resources$", RESOURCE_DIR);
+                    } else {
+                        LOGGER.log(LogLevel::WARNING, "[render/render_map.cpp:Map] Failed to load tile: Could not find namespace '%s' in '%s'", tile_namespace, PATH_NAMESPACES);
+                    }
+
+                    // last partial
+                    nlohmann::json json_tile_defaults = get_json(PATH_DEFAULT_TEXTURE_TILES);
+
+                    std::string tile_path = PATH_MISSING_TEXTURE_TILE;
+                    std::vector<std::string> tile_path_end_vector = json_tile_defaults[new_tile.id].get<std::vector<std::string>>();
+                    if (!tile_path_end_vector.empty()) {
+                        std::random_device rd;
+                        std::mt19937 gen(rd()); // Seed with a real random value, if available
+                        std::uniform_int_distribution<> dis(0, tile_path_end_vector.size() - 1);
+                        int random_index = dis(gen);
+
+                        tile_path = tile_path_prefix + tile_path_end_vector[random_index];
+                    } else {
+                        LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
+                    }
+
+                    // give out
+                    new_tile.path = tile_path;
                 }
 
-                // last partial
-                nlohmann::json json_tile_defaults = get_json(PATH_DEFAULT_TEXTURE_TILES);
-                std::string tile_path_end = json_tile_defaults[new_tile.id].get<std::string>();
+                // GET SIZE //
+                if (tile.contains("size")) {
+                    new_tile.size = tile["size"].get<int>();
+                } else { 
+                    new_tile.size = DEFAULT_SIZE_TILE;
+                }
 
-                // full
-                std::string tile_path = tile_path_prefix + tile_path_end;
-                new_tile.path = tile_path;
-            }
+                // GET MATADATA //
+                if (tile.contains("metadata")) {
+                    new_tile.metadata = get_tile_metadata(tile["metadata"]);
+                }
 
-            // GET SIZE //
-            if (tile.contains("size")) {
-                new_tile.size = tile["size"].get<int>();
-            } else { 
-                new_tile.size = DEFAULT_SIZE_TILE;
-            }
-
-            // GET MATADATA //
-            if (tile.contains("metadata")) {
-                new_tile.metadata = get_tile_metadata(tile["metadata"]);
-            }
-
-            // ADD TO TEXTURE AGENT //
-            if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.id) == 1) {
-                LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
+                // ADD TO TEXTURE AGENT //
+                if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.path) == 1) {
+                    LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
+                }
+            
+            } catch (...) {
+                LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Uncaught exception loading a Tile. Using 'missing' tile");
+                new_tile.id     =     "sentinel:missing";
+                new_tile.path   =     PATH_MISSING_TEXTURE_TILE;
+                new_tile.size   =     DEFAULT_SIZE_TILE;
             }
 
             // PUSH BACK //
@@ -132,7 +151,7 @@ void Map::render_map(int camera_x, int camera_y) {
                         continue;
                     }
                     int final_x = (x_tile * (DEFAULT_SIZE_TILE * ZOOM)) - camera_x;
-                    map_texture_agent->render_texture(tile_data.id, final_x, final_y, DEFAULT_SIZE_TILE * ZOOM);
+                    map_texture_agent->render_texture(tile_data.path, final_x, final_y, DEFAULT_SIZE_TILE * ZOOM);
                     x_tile++;
                 }
             y_tile++;

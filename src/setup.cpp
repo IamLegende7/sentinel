@@ -3,7 +3,7 @@
 
 #include "main.h"
 #include "logger.hpp"
-#include "locations.h"
+#include "locations.hpp"
 #include "info.h"
 #include "debug.h"
 

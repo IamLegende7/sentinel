@@ -22,4 +22,4 @@ elif [ "$DISTRO" = "arch" ]; then
 fi
 
 # Build
-make clean all
+make clean && make

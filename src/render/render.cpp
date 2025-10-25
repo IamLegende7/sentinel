@@ -8,7 +8,7 @@
 
 #include "main.h"
 #include "player_info.h"
-#include "locations.h"
+#include "locations.hpp"
 #include "info.h"
 #include "debug.h"
 

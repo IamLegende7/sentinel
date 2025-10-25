@@ -16,8 +16,7 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_texture_agent->load_texture(PATH_MISSING_TEXTURE_TILE.c_str(), PATH_MISSING_TEXTURE_TILE);
     // LOAD MAP //
     LOGGER.log(LogLevel::DEBUG, "NOW LOADING THE MAP %s!", map_name.c_str());
-    // TODO: remove + ".jsonc" vvv
-    nlohmann::json json_map_data = get_json(MAP_DIR + "/" + map_name + ".jsonc"); // no worry about errors; handling in ```get_json```
+    nlohmann::json json_map_data = get_json(MAP_DIR + "/" + map_name); // no worry about errors; handling in ```get_json```
     nlohmann::json json_settings = json_map_data["settings"];
     nlohmann::json json_tile_data = json_map_data["tiles"];
     map_tiles.clear();

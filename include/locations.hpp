@@ -17,6 +17,7 @@ const std::string MAP_DIR =                         RESOURCE_DIR + "/maps";
 // TEXTURES //
 const std::string TEXTURE_DIR =                     RESOURCE_DIR + "/textures";
 const std::string PATH_DEFAULT_TEXTURE_TILES =      TEXTURE_DIR  + "/defaults/texture_tile_defaults.jsonc";
+const std::string PATH_DEFAULTS_TILES =             RESOURCE_DIR + "/registry/default.jsonc";
 const std::string PATH_MISSING_TEXTURE_TILE =       TEXTURE_DIR  + "/tiles/missing.png";
 
 // LOGGING //

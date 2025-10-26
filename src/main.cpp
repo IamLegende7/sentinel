@@ -11,10 +11,13 @@ int main(int argc, char *argv[]) {
         float accumulator = 0.0f;
         Uint64 previous = SDL_GetTicks();
 
+        // Smaller vars //
+        bool reload_pressed = false;
+
         // move to a ```start_combat``` function or something
         //render_combat_inital("campain/debug");
-        CombatLoop combat("debug/debug2.jsonc", MAIN_REN);
-        PLAYER = init_player_unit(0, 0);
+        CombatLoop combat("debug/debug1.jsonc", MAIN_REN);
+        PLAYER = init_player_unit(DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.x, DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.y);
 
         // main game loop
         bool quit;
@@ -38,6 +41,16 @@ int main(int argc, char *argv[]) {
                         }
                     }
                     if (MODE == 2) {
+                        if ((e.key.scancode == SDL_SCANCODE_R) and DEBUG_CAN_RELOAD) { // TODO: this is just a quick-and-dirty fix for now
+                            if ((e.type == SDL_EVENT_KEY_DOWN) and not reload_pressed) {
+                                reload_pressed = true;
+                                LOGGER.log(LogLevel::INFO, "Reloading the Map...");
+                                CombatLoop combat("debug/debug1.jsonc", MAIN_REN);
+                                PLAYER = init_player_unit(DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.x, DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.y);
+                            } else if (e.type == SDL_EVENT_KEY_UP) {
+                                reload_pressed = false;
+                            }
+                        }
                         inputs_player(e);
                     }
                 }

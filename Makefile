@@ -42,6 +42,7 @@ clean:
 	rm -rf $(OBJ_DIR)/*.o $(TARGET)
 
 run: $(TARGET)
+	read
 	clear && ./$(TARGET)
 
 .PHONY: all clean run

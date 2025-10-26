@@ -154,14 +154,14 @@ int TextureAgent::load_texture(const char* texture_path, std::string name) {
 // RENDERING TEXTURES //
 ////////////////////////
 
-void TextureAgent::render_texture(std::string texture_name, float x_pos, float y_pos, float size) {
+void TextureAgent::render_texture(std::string texture_name, float x_pos, float y_pos, float size, int rotation) {
     int texture_index = get_index(texture_name);
     if (texture_index == -1) {
         LOGGER.log(LogLevel::WARNING,"[texture_agent.cpp:render_texture] Could not find Texture with name '%s'", texture_name.c_str());
     }
     AgentTextureData data = agent_textures[texture_index];
     if (data.texture) {
-        SDL_FRect dst = { x_pos, y_pos, size, size };
-        SDL_RenderTexture(renderer, data.texture, NULL, &dst);
+        SDL_FRect destination_rect = { x_pos, y_pos, size, size };
+        SDL_RenderTextureRotated(renderer, data.texture, NULL, &destination_rect, rotation, NULL, SDL_FLIP_NONE);
     }
 }

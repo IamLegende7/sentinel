@@ -14,10 +14,19 @@
 Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_texture_agent = new TextureAgent(renderer);
     map_texture_agent->load_texture(PATH_MISSING_TEXTURE_TILE.c_str(), PATH_MISSING_TEXTURE_TILE);
-    // LOAD MAP //
+    //// LOAD MAP ////
     LOGGER.log(LogLevel::DEBUG, "NOW LOADING THE MAP %s!", map_name.c_str());
     nlohmann::json json_map_data = get_json(MAP_DIR + "/" + map_name); // no worry about errors; handling in ```get_json```
+
+    // SETTINGS //
     nlohmann::json json_settings = json_map_data["settings"];
+    if (json_settings.contains("starting_pos")) {
+        settings.starting_pos.x = json_settings["starting_pos"][0].get<int>();
+        settings.starting_pos.y = json_settings["starting_pos"][1].get<int>();
+    }
+    LOGGER.log(LogLevel::DEBUG, "Starting X: %d, Y: %d", settings.starting_pos.x, settings.starting_pos.y);
+
+    // TILES //
     nlohmann::json json_tile_data = json_map_data["tiles"];
     map_tiles.clear();
 
@@ -59,15 +68,19 @@ Map::~Map() {
 Tile Map::load_tile(nlohmann::json tile) {
     Tile new_tile;
     try {
+
         // GET ID //
         new_tile.id = tile["id"].get<std::string>();
+
+
+        nlohmann::json json_tile_defaults = get_json(PATH_DEFAULTS_TILES)["data"][new_tile.id];
 
         // GET PATH //
         if (tile.contains("texture")) {
             // Use the given texture path //
             new_tile.path = tile["texture"].get<std::string>();
         } else {
-            // Get tile path from texture_tile_defaults.json //
+            // Get tile path from tile_defaults.json //
 
             // first partial
             std::string tile_path_prefix = "";
@@ -82,20 +95,25 @@ Tile Map::load_tile(nlohmann::json tile) {
             }
 
             // last partial
-            nlohmann::json json_tile_defaults = get_json(PATH_DEFAULT_TEXTURE_TILES);
-
             std::string tile_path = PATH_MISSING_TEXTURE_TILE;
-            std::vector<std::string> tile_path_end_vector = json_tile_defaults[new_tile.id].get<std::vector<std::string>>();
-            if (!tile_path_end_vector.empty()) {
-                std::random_device rd;
-                std::mt19937 gen(rd()); // Seed with a real random value, if available
-                std::uniform_int_distribution<> dis(0, tile_path_end_vector.size() - 1);
-                int random_index = dis(gen);
+            if (json_tile_defaults["texture"].is_string()) {
+                std::string tile_texture = json_tile_defaults["texture"].get<std::string>();
+                tile_path = tile_path_prefix + tile_texture;
 
-                tile_path = tile_path_prefix + tile_path_end_vector[random_index];
-            } else {
-                LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
+            } else if (json_tile_defaults["texture"].is_array()) {
+                std::vector<std::string> tile_path_end_vector = json_tile_defaults["texture"].get<std::vector<std::string>>();
+                if (!tile_path_end_vector.empty()) {
+                    std::random_device rd;
+                    std::mt19937 gen(rd()); // Seed with a real random value, if available
+                    std::uniform_int_distribution<> dis(0, tile_path_end_vector.size() - 1);
+                    int random_index = dis(gen);
+                    tile_path = tile_path_prefix + tile_path_end_vector[random_index];
+
+                } else {
+                    LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
+                }
             }
+            //LOGGER.log(LogLevel::DEBUG, "Tile path: %s", tile_path.c_str());
 
             // give out
             new_tile.path = tile_path;
@@ -104,13 +122,24 @@ Tile Map::load_tile(nlohmann::json tile) {
         // GET SIZE //
         if (tile.contains("size")) {
             new_tile.size = tile["size"].get<int>();
+        } else if (json_tile_defaults.contains("size")) {
+            new_tile.size = json_tile_defaults["size"].get<int>();
         } else { 
             new_tile.size = DEFAULT_SIZE_TILE;
+        }
+
+        // GET ROTATION //
+        if (tile.contains("rotation")) {
+            new_tile.rotation = 90 * tile["rotation"].get<int>();
+        } else if (json_tile_defaults.contains("rotation")) {
+            new_tile.rotation = 90 * json_tile_defaults["rotation"].get<int>();
         }
 
         // GET MATADATA //
         if (tile.contains("metadata")) {
             new_tile.metadata = get_tile_metadata(tile["metadata"]);
+        } else if (json_tile_defaults.contains("metadata")) {
+            new_tile.metadata = get_tile_metadata(json_tile_defaults["metadata"]);
         }
 
         // ADD TO TEXTURE AGENT //
@@ -164,7 +193,7 @@ void Map::render_map(int camera_x, int camera_y) {
                     }
                     for (Tile& tile : tile_list) {
                         int final_x = (x_tile * (tile.size * ZOOM)) - camera_x;
-                        map_texture_agent->render_texture(tile.path, final_x, final_y, DEFAULT_SIZE_TILE * ZOOM);
+                        map_texture_agent->render_texture(tile.path, final_x, final_y, tile.size * ZOOM, tile.rotation);
                     }
                     x_tile++;
                 }

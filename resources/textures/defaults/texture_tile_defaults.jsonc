@@ -1,6 +1,0 @@
-{
-    "sentinel:missing":         ["/tiles/missing.png"], // Don't know why you would want this, but just in case..
-    "sentinel:dirt":            ["/tiles/dirt.png"],
-    "sentinel:concrete":        ["/tiles/concrete.png"],
-    "sentinel:wall":            ["/tiles/wall.png"]
-}

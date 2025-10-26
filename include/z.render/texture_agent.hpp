@@ -46,7 +46,7 @@ class TextureAgent {
         int load_texture(const char* texture_path, std::string name = "none");;
 
         // Renderering textures //
-        void render_texture(std::string texture_name, float x_pos, float y_pos, float size);
+        void render_texture(std::string texture_name, float x_pos, float y_pos, float size, int rotation = 0);
 };
 
 #endif

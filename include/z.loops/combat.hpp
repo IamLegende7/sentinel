@@ -17,16 +17,19 @@
 #include "debug.h"
 #include "texture_agent.hpp"
 #include "render_map.hpp"
+#include "helper_utils.h"
 
 class CombatLoop {
     private:
-        Map* main_map;                                       // the main map class handeling tiles
         SDL_Texture* background_texture;                    // the background (the main map) as a single texture
         SDL_Renderer* background_ren = nullptr;
         int old_x = 0;
         int old_y = 0;
         SDL_Renderer* combat_renderer;
     public:
+        // Vars //
+        Map* main_map;                                      // the main map class handeling tiles
+        std::vector<Hitbox> moveboxes;                      // handles all movement hitboxes in the game
         // Init and cleanup //
         CombatLoop(std::string map_name, SDL_Renderer* renderer);
         ~CombatLoop();

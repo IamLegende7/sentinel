@@ -16,7 +16,9 @@ bool render_combat_inital(std::string map_name);
 bool render_combat(SDL_Renderer* renderer, int player_x, int player_y);
 
 struct TileMetadata {
-    // TODO: add matadata here
+    Hitbox move_box;
+    Hitbox hit_box;
+    
     std::string debug_out() {
         std::string metadata_str = "{}";
         return metadata_str;
@@ -27,6 +29,7 @@ struct Tile {
     std::string id;
     std::string path;
     int size;
+    int rotation = 0;
     TileMetadata metadata;
 
     std::string debug_out() const {
@@ -34,11 +37,17 @@ struct Tile {
     }
 };
 
+struct MapSettings {
+    XY starting_pos = {0, 0};
+};
+
 class Map {
     private:
         TextureAgent* map_texture_agent;
         std::vector<std::vector<std::vector<Tile>>> map_tiles;
     public:
+        // Vars //
+        MapSettings settings;
         // Init and cleanup //
         Map(const std::string& map_name, SDL_Renderer* renderer);
         ~Map();

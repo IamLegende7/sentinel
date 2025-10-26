@@ -29,6 +29,8 @@ bool CombatLoop::tick(int camera_x, int camera_y) {
     // background (a.k.a the map)
     SDL_SetRenderDrawColor(combat_renderer, 0, 0, 0, 255);
     SDL_FRect full_window_rect = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
+
+    // UPDATE MAP //
     if ((old_x != camera_x) or (old_y != camera_y) or NEED_MAP_UPDATE) {
         make_background_texture(combat_renderer, camera_x - (SCREEN_WIDTH / 2) + 50, camera_y - (SCREEN_HEIGHT / 2) + 50);
         NEED_MAP_UPDATE = false;

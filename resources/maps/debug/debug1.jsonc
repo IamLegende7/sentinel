@@ -1,28 +1,27 @@
 {
-"spawn": [0, 0],
-"settings": [
-
-            ],
+"settings": {
+                "starting_pos": [0, 5]
+            },
 "tiles": [
             [
-                [{"id": "sentinel:concrete"}, {"id": "sentinel:wall"}],
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"},
-                {"id": "sentinel:concrete"}
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}]
             ],
             [
                 {"id": "sentinel:dirt"},
@@ -203,6 +202,26 @@
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"}
+            ],
+            [
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}]
             ]
         ]
 }

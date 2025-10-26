@@ -5,6 +5,26 @@
             ],
 "tiles": [
             [
+                [{"id": "sentinel:concrete"}, {"id": "sentinel:wall"}],
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"},
+                {"id": "sentinel:concrete"}
+            ],
+            [
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"},

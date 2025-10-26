@@ -16,7 +16,7 @@ bool render_combat_inital(std::string map_name);
 bool render_combat(SDL_Renderer* renderer, int player_x, int player_y);
 
 struct TileMetadata {
-    // TODO: add something here
+    // TODO: add matadata here
     std::string debug_out() {
         std::string metadata_str = "{}";
         return metadata_str;
@@ -37,13 +37,14 @@ struct Tile {
 class Map {
     private:
         TextureAgent* map_texture_agent;
-        std::vector<std::vector<Tile>> map_tiles;
+        std::vector<std::vector<std::vector<Tile>>> map_tiles;
     public:
         // Init and cleanup //
         Map(const std::string& map_name, SDL_Renderer* renderer);
         ~Map();
 
         // Helper functions //
+        Tile load_tile(nlohmann::json tile);
         TileMetadata get_tile_metadata(nlohmann::json metadata_json);
 
         // Render Map //

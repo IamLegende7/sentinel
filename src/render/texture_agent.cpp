@@ -138,7 +138,7 @@ int TextureAgent::load_texture(const char* texture_path, std::string name) {
         }
     }
     // Load Texture //
-    std::string texture_path_full = /*TEXTURE_DIR +*/ texture_path; // TODO: get rid of this; this isn' the job of the texture agent!
+    std::string texture_path_full = texture_path;
     SDL_Texture* texture = IMG_LoadTexture(renderer, texture_path_full.c_str());
     if (!texture) {
         LOGGER.log(LogLevel::WARNING, "[texture_agent.cpp:load_texture] Failed to load texture: %s", SDL_GetError());

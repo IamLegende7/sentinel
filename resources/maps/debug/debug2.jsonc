@@ -1,0 +1,11 @@
+{
+"spawn": [0, 0],
+"settings": [
+
+            ],
+"tiles": [
+            [
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wall"}]
+            ]
+        ]
+}

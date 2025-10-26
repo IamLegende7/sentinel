@@ -13,12 +13,18 @@ struct Effect {
 
 struct Hitbox {
     int type; // 0: none; 1: collides with walls & stuff; 2: takes damage from attacks
-    int x, y;
+    int x, y; // Stuck to the units x & y coords
     int x_offset, y_offset;
     int width, height;
 
 bool colliding(const Hitbox& B) {
-    return !(x + width < B.x || x > B.x + B.width || y + height < B.y || y > B.y + B.height);
+    int A_full_x = x + x_offset;
+    int A_full_y = y + y_offset;
+    int B_full_x = B.x + B.x_offset;
+    int B_full_y = B.y + B.y_offset;
+    return !(A_full_x + width < B_full_x  || A_full_x > B_full_x + B.width || 
+             A_full_y + height < B_full_y || A_full_y > B_full_y + B.height
+            );
 }
 };
 
@@ -32,10 +38,10 @@ class Unit {
         int hp_max = 1;
         int hp = 1;
 
-        Hitbox move_box = {1, 0, 0, 0, 80, 100, 20};
+        Hitbox move_box = {1, 0, 0, 0, 80, 100, 20}; // collides with walls and such
 
         // walking stuff
-        float slow_down = 1;                // how quickly the player loses speed, when slowing down // TODO: make slowing down when sprinting slower, but faster, when key in other direction
+        float slow_down = 1;                // how quickly the player loses speed, when slowing down
         bool running = false;               // true = running, false = walking
         int walk_speed_max = 10;            // maximum walk speed
         int run_speed_max = 17;             // maximum run speed

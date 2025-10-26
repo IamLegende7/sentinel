@@ -27,6 +27,7 @@ bool CombatLoop::make_background_texture(SDL_Renderer* renderer, int camera_x, i
 
 bool CombatLoop::tick(int camera_x, int camera_y) {
     // background (a.k.a the map)
+    SDL_SetRenderDrawColor(combat_renderer, 0, 0, 0, 255);
     SDL_FRect full_window_rect = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
     if ((old_x != camera_x) or (old_y != camera_y) or NEED_MAP_UPDATE) {
         make_background_texture(combat_renderer, camera_x - (SCREEN_WIDTH / 2) + 50, camera_y - (SCREEN_HEIGHT / 2) + 50);
@@ -36,6 +37,7 @@ bool CombatLoop::tick(int camera_x, int camera_y) {
     }
     SDL_RenderTexture(combat_renderer, background_texture, NULL, &full_window_rect);
     
+    // Debug
     if (DEBUG_SHOW_CROSSHAIR) {
         std::string picture_path_full = TEXTURE_DIR + "/crosshair_debug.png";
         SDL_Texture* crosshair_texture = IMG_LoadTexture(combat_renderer, picture_path_full.c_str());
@@ -48,7 +50,7 @@ bool CombatLoop::tick(int camera_x, int camera_y) {
         // for (Unit current_unit : UNITS) {
             // moveboxes
             SDL_SetRenderDrawColor(combat_renderer, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
-            SDL_FRect hitbox_rect = { (float)(SCREEN_WIDTH / 2) - 50, (float)(SCREEN_HEIGHT / 2) - 50, (float)PLAYER.move_box.width, (float)PLAYER.move_box.height };
+            SDL_FRect hitbox_rect = { (float)(SCREEN_WIDTH / 2) - 50 + PLAYER.move_box.x_offset, (float)(SCREEN_HEIGHT / 2) - 50 + PLAYER.move_box.y_offset, (float)PLAYER.move_box.width, (float)PLAYER.move_box.height };
             SDL_RenderRect(combat_renderer, &hitbox_rect);
     }
 

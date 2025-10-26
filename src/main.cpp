@@ -4,7 +4,6 @@
 #include "main.h"
 #include "enemy.h"
 #include "player_info.h"
-//#include "render_map.hpp"
 #include "combat.hpp"
 
 int main(int argc, char *argv[]) {
@@ -14,7 +13,7 @@ int main(int argc, char *argv[]) {
 
         // move to a ```start_combat``` function or something
         //render_combat_inital("campain/debug");
-        CombatLoop combat("campain/debug.jsonc", MAIN_REN);
+        CombatLoop combat("debug/debug2.jsonc", MAIN_REN);
         PLAYER = init_player_unit(0, 0);
 
         // main game loop
@@ -48,8 +47,7 @@ int main(int argc, char *argv[]) {
                 accumulator -= TIME_STEP;
             }
 
-            //rendering here vv
-            SDL_SetRenderDrawColor(MAIN_REN, 0, 0, 0, 255);
+            // RENDERING //
             if (MODE == 2) {
                 combat.tick(PLAYER.x, PLAYER.y);
             }

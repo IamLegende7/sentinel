@@ -35,6 +35,8 @@ int main(int argc, char *argv[]) {
                     if (e.type == SDL_EVENT_WINDOW_RESIZED) {
                         SCREEN_WIDTH = e.window.data1;
                         SCREEN_HEIGHT = e.window.data2;
+                        RENDER_OFFSET_X = (SCREEN_WIDTH / 2) - 50;
+                        RENDER_OFFSET_Y = (SCREEN_HEIGHT / 2) - 50;
                         SDL_SetRenderViewport(MAIN_REN, NULL);
                         if (MODE == 2) {
                             NEED_MAP_UPDATE = true;
@@ -62,7 +64,9 @@ int main(int argc, char *argv[]) {
 
             // RENDERING //
             if (MODE == 2) {
-                combat.tick(PLAYER.x, PLAYER.y);
+                combat.camera_x = PLAYER.x;
+                combat.camera_y = PLAYER.y;
+                combat.tick();
             }
             SDL_RenderPresent(MAIN_REN);
 

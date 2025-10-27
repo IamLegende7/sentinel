@@ -15,25 +15,29 @@ nlohmann::json get_json(std::string path_json_file);
 
 // misc //
 struct XY {
-    int y = 0;
     int x = 0;
+    int y = 0;
 };
 
-struct Hitbox {
-    int type; // 0: none; 1: collides with walls & stuff; 2: takes damage from attacks
-    int x, y; // Stuck to the units x & y coords
-    int x_offset, y_offset;
-    int width, height;
+class Hitbox {
+    private:
+    public:
+        int type; // 0: none; 1: collides with walls & stuff; 2: takes damage from attacks
+        int x, y; // Stuck to the units x & y coords
+        int x_offset, y_offset;
+        int width, height;
 
-    bool colliding(const Hitbox& B) {
-        int A_full_x = x + x_offset;
-        int A_full_y = y + y_offset;
-        int B_full_x = B.x + B.x_offset;
-        int B_full_y = B.y + B.y_offset;
-        return !(A_full_x + width < B_full_x  || A_full_x > B_full_x + B.width || 
-                A_full_y + height < B_full_y || A_full_y > B_full_y + B.height
-                );
-    }
+        bool colliding(const Hitbox& B) {
+            int A_full_x = x + x_offset;
+            int A_full_y = y + y_offset;
+            int B_full_x = B.x + B.x_offset;
+            int B_full_y = B.y + B.y_offset;
+            return !(A_full_x + width < B_full_x  || A_full_x > B_full_x + B.width || 
+                    A_full_y + height < B_full_y || A_full_y > B_full_y + B.height
+                    );
+        }
+
+        void render(SDL_Renderer* renderer, XY camera_pos = {0, 0}, bool player = false);
 };
 
 

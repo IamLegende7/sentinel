@@ -22,6 +22,9 @@ void move_player();
     SOME VARS BELOW
 */
 
+// Hiboxes //
+inline std::vector<std::vector<Hitbox>> MOVEBOXES_TILES;         // handles all movement hitboxes in the game
+
 // Renderring //
 inline int DEFAULT_SIZE_TILE = 100;
 
@@ -39,5 +42,8 @@ inline int MODE = 2;  // TODO: when main menu is added: change to 0
 
 inline int SCREEN_WIDTH = 640;
 inline int SCREEN_HEIGHT = 480;
+
+inline float RENDER_OFFSET_X = 0;
+inline float RENDER_OFFSET_Y = 0;
 
 #endif

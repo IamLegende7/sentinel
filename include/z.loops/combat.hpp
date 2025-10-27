@@ -28,17 +28,18 @@ class CombatLoop {
         SDL_Renderer* combat_renderer;
     public:
         // Vars //
+        int camera_x = 0;
+        int camera_y = 0;
         Map* main_map;                                      // the main map class handeling tiles
-        std::vector<Hitbox> moveboxes;                      // handles all movement hitboxes in the game
         // Init and cleanup //
         CombatLoop(std::string map_name, SDL_Renderer* renderer);
         ~CombatLoop();
 
         // Helper functions //
-        bool make_background_texture(SDL_Renderer* renderer, int camera_x, int camera_y);
+        bool make_background_texture(SDL_Renderer* renderer);
 
         // Main fuctions //
-        bool tick(int camera_x, int camera_y);
+        bool tick();
 };
 
 #endif

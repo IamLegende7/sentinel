@@ -2,7 +2,9 @@
 #include <vector>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <random>
 
+#include "main.h"
 #include "debug.h"
 #include "locations.hpp"
 #include "info.h"
@@ -16,8 +18,8 @@ bool render_combat_inital(std::string map_name);
 bool render_combat(SDL_Renderer* renderer, int player_x, int player_y);
 
 struct TileMetadata {
-    Hitbox move_box;
-    Hitbox hit_box;
+    std::vector<Hitbox> moveboxes;
+    std::vector<Hitbox> hitboxes;
     
     std::string debug_out() {
         std::string metadata_str = "{}";
@@ -45,6 +47,8 @@ class Map {
     private:
         TextureAgent* map_texture_agent;
         std::vector<std::vector<std::vector<Tile>>> map_tiles;
+        int current_tile_x;
+        int current_tile_y;
     public:
         // Vars //
         MapSettings settings;

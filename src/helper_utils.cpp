@@ -78,3 +78,18 @@ nlohmann::json get_json(std::string path_json_file) {
     }
     return json_data;
 }
+
+//////////////
+// HITBOXES //
+//////////////
+
+void Hitbox::render(SDL_Renderer* renderer, XY camera_pos, bool player) {
+    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
+    SDL_FRect hitbox_rect = {};
+    if (player) {
+        hitbox_rect = {(float)(RENDER_OFFSET_X + x_offset), (float)(RENDER_OFFSET_Y + y_offset), (float)width, (float)height};
+    } else {
+        hitbox_rect = {(float)(RENDER_OFFSET_X - camera_pos.x + x_offset), (float)(RENDER_OFFSET_Y - camera_pos.y + y_offset), (float)width, (float)height};
+    }
+    SDL_RenderRect(renderer, &hitbox_rect);
+}

@@ -1,6 +1,5 @@
 #include "render_map.hpp"
 #include <iostream>
-#include <random>
 
 /* This class handels renderring and loading of the maps
    Use one instance for each map!
@@ -31,10 +30,12 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_tiles.clear();
 
     // GET ALL TILES IN MAP //
+    current_tile_y = 0;
     for (const auto& row : json_tile_data) {
         std::vector<std::vector<Tile>> new_row;
 
         // GET TILES IN ROW //
+        current_tile_x = 0;
         for (const auto& tile_list : row) {
             std::vector<Tile> new_tile_list;
             if (tile_list.is_object()) {
@@ -48,10 +49,14 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
 
             // PUSH BACK //
             new_row.push_back(new_tile_list);
+
+            current_tile_x++;
         }
 
         // PUSH BACK ROW //
         map_tiles.push_back(new_row);
+
+        current_tile_y++;
     }
 
     LOGGER.log(LogLevel::DEBUG, "DONE LOADING THE MAP");
@@ -76,29 +81,14 @@ Tile Map::load_tile(nlohmann::json tile) {
         nlohmann::json json_tile_defaults = get_json(PATH_DEFAULTS_TILES)["data"][new_tile.id];
 
         // GET PATH //
+        std::string tile_path = PATH_MISSING_TEXTURE_TILE;
         if (tile.contains("texture")) {
             // Use the given texture path //
-            new_tile.path = tile["texture"].get<std::string>();
+            tile_path = tile["texture"].get<std::string>();
         } else {
             // Get tile path from tile_defaults.json //
-
-            // first partial
-            std::string tile_path_prefix = "";
-            std::string tile_namespace = split(new_tile.id, ':')[0];
-            nlohmann::json json_namespaces = get_json(PATH_NAMESPACES);
-            if (json_namespaces.contains(tile_namespace)) {
-                tile_path_prefix = json_namespaces[tile_namespace].get<std::string>();
-                tile_path_prefix = replace_substring(tile_path_prefix, "$textures$", TEXTURE_DIR);
-                tile_path_prefix = replace_substring(tile_path_prefix, "$resources$", RESOURCE_DIR);
-            } else {
-                LOGGER.log(LogLevel::WARNING, "[render/render_map.cpp:Map] Failed to load tile: Could not find namespace '%s' in '%s'", tile_namespace, PATH_NAMESPACES);
-            }
-
-            // last partial
-            std::string tile_path = PATH_MISSING_TEXTURE_TILE;
             if (json_tile_defaults["texture"].is_string()) {
-                std::string tile_texture = json_tile_defaults["texture"].get<std::string>();
-                tile_path = tile_path_prefix + tile_texture;
+                tile_path = json_tile_defaults["texture"].get<std::string>();
 
             } else if (json_tile_defaults["texture"].is_array()) {
                 std::vector<std::string> tile_path_end_vector = json_tile_defaults["texture"].get<std::vector<std::string>>();
@@ -107,17 +97,24 @@ Tile Map::load_tile(nlohmann::json tile) {
                     std::mt19937 gen(rd()); // Seed with a real random value, if available
                     std::uniform_int_distribution<> dis(0, tile_path_end_vector.size() - 1);
                     int random_index = dis(gen);
-                    tile_path = tile_path_prefix + tile_path_end_vector[random_index];
+                    tile_path = tile_path_end_vector[random_index];
 
                 } else {
                     LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
                 }
             }
-            //LOGGER.log(LogLevel::DEBUG, "Tile path: %s", tile_path.c_str());
-
-            // give out
-            new_tile.path = tile_path;
+            if (DEBUG_ALL_DEBUG_LOGS) {
+                LOGGER.log(LogLevel::DEBUG, "Tile path: %s", tile_path.c_str());
+            }
         }
+        // replace substrings //
+        tile_path = replace_substring(tile_path, "$textures$", TEXTURE_DIR);
+        tile_path = replace_substring(tile_path, "$resources$", RESOURCE_DIR);
+        tile_path = replace_substring(tile_path, "$texturepacks$", TEXTUREPACK_DIR);
+        tile_path = replace_substring(tile_path, "$data$", DATA_DIR);
+        // give out //
+        new_tile.path = tile_path;
+
 
         // GET SIZE //
         if (tile.contains("size")) {
@@ -135,11 +132,24 @@ Tile Map::load_tile(nlohmann::json tile) {
             new_tile.rotation = 90 * json_tile_defaults["rotation"].get<int>();
         }
 
-        // GET MATADATA //
+        // GET METADATA //
         if (tile.contains("metadata")) {
             new_tile.metadata = get_tile_metadata(tile["metadata"]);
         } else if (json_tile_defaults.contains("metadata")) {
             new_tile.metadata = get_tile_metadata(json_tile_defaults["metadata"]);
+        }
+
+        // ADD HITBOXES //
+        if ((tile.contains("metadata") and tile["metadata"].contains("movebox")) or (json_tile_defaults.contains("metadata") and json_tile_defaults["metadata"].contains("movebox"))) {
+            for (auto& movebox : new_tile.metadata.moveboxes) {
+                movebox.x_offset += current_tile_x * new_tile.size;
+                movebox.y_offset += current_tile_y * new_tile.size;
+
+                if (DEBUG_ALL_DEBUG_LOGS) {
+                    LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
+                }
+            }
+            MOVEBOXES_TILES.push_back(new_tile.metadata.moveboxes);
         }
 
         // ADD TO TEXTURE AGENT //
@@ -158,6 +168,35 @@ Tile Map::load_tile(nlohmann::json tile) {
 
 TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
     TileMetadata metadata;
+    if (metadata_json.contains("movebox")) {
+        for (nlohmann::json movebox_json_single : metadata_json["movebox"]) {
+            Hitbox new_movebox = {
+                movebox_json_single[0],
+                0, 0,
+                movebox_json_single[3],
+                movebox_json_single[4],
+                movebox_json_single[5],
+                movebox_json_single[6],
+            };
+            metadata.moveboxes.push_back(new_movebox);
+        }
+    }
+    if (metadata_json.contains("hitbox")) {
+        for (nlohmann::json hitbox_json_single : metadata_json["hitbox"]) {
+            Hitbox new_hitbox = {
+                hitbox_json_single[0],
+                0, 0,
+                hitbox_json_single[1],
+                hitbox_json_single[2],
+                hitbox_json_single[3],
+                hitbox_json_single[4],
+            };
+            metadata.hitboxes.push_back(new_hitbox);
+            if (DEBUG_ALL_DEBUG_LOGS) {
+                LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", new_hitbox.type, new_hitbox.x_offset, new_hitbox.y_offset, new_hitbox.width, new_hitbox.height);
+            }
+        }
+    }
     return metadata;
 }
 

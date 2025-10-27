@@ -3,12 +3,12 @@
     "description":  "The old programer art I made in like 5 seconds. This texturepack is here, just in case you want bleeding eyes",
     "data": {
         // FLOOR / FULL TILES //
-        "sentinel:missing":         {"texture": "/texturepacks/programerart/tiles/missing.png"},
-        "sentinel:dirt":            {"texture": "/texturepacks/programerart/tiles/dirt1.png"},
-        "sentinel:concrete":        {"texture": "/texturepacks/programerart/tiles/concrete.png"},
-        "sentinel:wood_floor":      {"texture": "/texturepacks/programerart/tiles/wood_floor.png"},
+        "sentinel:missing":         {"texture": "$texturepacks$/programerart/tiles/missing.png"},
+        "sentinel:dirt":            {"texture": ["$texturepacks$/programerart/tiles/dirt1.png", "$texturepacks$/programerart/tiles/dirt2.png", "$texturepacks$/programerart/tiles/dirt3.png"]},
+        "sentinel:concrete":        {"texture": "$texturepacks$/programerart/tiles/concrete.png"},
+        "sentinel:wood_floor":      {"texture": "$texturepacks$/programerart/tiles/wood_floor.png"},
         
         // WALLS //
-        "sentinel:wood_wall":       {"texture": "/texturepacks/programerart/tiles/wood_wall.png", "metadata": {"movebox": [[1, 0, 0, 0, 50, 100, 20]]}}
+        "sentinel:wood_wall":       {"texture": "$texturepacks$/programerart/tiles/wood_wall.png", "metadata": {"movebox": [[1, 0, 0, 0, 31, 100, 37]]}}
     }
 }

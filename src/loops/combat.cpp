@@ -1,8 +1,12 @@
 #include "combat.hpp"
 
 CombatLoop::CombatLoop(std::string map_name, SDL_Renderer* renderer) {
+    MOVEBOXES_TILES.clear();
     combat_renderer = renderer;
     main_map = new Map(map_name, combat_renderer);
+    if (DEBUG_ALL_DEBUG_LOGS) {
+        LOGGER.log(LogLevel::DEBUG, "Length of MOVEBOXES_TILES: %d", MOVEBOXES_TILES.size());
+    }
 }
 
 CombatLoop::~CombatLoop() {
@@ -14,25 +18,25 @@ CombatLoop::~CombatLoop() {
     ```SLD_Renderer``` for renderring the texture. Can be the main renderer.
     ```camera_x```, ```camera_y``` for the locations of wich to render
 */
-bool CombatLoop::make_background_texture(SDL_Renderer* renderer, int camera_x, int camera_y) {
+bool CombatLoop::make_background_texture(SDL_Renderer* renderer) {
     SDL_DestroyTexture(background_texture);
     background_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_SetRenderTarget(renderer, background_texture);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);   // Black background
     SDL_RenderClear(renderer);
-    main_map->render_map(camera_x, camera_y);
+    main_map->render_map(camera_x - RENDER_OFFSET_X, camera_y - RENDER_OFFSET_Y);
     SDL_SetRenderTarget(renderer, nullptr);
     return true;
 }
 
-bool CombatLoop::tick(int camera_x, int camera_y) {
+bool CombatLoop::tick() {
     // background (a.k.a the map)
     SDL_SetRenderDrawColor(combat_renderer, 0, 0, 0, 255);
     SDL_FRect full_window_rect = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
 
     // UPDATE MAP //
     if ((old_x != camera_x) or (old_y != camera_y) or NEED_MAP_UPDATE) {
-        make_background_texture(combat_renderer, camera_x - (SCREEN_WIDTH / 2) + 50, camera_y - (SCREEN_HEIGHT / 2) + 50);
+        make_background_texture(combat_renderer);
         NEED_MAP_UPDATE = false;
         old_x = camera_x;
         old_y = camera_y;
@@ -49,11 +53,12 @@ bool CombatLoop::tick(int camera_x, int camera_y) {
     }
 
     if (DEBUG_SHOW_HITBOXES) {
-        // for (Unit current_unit : UNITS) {
-            // moveboxes
-            SDL_SetRenderDrawColor(combat_renderer, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
-            SDL_FRect hitbox_rect = { (float)(SCREEN_WIDTH / 2) - 50 + PLAYER.move_box.x_offset, (float)(SCREEN_HEIGHT / 2) - 50 + PLAYER.move_box.y_offset, (float)PLAYER.move_box.width, (float)PLAYER.move_box.height };
-            SDL_RenderRect(combat_renderer, &hitbox_rect);
+        for (std::vector<Hitbox> hitbox_vector : MOVEBOXES_TILES) {
+            for (Hitbox hitbox : hitbox_vector) {
+                hitbox.render(combat_renderer, {camera_x, camera_y});
+            }
+        }
+        PLAYER.move_box.render(combat_renderer, {0, 0}, true);
     }
 
     // render debug information   // TODO: change to actual text, not SDL debug text

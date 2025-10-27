@@ -8,6 +8,7 @@
 #include "main.h"
 #include "logger.hpp"
 #include "locations.hpp"
+#include "debug.h"
 
 /*
    Holds the Data of a ```SDL_Texture``` of ```TextureAgent```

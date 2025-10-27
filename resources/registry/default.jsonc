@@ -3,12 +3,12 @@
     "description":  "The default Sentinel textures & tiles",
     "data": {
         // FLOOR / FULL TILES //
-        "sentinel:missing":         {"texture": "/textures/tiles/missing.png"},
-        "sentinel:dirt":            {"texture": ["/textures/tiles/dirt1.png", "/textures/tiles/dirt2.png"]},
-        "sentinel:concrete":        {"texture": "/textures/tiles/concrete.png"},
-        "sentinel:wood_floor":      {"texture": "/textures/tiles/wood_floor.png"},
+        "sentinel:missing":         {"texture": "$textures$/tiles/missing.png"},
+        "sentinel:dirt":            {"texture": ["$textures$/tiles/dirt1.png", "$textures$/tiles/dirt2.png"]},
+        "sentinel:concrete":        {"texture": "$textures$/tiles/concrete.png"},
+        "sentinel:wood_floor":      {"texture": "$textures$/tiles/wood_floor.png"},
         
         // WALLS //
-        "sentinel:wood_wall":       {"texture": "/textures/tiles/wood_wall.png", "metadata": {"movebox": [[1, 0, 0, 0, 50, 100, 20]]}}
+        "sentinel:wood_wall":       {"texture": "$textures$/tiles/wood_wall.png", "metadata": {"movebox": [[1, 0, 0, 0, 31, 100, 37]]}} // FIXME: theese values dont ajust to zoom
     }
 }

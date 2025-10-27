@@ -22,5 +22,6 @@ inline bool DEBUG_SHOW_SPEED =              false;
 // Logging //
 inline bool DEBUG_TEST_LOGGER =             false;
 inline bool DEBUG_ALL_DEBUG_LOGS =          false;
+inline bool DEBUG_ANNOYING_LOGS  =          false;
 
 #endif

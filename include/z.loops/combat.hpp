@@ -28,8 +28,6 @@ class CombatLoop {
         SDL_Renderer* combat_renderer;
     public:
         // Vars //
-        int camera_x = 0;
-        int camera_y = 0;
         Map* main_map;                                      // the main map class handeling tiles
         // Init and cleanup //
         CombatLoop(std::string map_name, SDL_Renderer* renderer);

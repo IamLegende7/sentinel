@@ -16,7 +16,6 @@ CombatLoop::~CombatLoop() {
 /*  This function bakes all tiles of the map into one texture
     ### Inputs: 
     ```SLD_Renderer``` for renderring the texture. Can be the main renderer.
-    ```camera_x```, ```camera_y``` for the locations of wich to render
 */
 bool CombatLoop::make_background_texture(SDL_Renderer* renderer) {
     SDL_DestroyTexture(background_texture);
@@ -24,7 +23,7 @@ bool CombatLoop::make_background_texture(SDL_Renderer* renderer) {
     SDL_SetRenderTarget(renderer, background_texture);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);   // Black background
     SDL_RenderClear(renderer);
-    main_map->render_map(camera_x - RENDER_OFFSET_X, camera_y - RENDER_OFFSET_Y);
+    main_map->render_map(CAMERA_POS.x - RENDER_OFFSET_X, CAMERA_POS.y - RENDER_OFFSET_Y);
     SDL_SetRenderTarget(renderer, nullptr);
     return true;
 }
@@ -35,11 +34,11 @@ bool CombatLoop::tick() {
     SDL_FRect full_window_rect = { 0, 0, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT };
 
     // UPDATE MAP //
-    if ((old_x != camera_x) or (old_y != camera_y) or NEED_MAP_UPDATE) {
+    if ((old_x != CAMERA_POS.x) or (old_y != CAMERA_POS.y) or NEED_MAP_UPDATE) {
         make_background_texture(combat_renderer);
         NEED_MAP_UPDATE = false;
-        old_x = camera_x;
-        old_y = camera_y;
+        old_x = CAMERA_POS.x;
+        old_y = CAMERA_POS.y;
     }
     SDL_RenderTexture(combat_renderer, background_texture, NULL, &full_window_rect);
     
@@ -55,10 +54,10 @@ bool CombatLoop::tick() {
     if (DEBUG_SHOW_HITBOXES) {
         for (std::vector<Hitbox> hitbox_vector : MOVEBOXES_TILES) {
             for (Hitbox hitbox : hitbox_vector) {
-                hitbox.render(combat_renderer, {camera_x, camera_y});
+                hitbox.render(combat_renderer);
             }
         }
-        PLAYER.move_box.render(combat_renderer, {0, 0}, true);
+        PLAYER.movebox.render(combat_renderer, true);
     }
 
     // render debug information   // TODO: change to actual text, not SDL debug text

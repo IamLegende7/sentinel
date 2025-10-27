@@ -64,8 +64,8 @@ int main(int argc, char *argv[]) {
 
             // RENDERING //
             if (MODE == 2) {
-                combat.camera_x = PLAYER.x;
-                combat.camera_y = PLAYER.y;
+                CAMERA_POS.x = PLAYER.x;
+                CAMERA_POS.y = PLAYER.y;
                 combat.tick();
             }
             SDL_RenderPresent(MAIN_REN);

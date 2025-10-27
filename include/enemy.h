@@ -4,6 +4,8 @@
 #include <cmath>
 
 #include "helper_utils.h"
+#include "debug.h"
+#include "logger.hpp"
 
 struct Effect {
     std::string id;
@@ -21,9 +23,12 @@ class Unit {
         int hp_max = 1;
         int hp = 1;
 
-        Hitbox move_box = {1, 0, 0, 0, 80, 100, 20}; // collides with walls and such
+        // colliding
+        Hitbox movebox = {1, 0, 0, 0, 80, 100, 20}; // collides with walls and such
+        int stuck_in_wall = 0; // ticks the player was stuck in a wall; if too high: apply backwards force
 
         // walking stuff
+        int to_move = 0;
         float slow_down = 1;                // how quickly the player loses speed, when slowing down
         bool running = false;               // true = running, false = walking
         int walk_speed_max = 10;            // maximum walk speed
@@ -37,6 +42,8 @@ class Unit {
         int directional_modifier_y = 0;
         int directional_modifier_x = 0;
 
+
+        // stats
         int control_resistance = 0;  // ```-1```, if impossible to control
         bool is_player = false;
 
@@ -57,13 +64,14 @@ class Unit {
                 // unit ai here
                 XY direction = {0, 0}; // delete later
                 move(direction);
-                move_box.x = x + move_box.x_offset;
-                move_box.y = y + move_box.y_offset;
             }
         }
 
         void move(XY direction) {
-            if (!running) { // Walking
+            if (!running) { 
+                /////////////
+                // Walking //
+                /////////////
                 // Y
                 if (directional_modifier_y == 0) {
                     directional_modifier_y = direction.y;
@@ -97,7 +105,10 @@ class Unit {
                     // printf("SpeedX: %f\n", speed_x);
                     if (speed_x > walk_speed_max) { speed_x = walk_speed_max; }     // enforce max speed cap
                 }
-            } else { // Running
+            } else {
+                /////////////
+                // Running //
+                /////////////
                 const double eulers_constant = std::exp(1.0);
                 // Y
                 if (directional_modifier_y == 0) {
@@ -138,12 +149,125 @@ class Unit {
                 }
             }
 
-            // move
-            if (speed_y != 0 || speed_x != 0) {
-                if (direction.x == 0) { y += ceil(speed_y) * directional_modifier_y; }              // diagonal = false
-                else                  { y += ceil(speed_y / sqrt(2)) * directional_modifier_y; }    // diagonal = true
-                if (direction.y == 0) { x += ceil(speed_x) * directional_modifier_x; }
-                else                  { x += ceil(speed_x / sqrt(2)) * directional_modifier_x; }
+            //////////////
+            // MOVEMENT //
+            //////////////
+            float diagonal_compensator_x;
+            float diagonal_compensator_y;
+            if (direction.y == 0) diagonal_compensator_x = 1;             // diagonal = false
+            else                  diagonal_compensator_x = sqrt(2);       // diagonal = true
+            if (direction.x == 0) diagonal_compensator_y = 1;
+            else                  diagonal_compensator_y = sqrt(2);
+
+            /// COLLISION ///
+            bool colliding_x = false;
+            bool colliding_y = false;
+            // X //
+            Hitbox test_movebox = movebox;
+            test_movebox.x += ceil(speed_x / diagonal_compensator_x) * directional_modifier_x;
+            for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
+                for (auto& tile_movebox : tile_movebox_vector) {
+                    if (test_movebox.colliding(tile_movebox)) {
+                        colliding_x = true;
+                        stuck_in_wall++;
+                        speed_x = 0;
+                        break;
+                    }
+                }
+                if (colliding_x) break;
+            }
+
+            // Y //
+            test_movebox = movebox;
+            test_movebox.y += ceil(speed_y / diagonal_compensator_y) * directional_modifier_y;
+            for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
+                for (auto& tile_movebox : tile_movebox_vector) {
+                    if (test_movebox.colliding(tile_movebox)) {
+                        colliding_y = true;
+                        stuck_in_wall++;
+                        speed_y = 0;
+                        break;
+                    }
+                }
+                if (colliding_y) break;
+            }
+
+
+            // Unstuck //
+            /* Sometimes the unit can get stuck in corners.
+               This code makes shure you will be pushed outside the hitbox.
+            */
+            if (!(colliding_x) and !(colliding_y)) stuck_in_wall = 0;
+            if (DEBUG_ANNOYING_LOGS) LOGGER.log(LogLevel::DEBUG, "stuck_in_wall: %d", stuck_in_wall);
+            bool still_colliding;
+            if (stuck_in_wall >= 15) {
+                if (colliding_x) {
+                    still_colliding = false;
+                    // LEFT //
+                    test_movebox = movebox;
+                    test_movebox.x -= 20;
+                    for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
+                        for (auto& tile_movebox : tile_movebox_vector) { if (test_movebox.colliding(tile_movebox)) still_colliding = true; }
+                        if (still_colliding) break;
+                    }
+                    if (!still_colliding) { x -= 1; }
+                    // RIGHT //
+                    if (still_colliding) {
+                        test_movebox = movebox;
+                        test_movebox.x += 20;
+                        for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
+                            for (auto& tile_movebox : tile_movebox_vector) { if (test_movebox.colliding(tile_movebox)) still_colliding = true; }
+                            if (still_colliding) break;
+                        }
+                        if (!still_colliding) { x += 1; }
+                    }
+                }
+                if (colliding_y) {
+                    still_colliding = false;
+                    // UP //
+                    test_movebox = movebox;
+                    test_movebox.y -= 20;
+                    for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
+                        for (auto& tile_movebox : tile_movebox_vector) { if (test_movebox.colliding(tile_movebox)) still_colliding = true; }
+                        if (still_colliding) break;
+                    }
+                    if (!still_colliding) { y -= 1; }
+                    // DOWN //
+                    if (still_colliding) {
+                        test_movebox = movebox;
+                        test_movebox.y += 20;
+                        for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
+                            for (auto& tile_movebox : tile_movebox_vector) { if (test_movebox.colliding(tile_movebox)) still_colliding = true; }
+                            if (still_colliding) break;
+                        }
+                        if (!still_colliding) { y += 1; }
+                    }
+                }
+                movebox.x = x + movebox.x_offset;
+                movebox.y = y + movebox.y_offset;
+            }
+
+
+            /// MOVE ///
+            if ((direction.y == 0) or colliding_y) diagonal_compensator_x = 1;             // diagonal = false
+            else                                   diagonal_compensator_x = sqrt(2);       // diagonal = true
+            if ((direction.x == 0) or colliding_x) diagonal_compensator_y = 1;
+            else                                   diagonal_compensator_y = sqrt(2);
+
+            // X //
+            if (speed_x != 0) {
+                if (!colliding_x) {
+                    x += ceil(speed_x / diagonal_compensator_x) * directional_modifier_x;
+                    movebox.x = x + movebox.x_offset;
+                }
+            }
+
+            // Y //
+            if (speed_y != 0) {
+                if (!colliding_y) {
+                    y += ceil(speed_y / diagonal_compensator_x) * directional_modifier_y;
+                    movebox.y = y + movebox.y_offset;
+                }
             }
         }
 };

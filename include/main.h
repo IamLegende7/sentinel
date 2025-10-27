@@ -40,6 +40,8 @@ inline SDL_Renderer* MAIN_REN = nullptr;
 // 0: main menu; 1: in game, out of combat; 2: in "combat", in the map; 3: pause menu
 inline int MODE = 2;  // TODO: when main menu is added: change to 0
 
+inline XY CAMERA_POS = {0, 0};
+
 inline int SCREEN_WIDTH = 640;
 inline int SCREEN_HEIGHT = 480;
 

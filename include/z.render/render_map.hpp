@@ -7,10 +7,11 @@
 #include "main.h"
 #include "debug.h"
 #include "locations.hpp"
-#include "info.h"
 #include "player_info.h"
 #include "helper_utils.h"
 #include "texture_agent.hpp"
+#include "combat_vars_one.hpp"
+#include "combat_vars_two.hpp"
 
 inline bool NEED_MAP_UPDATE = true;
 
@@ -30,6 +31,7 @@ struct TileMetadata {
 
 struct Tile {
     std::string id = "sentinel:missing";
+    bool unit = false;
     std::string path = PATH_MISSING_TEXTURE_TILE;
     int rotation = 0;
     TileMetadata metadata;

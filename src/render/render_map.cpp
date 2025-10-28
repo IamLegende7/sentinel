@@ -14,7 +14,7 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_texture_agent = new TextureAgent(renderer);
     map_texture_agent->load_texture(PATH_MISSING_TEXTURE_TILE.c_str(), PATH_MISSING_TEXTURE_TILE);
     //// LOAD MAP ////
-    LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(PATH_DEFAULTS_TILES)["name"].get<std::string>().c_str());
+    LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(PATH_TEXTURES)["name"].get<std::string>().c_str());
     LOGGER.log(LogLevel::INFO, "NOW LOADING THE MAP %s!", map_name.c_str());
     nlohmann::json json_map_data = get_json(MAP_DIR + "/" + map_name); // no worry about errors; handling in ```get_json```
 
@@ -41,10 +41,12 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
             std::vector<Tile> new_tile_list;
             if (tile_list.is_object()) {
                 nlohmann::json tile = tile_list;
-                new_tile_list.push_back(load_tile(tile));
+                Tile new_tile = load_tile(tile);
+                if (!new_tile.unit) new_tile_list.push_back(new_tile);
             } else if (tile_list.is_array()) {
                 for (nlohmann::json tile : tile_list) {
-                    new_tile_list.push_back(load_tile(tile));
+                    Tile new_tile = load_tile(tile);
+                    if (!new_tile.unit) new_tile_list.push_back(new_tile);
                 }
             }
 
@@ -75,113 +77,123 @@ Map::~Map() {
 Tile Map::load_tile(nlohmann::json tile) {
     Tile new_tile;
     try {
-
         // GET ID //
         new_tile.id = tile["id"].get<std::string>();
 
-        nlohmann::json json_tile_defaults = nlohmann::json{};
-        if (get_json(PATH_DEFAULTS_TILES)["data"].contains(new_tile.id)) {
-            json_tile_defaults = get_json(PATH_DEFAULTS_TILES)["data"][new_tile.id];
+        if (tile.contains("unit")) {
+            LOGGER.log(LogLevel::WARNING, "No unit spawn logic yet!");
+            new_tile.unit = true;
         } else {
-            LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", PATH_DEFAULTS_TILES.c_str(), new_tile.id.c_str());
-        }
-
-        // GET PATH //
-        std::string tile_path = PATH_MISSING_TEXTURE_TILE;
-        if (tile.contains("texture")) {
-            // Use the given texture path //
-            tile_path = tile["texture"].get<std::string>();
-        } else {
-            // Get tile path from tile_defaults.json //
-            if (json_tile_defaults["texture"].is_string()) {
-                tile_path = json_tile_defaults["texture"].get<std::string>();
-
-            } else if (json_tile_defaults["texture"].is_array()) {
-                std::vector<std::string> tile_path_end_vector = json_tile_defaults["texture"].get<std::vector<std::string>>();
-                if (!tile_path_end_vector.empty()) {
-                    std::random_device rd;
-                    std::mt19937 gen(rd()); // Seed with a real random value, if available
-                    std::uniform_int_distribution<> dis(0, tile_path_end_vector.size() - 1);
-                    int random_index = dis(gen);
-                    tile_path = tile_path_end_vector[random_index];
-
-                } else {
-                    LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
-                }
+            nlohmann::json json_tile_defaults = nlohmann::json{};
+            if (get_json(PATH_DEFAULTS_TILES).contains(new_tile.id)) {
+                json_tile_defaults = get_json(PATH_DEFAULTS_TILES)[new_tile.id];
+            } else {
+                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", PATH_DEFAULTS_TILES.c_str(), new_tile.id.c_str());
             }
-            if (DEBUG_ALL_DEBUG_LOGS) {
-                LOGGER.log(LogLevel::DEBUG, "Tile path: %s", tile_path.c_str());
+
+            nlohmann::json json_textures = nlohmann::json{};
+            if (get_json(PATH_TEXTURES)["data"].contains(new_tile.id)) {
+                json_textures = get_json(PATH_TEXTURES)["data"][new_tile.id];
+            } else {
+                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", PATH_TEXTURES.c_str(), new_tile.id.c_str());
             }
-        }
-        // replace substrings //
-        tile_path = replace_substring(tile_path, "$textures$", TEXTURE_DIR);
-        tile_path = replace_substring(tile_path, "$resources$", RESOURCE_DIR);
-        tile_path = replace_substring(tile_path, "$texturepacks$", TEXTUREPACK_DIR);
-        tile_path = replace_substring(tile_path, "$data$", DATA_DIR);
-        // give out //
-        new_tile.path = tile_path;
 
-        // GET ROTATION //
-        if (tile.contains("rotation")) {
-            new_tile.rotation = 90 * tile["rotation"].get<int>();
-        } else if (json_tile_defaults.contains("rotation")) {
-            new_tile.rotation = 90 * json_tile_defaults["rotation"].get<int>();
-        }
+            // GET PATH //
+            std::string tile_path = PATH_MISSING_TEXTURE_TILE;
+            if (tile.contains("texture")) {
+                // Use the given texture path //
+                tile_path = tile.get<std::string>();
+            } else {
+                // Get tile path from tile_defaults.json //
+                if (json_textures.is_string()) {
+                    tile_path = json_textures.get<std::string>();
 
-        // GET METADATA //
-        if (tile.contains("metadata")) {
-            new_tile.metadata = get_tile_metadata(tile["metadata"]);
-        } else if (json_tile_defaults.contains("metadata")) {
-            new_tile.metadata = get_tile_metadata(json_tile_defaults["metadata"]);
-        }
+                } else if (json_textures.is_array()) {
+                    std::vector<std::string> tile_path_end_vector = json_textures.get<std::vector<std::string>>();
+                    if (!tile_path_end_vector.empty()) {
+                        std::random_device rd;
+                        std::mt19937 gen(rd()); // Seed with a real random value, if available
+                        std::uniform_int_distribution<> dis(0, tile_path_end_vector.size() - 1);
+                        int random_index = dis(gen);
+                        tile_path = tile_path_end_vector[random_index];
 
-        // ADD HITBOXES //
-        if ((tile.contains("metadata") and tile["metadata"].contains("movebox")) or (json_tile_defaults.contains("metadata") and json_tile_defaults["metadata"].contains("movebox"))) {
-            for (auto& movebox : new_tile.metadata.moveboxes) {
-                // rotate //
-                switch (new_tile.rotation) {
-                    case 90: {
-                        movebox.y_offset = 100 - (movebox.y_offset + movebox.height);
-                        XY offset =  {movebox.x_offset, movebox.y_offset};
-                        movebox.x_offset = offset.y;
-                        movebox.y_offset = offset.x;
-                        XY dimensions = {movebox.width, movebox.height};
-                        movebox.width  = dimensions.y;
-                        movebox.height = dimensions.x;
-                        break;
-                    }
-                    case 180: {
-                        movebox.x_offset = 100 - (movebox.x_offset + movebox.width);
-                        movebox.y_offset = 100 - (movebox.y_offset + movebox.height);
-                        break;
-                    }
-                    case 270: {
-                        movebox.x_offset = 100 - (movebox.x_offset + movebox.width);
-                        XY offset =  {movebox.x_offset, movebox.y_offset};
-                        movebox.x_offset = offset.y;
-                        movebox.y_offset = offset.x;
-                        XY dimensions = {movebox.width, movebox.height};
-                        movebox.width  = dimensions.y;
-                        movebox.height = dimensions.x;
-                        break;
+                    } else {
+                        LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
                     }
                 }
-                // offset //
-                movebox.x_offset += current_tile_x * new_tile.metadata.size;
-                movebox.y_offset += current_tile_y * new_tile.metadata.size;
-
                 if (DEBUG_ALL_DEBUG_LOGS) {
-                    LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
+                    LOGGER.log(LogLevel::DEBUG, "Tile path: %s", tile_path.c_str());
                 }
             }
-            MOVEBOXES_TILES.push_back(new_tile.metadata.moveboxes);
-        }
+            // replace substrings //
+            tile_path = replace_substring(tile_path, "$textures$", TEXTURE_DIR);
+            tile_path = replace_substring(tile_path, "$resources$", RESOURCE_DIR);
+            tile_path = replace_substring(tile_path, "$texturepacks$", TEXTUREPACK_DIR);
+            tile_path = replace_substring(tile_path, "$data$", DATA_DIR);
+            // give out //
+            new_tile.path = tile_path;
 
-        // ADD TO TEXTURE AGENT //
-        if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.path) == 1) {
-            LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
+            // GET ROTATION //
+            if (tile.contains("rotation")) {
+                new_tile.rotation = 90 * tile["rotation"].get<int>();
+            } else if (json_tile_defaults.contains("rotation")) {
+                new_tile.rotation = 90 * json_tile_defaults["rotation"].get<int>();
+            }
+
+            // GET METADATA //
+            if (tile.contains("metadata")) {
+                new_tile.metadata = get_tile_metadata(tile["metadata"]);
+            } else if (json_tile_defaults.contains("metadata")) {
+                new_tile.metadata = get_tile_metadata(json_tile_defaults["metadata"]);
+            }
+
+            // ADD HITBOXES //
+            if ((tile.contains("metadata") and tile["metadata"].contains("movebox")) or (json_tile_defaults.contains("metadata") and json_tile_defaults["metadata"].contains("movebox"))) {
+                for (auto& movebox : new_tile.metadata.moveboxes) {
+                    // rotate //
+                    switch (new_tile.rotation) {
+                        case 90: {
+                            movebox.y_offset = 100 - (movebox.y_offset + movebox.height);
+                            XY offset =  {movebox.x_offset, movebox.y_offset};
+                            movebox.x_offset = offset.y;
+                            movebox.y_offset = offset.x;
+                            XY dimensions = {movebox.width, movebox.height};
+                            movebox.width  = dimensions.y;
+                            movebox.height = dimensions.x;
+                            break;
+                        }
+                        case 180: {
+                            movebox.x_offset = 100 - (movebox.x_offset + movebox.width);
+                            movebox.y_offset = 100 - (movebox.y_offset + movebox.height);
+                            break;
+                        }
+                        case 270: {
+                            movebox.x_offset = 100 - (movebox.x_offset + movebox.width);
+                            XY offset =  {movebox.x_offset, movebox.y_offset};
+                            movebox.x_offset = offset.y;
+                            movebox.y_offset = offset.x;
+                            XY dimensions = {movebox.width, movebox.height};
+                            movebox.width  = dimensions.y;
+                            movebox.height = dimensions.x;
+                            break;
+                        }
+                    }
+                    // offset //
+                    movebox.x_offset += current_tile_x * new_tile.metadata.size;
+                    movebox.y_offset += current_tile_y * new_tile.metadata.size;
+
+                    if (DEBUG_ALL_DEBUG_LOGS) {
+                        LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
+                    }
+                }
+                MOVEBOXES_TILES.push_back(new_tile.metadata.moveboxes);
+            }
+
+            // ADD TO TEXTURE AGENT //
+            if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.path) == 1) {
+                LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
+            }
         }
-    
     } catch (...) {
         LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Uncaught exception loading a Tile. Using 'missing' tile");
     }

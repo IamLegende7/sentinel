@@ -1,0 +1,14 @@
+{
+    // FLOOR / FULL TILES //
+    "sentinel:missing":             {},
+    "sentinel:dirt":                {},
+    "sentinel:concrete":            {},
+    "sentinel:wood_floor":          {},
+    
+    // WALLS //
+    "sentinel:wood_wall":           {"metadata": {"movebox": [[1, 0, 0,  0, 31, 100, 37]]}},
+    "sentinel:wood_wall_ending":    {"metadata": {"movebox": [[1, 0, 0,  0, 32,  50, 37]]}},
+    "sentinel:wood_wall_corner":    {"metadata": {"movebox": [[1, 0, 0,  0, 32,  68, 37], [1, 0, 0, 31,  0, 37,  31]]}},
+    "sentinel:wood_wall_tpiece":    {"metadata": {"movebox": [[1, 0, 0,  0, 31, 100, 37], [1, 0, 0, 31,  0, 37,  31]]}},
+    "sentinel:wood_wall_cross":     {"metadata": {"movebox": [[1, 0, 0,  0, 31, 100, 37], [1, 0, 0, 31,  0, 37, 100]]}}
+}

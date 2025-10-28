@@ -48,7 +48,7 @@
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"},
-                {"id": "sentinel:dirt"},
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:unit_soldier", "unit": {}}],
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"},
                 {"id": "sentinel:dirt"},

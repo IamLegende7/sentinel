@@ -6,6 +6,7 @@
 #include "helper_utils.h"
 #include "debug.h"
 #include "logger.hpp"
+#include "combat_vars_one.hpp"
 
 struct Effect {
     std::string id;

@@ -22,9 +22,6 @@ void move_player();
     SOME VARS BELOW
 */
 
-// Hiboxes //
-inline std::vector<std::vector<Hitbox>> MOVEBOXES_TILES;         // handles all movement hitboxes in the game
-
 // Renderring //
 inline int DEFAULT_SIZE_TILE = 100;
 

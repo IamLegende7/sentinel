@@ -5,9 +5,6 @@ TODO: keyboard keybinds  --> list of SDL_Keycode
 TODO: add logfile rotation logic (getting rid of unused logs)
 TODO: add more cleanup to clases
 
-TODO: fix rendering of hitboxes
-TODO: add multi layer maps
-TODO: add walls
 TODO: add enemys
 TODO: add enemy ai
 
@@ -19,11 +16,9 @@ TODO: make camera follow the player, not be stuck to it
 
 TODO: add better error handeling
 
-TODO: Add build.bat
 TODO: update git wiki
 TODO: add .documentation to wiki
 TODO: better documentation in-code (see inputs.cpp, ~ line 15)
-TODO: change ids (Like Tile IDs or something) from string to int pointing to string
 
 TODO: translation framework (multilang framework)
 

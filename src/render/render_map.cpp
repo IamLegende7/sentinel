@@ -65,6 +65,7 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
 
 Map::~Map() {
     delete map_texture_agent;
+    map_texture_agent = nullptr;
 }
 
 //////////////////////

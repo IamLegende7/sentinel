@@ -1,5 +1,3 @@
-FIXME: reloading the map doesnt re-render stuff
-
 TODO: keyboard keybinds  --> list of SDL_Keycode
 
 TODO: add logfile rotation logic (getting rid of unused logs)

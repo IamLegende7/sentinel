@@ -11,6 +11,7 @@ CombatLoop::CombatLoop(std::string map_name, SDL_Renderer* renderer) {
 
 CombatLoop::~CombatLoop() {
     delete main_map;
+    main_map = nullptr;
 }
 
 /*  This function bakes all tiles of the map into one texture

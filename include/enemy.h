@@ -198,7 +198,7 @@ class Unit {
                This code makes shure you will be pushed outside the hitbox.
             */
             if (!(colliding_x) and !(colliding_y)) stuck_in_wall = 0;
-            if (DEBUG_ANNOYING_LOGS) LOGGER.log(LogLevel::DEBUG, "stuck_in_wall: %d", stuck_in_wall);
+            if (DEBUG_ANNOYING_LOGS and (stuck_in_wall != 0)) LOGGER.log(LogLevel::DEBUG, "stuck_in_wall: %d", stuck_in_wall);
             bool still_colliding;
             if (stuck_in_wall >= 15) {
                 if (colliding_x) {

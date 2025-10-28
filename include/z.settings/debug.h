@@ -10,7 +10,6 @@ inline bool DEBUG_CAN_RELOAD =              true;
 
 // Renderring //
 inline bool DEBUG_SHOW_TILE_HIDING =        false;
-inline bool DEBUG_SHOW_CROSSHAIR =          false;
 
 // Hitboxes //
 inline bool DEBUG_SHOW_HITBOXES =           true;

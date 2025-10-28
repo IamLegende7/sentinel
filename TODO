@@ -7,8 +7,6 @@ TODO: add enemys
 TODO: add enemy ai
 
 TODO: make speed not dependent on zoom
-FIXME: crosshair is at slight offset
-FIXME: resizing the window is really laggy
 
 TODO: make camera follow the player, not be stuck to it
 

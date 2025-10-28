@@ -42,15 +42,6 @@ bool CombatLoop::tick() {
         old_y = CAMERA_POS.y;
     }
     SDL_RenderTexture(combat_renderer, background_texture, NULL, &full_window_rect);
-    
-    // Debug
-    if (DEBUG_SHOW_CROSSHAIR) {
-        std::string picture_path_full = TEXTURE_DIR + "/crosshair_debug.png";
-        SDL_Texture* crosshair_texture = IMG_LoadTexture(combat_renderer, picture_path_full.c_str());
-        SDL_SetTextureScaleMode(crosshair_texture, SDL_SCALEMODE_NEAREST);
-        SDL_FRect crosshair_rect = { (float)(ceil(SCREEN_WIDTH / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)((SCREEN_HEIGHT / 2) - (DEFAULT_SIZE_TILE * ZOOM / 3)), (float)(DEFAULT_SIZE_TILE * ZOOM / 2), (float)(DEFAULT_SIZE_TILE * ZOOM / 2) };
-        SDL_RenderTexture(combat_renderer, crosshair_texture, NULL, &crosshair_rect);
-    }
 
     if (DEBUG_SHOW_HITBOXES) {
         for (std::vector<Hitbox> hitbox_vector : MOVEBOXES_TILES) {

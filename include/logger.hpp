@@ -68,7 +68,7 @@ class Logger {
             SDL_Log("%s", fullLog.c_str());
         }
 
-        bool set_log_file(const std::string& filename) {
+        bool set_logfile(const std::string& filename) {
             log_file.open(filename, std::ios::out | std::ios::app);
             if (!log_file.is_open()) {
                 SDL_Log("\033[31mERROR\033[0m: Could not open log file: %s", filename.c_str());

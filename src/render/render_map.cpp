@@ -14,7 +14,8 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_texture_agent = new TextureAgent(renderer);
     map_texture_agent->load_texture(PATH_MISSING_TEXTURE_TILE.c_str(), PATH_MISSING_TEXTURE_TILE);
     //// LOAD MAP ////
-    LOGGER.log(LogLevel::DEBUG, "NOW LOADING THE MAP %s!", map_name.c_str());
+    LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(PATH_DEFAULTS_TILES)["name"].get<std::string>().c_str());
+    LOGGER.log(LogLevel::INFO, "NOW LOADING THE MAP %s!", map_name.c_str());
     nlohmann::json json_map_data = get_json(MAP_DIR + "/" + map_name); // no worry about errors; handling in ```get_json```
 
     // SETTINGS //
@@ -76,7 +77,6 @@ Tile Map::load_tile(nlohmann::json tile) {
 
         // GET ID //
         new_tile.id = tile["id"].get<std::string>();
-
 
         nlohmann::json json_tile_defaults = get_json(PATH_DEFAULTS_TILES)["data"][new_tile.id];
 
@@ -200,12 +200,12 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
     if (metadata_json.contains("movebox")) {
         for (nlohmann::json movebox_json_single : metadata_json["movebox"]) {
             Hitbox new_movebox = {
-                movebox_json_single[0],
+                movebox_json_single[0].get<int>(),
                 0, 0,
-                movebox_json_single[3],
-                movebox_json_single[4],
-                movebox_json_single[5],
-                movebox_json_single[6],
+                movebox_json_single[3].get<int>(),
+                movebox_json_single[4].get<int>(),
+                movebox_json_single[5].get<int>(),
+                movebox_json_single[6].get<int>()
             };
             metadata.moveboxes.push_back(new_movebox);
         }
@@ -213,12 +213,12 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
     if (metadata_json.contains("hitbox")) {
         for (nlohmann::json hitbox_json_single : metadata_json["hitbox"]) {
             Hitbox new_hitbox = {
-                hitbox_json_single[0],
+                hitbox_json_single[0].get<int>() * ZOOM,
                 0, 0,
-                hitbox_json_single[1],
-                hitbox_json_single[2],
-                hitbox_json_single[3],
-                hitbox_json_single[4],
+                hitbox_json_single[1].get<int>() * ZOOM,
+                hitbox_json_single[2].get<int>() * ZOOM,
+                hitbox_json_single[3].get<int>() * ZOOM,
+                hitbox_json_single[4].get<int>() * ZOOM
             };
             metadata.hitboxes.push_back(new_hitbox);
             if (DEBUG_ALL_DEBUG_LOGS) {

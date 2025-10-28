@@ -4,6 +4,7 @@
             },
 "tiles": [
             [
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall_ending", "rotation": 2}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
@@ -20,8 +21,7 @@
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
-                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
-                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}]
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall_ending"}]
             ],
             [
                 {"id": "sentinel:dirt"},
@@ -204,6 +204,10 @@
                 {"id": "sentinel:dirt"}
             ],
             [
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall_corner", "rotation": 2}],
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
+                [{"id": "sentinel:wood_floor"}],
+                [{"id": "sentinel:wood_floor"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
@@ -217,11 +221,7 @@
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
                 [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
-                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
-                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
-                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
-                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}],
-                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall"}]
+                [{"id": "sentinel:wood_floor"}, {"id": "sentinel:wood_wall_corner", "rotation": 3}]
             ]
         ]
 }

@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
         // move to a ```start_combat``` function or something
         //render_combat_inital("campain/debug");
-        std::string map_name = "debug/debug1.jsonc";
+        std::string map_name = "debug/debug2.jsonc";
         CombatLoop combat(map_name, MAIN_REN);
         PLAYER = init_player_unit(DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.x, DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.y);
 

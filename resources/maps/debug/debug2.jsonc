@@ -5,10 +5,34 @@
             ],
 "tiles": [
             [
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_ending", "rotation": 0}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_ending", "rotation": 1}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_ending", "rotation": 2}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_ending", "rotation": 3}]
+            ],
+            [
                 [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 0}],
                 [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 1}],
                 [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 2}],
                 [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 3}]
+            ],
+            [
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_corner", "rotation": 0}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_corner", "rotation": 1}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_corner", "rotation": 2}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_corner", "rotation": 3}]
+            ],
+            [
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_tpiece", "rotation": 0}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_tpiece", "rotation": 1}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_tpiece", "rotation": 2}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_tpiece", "rotation": 3}]
+            ],
+            [
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_cross", "rotation": 0}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_cross", "rotation": 1}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_cross", "rotation": 2}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall_cross", "rotation": 3}]
             ]
         ]
 }

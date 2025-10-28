@@ -1,6 +1,8 @@
+FIXME: reloading the map doesnt re-render stuff
+
 TODO: keyboard keybinds  --> list of SDL_Keycode
 
-TODO: add logfile handeling logic (getting rid of unused logs)
+TODO: add logfile rotation logic (getting rid of unused logs)
 TODO: add more cleanup to clases
 
 TODO: fix rendering of hitboxes

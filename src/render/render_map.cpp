@@ -79,7 +79,12 @@ Tile Map::load_tile(nlohmann::json tile) {
         // GET ID //
         new_tile.id = tile["id"].get<std::string>();
 
-        nlohmann::json json_tile_defaults = get_json(PATH_DEFAULTS_TILES)["data"][new_tile.id];
+        nlohmann::json json_tile_defaults = nlohmann::json{};
+        if (get_json(PATH_DEFAULTS_TILES)["data"].contains(new_tile.id)) {
+            json_tile_defaults = get_json(PATH_DEFAULTS_TILES)["data"][new_tile.id];
+        } else {
+            LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", PATH_DEFAULTS_TILES.c_str(), new_tile.id.c_str());
+        }
 
         // GET PATH //
         std::string tile_path = PATH_MISSING_TEXTURE_TILE;
@@ -115,16 +120,6 @@ Tile Map::load_tile(nlohmann::json tile) {
         tile_path = replace_substring(tile_path, "$data$", DATA_DIR);
         // give out //
         new_tile.path = tile_path;
-
-
-        // GET SIZE //
-        if (tile.contains("size")) {
-            new_tile.size = tile["size"].get<int>();
-        } else if (json_tile_defaults.contains("size")) {
-            new_tile.size = json_tile_defaults["size"].get<int>();
-        } else { 
-            new_tile.size = DEFAULT_SIZE_TILE;
-        }
 
         // GET ROTATION //
         if (tile.contains("rotation")) {
@@ -172,8 +167,8 @@ Tile Map::load_tile(nlohmann::json tile) {
                     }
                 }
                 // offset //
-                movebox.x_offset += current_tile_x * new_tile.size;
-                movebox.y_offset += current_tile_y * new_tile.size;
+                movebox.x_offset += current_tile_x * new_tile.metadata.size;
+                movebox.y_offset += current_tile_y * new_tile.metadata.size;
 
                 if (DEBUG_ALL_DEBUG_LOGS) {
                     LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
@@ -189,15 +184,17 @@ Tile Map::load_tile(nlohmann::json tile) {
     
     } catch (...) {
         LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Uncaught exception loading a Tile. Using 'missing' tile");
-        new_tile.id     =     "sentinel:missing";
-        new_tile.path   =     PATH_MISSING_TEXTURE_TILE;
-        new_tile.size   =     DEFAULT_SIZE_TILE;
     }
     return new_tile;
 }
 
 TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
     TileMetadata metadata;
+    // GET SIZE //
+    if (metadata_json.contains("size")) {
+        metadata.size = metadata_json["size"].get<int>();
+    }
+
     if (metadata_json.contains("movebox")) {
         for (nlohmann::json movebox_json_single : metadata_json["movebox"]) {
             Hitbox new_movebox = {
@@ -214,12 +211,12 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
     if (metadata_json.contains("hitbox")) {
         for (nlohmann::json hitbox_json_single : metadata_json["hitbox"]) {
             Hitbox new_hitbox = {
-                hitbox_json_single[0].get<int>() * ZOOM,
+                hitbox_json_single[0].get<int>(),
                 0, 0,
-                hitbox_json_single[1].get<int>() * ZOOM,
-                hitbox_json_single[2].get<int>() * ZOOM,
-                hitbox_json_single[3].get<int>() * ZOOM,
-                hitbox_json_single[4].get<int>() * ZOOM
+                hitbox_json_single[1].get<int>(),
+                hitbox_json_single[2].get<int>(),
+                hitbox_json_single[3].get<int>(),
+                hitbox_json_single[4].get<int>()
             };
             metadata.hitboxes.push_back(new_hitbox);
             if (DEBUG_ALL_DEBUG_LOGS) {
@@ -235,10 +232,10 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
 ////////////////
 
 void Map::render_map(int camera_x, int camera_y) {
-            int min_x = (camera_x / (DEFAULT_SIZE_TILE * ZOOM));
-            int max_x = (camera_x + SCREEN_WIDTH) / (DEFAULT_SIZE_TILE * ZOOM);
-            int min_y = (camera_y / (DEFAULT_SIZE_TILE * ZOOM));
-            int max_y = (camera_y + SCREEN_HEIGHT) / (DEFAULT_SIZE_TILE * ZOOM);
+            int min_x = static_cast<int>(camera_x / 100);
+            int max_x = static_cast<int>((camera_x + (SCREEN_WIDTH / ZOOM))  / 100);
+            int min_y = static_cast<int>(camera_y / 100);
+            int max_y = static_cast<int>((camera_y + (SCREEN_HEIGHT / ZOOM)) / 100);
 
             if (DEBUG_SHOW_TILE_HIDING) {
                 min_x += 1;
@@ -253,7 +250,7 @@ void Map::render_map(int camera_x, int camera_y) {
                     y_tile++;
                     continue;
                 }
-                int final_y = (y_tile * (DEFAULT_SIZE_TILE * ZOOM)) - camera_y;
+                float final_y = ((y_tile * 100) - camera_y) * ZOOM;
                 int x_tile = 0;
                 for (std::vector<Tile> tile_list : row) {
                     if (x_tile < min_x || x_tile > max_x) {
@@ -261,8 +258,8 @@ void Map::render_map(int camera_x, int camera_y) {
                         continue;
                     }
                     for (Tile& tile : tile_list) {
-                        int final_x = (x_tile * (tile.size * ZOOM)) - camera_x;
-                        map_texture_agent->render_texture(tile.path, final_x, final_y, tile.size * ZOOM, tile.rotation);
+                        float final_x = ((x_tile * 100) - camera_x) * ZOOM;
+                        map_texture_agent->render_texture(tile.path, final_x, final_y, tile.metadata.size * ZOOM, tile.rotation);
                     }
                     x_tile++;
                 }

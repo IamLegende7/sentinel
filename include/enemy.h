@@ -134,7 +134,7 @@ class Unit {
                     directional_modifier_x = direction.x;
                 }
                 if (directional_modifier_x != direction.x) {    // slow down
-                    speed_x -= slow_down * 2;
+                    speed_x -= slow_down * 2; //
                     if (speed_x <= 0) {
                         speed_x = 0;
                         directional_modifier_x = 0;

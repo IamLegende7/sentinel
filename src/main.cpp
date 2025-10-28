@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         std::string map_name = "debug/debug1.jsonc";
         CombatLoop* combat;
         combat = new CombatLoop(map_name, MAIN_REN);
-        PLAYER = init_player_unit(DEFAULT_SIZE_TILE * ZOOM * combat->main_map->settings.starting_pos.x, DEFAULT_SIZE_TILE * ZOOM * combat->main_map->settings.starting_pos.y);
+        PLAYER = init_player_unit(100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y);
 
         // main game loop
         bool quit;
@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
                     if (e.type == SDL_EVENT_WINDOW_RESIZED) {
                         SCREEN_WIDTH = e.window.data1;
                         SCREEN_HEIGHT = e.window.data2;
-                        RENDER_OFFSET_X = (SCREEN_WIDTH / 2) - 50;
-                        RENDER_OFFSET_Y = (SCREEN_HEIGHT / 2) - 50;
+                        RENDER_OFFSET_X = ((SCREEN_WIDTH  / 2) - 50) / ZOOM;
+                        RENDER_OFFSET_Y = ((SCREEN_HEIGHT / 2) - 50) / ZOOM;
                         SDL_SetRenderViewport(MAIN_REN, NULL);
                         if (MODE == 2) {
                             NEED_MAP_UPDATE = true;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
                                 reload_pressed = true;
                                 LOGGER.log(LogLevel::INFO, "Reloading the Map...");
                                 combat = new CombatLoop(map_name, MAIN_REN);
-                                PLAYER = init_player_unit(DEFAULT_SIZE_TILE * ZOOM * combat->main_map->settings.starting_pos.x, DEFAULT_SIZE_TILE * ZOOM * combat->main_map->settings.starting_pos.y);
+                                PLAYER = init_player_unit(100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y);
                             } else if (e.type == SDL_EVENT_KEY_UP) {
                                 reload_pressed = false;
                             }

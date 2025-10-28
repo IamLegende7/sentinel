@@ -18,6 +18,7 @@ bool render_combat_inital(std::string map_name);
 bool render_combat(SDL_Renderer* renderer, int player_x, int player_y);
 
 struct TileMetadata {
+    int size = DEFAULT_SIZE_TILE;
     std::vector<Hitbox> moveboxes;
     std::vector<Hitbox> hitboxes;
     
@@ -28,14 +29,13 @@ struct TileMetadata {
 };
 
 struct Tile {
-    std::string id;
-    std::string path;
-    int size;
+    std::string id = "sentinel:missing";
+    std::string path = PATH_MISSING_TEXTURE_TILE;
     int rotation = 0;
     TileMetadata metadata;
 
     std::string debug_out() const {
-        return id + ", " + path + ", " + std::to_string(size) /*+ ", " + metadata.debug_out()*/; // TODO: fix metadata.debug_out()
+        return id + ", " + path + ", " + std::to_string(rotation) /*+ ", " + metadata.debug_out()*/; // TODO: fix metadata.debug_out()
     }
 };
 

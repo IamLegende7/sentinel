@@ -7,6 +7,7 @@
 #include "helper_utils.h"
 #include "main.h"
 #include "logger.hpp"
+#include "player_info.h"
 
 
 std::string replace_substring(const std::string& original, const std::string& toReplace, const std::string& replaceWith) {
@@ -84,7 +85,7 @@ nlohmann::json get_json(std::string path_json_file) {
 //////////////
 
 bool Hitbox::colliding(const Hitbox& B) {
-    int A_full_x = x; //+ x_offset;
+    int A_full_x = x; //+ x_offset; // dont know why this isnt needed
     int A_full_y = y; //+ y_offset;
     int B_full_x = B.x + B.x_offset;
     int B_full_y = B.y + B.y_offset;
@@ -97,9 +98,9 @@ void Hitbox::render(SDL_Renderer* renderer, bool player) {
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
     SDL_FRect hitbox_rect = {};
     if (player) {
-        hitbox_rect = {(float)(RENDER_OFFSET_X + x_offset), (float)(RENDER_OFFSET_Y + y_offset), (float)width, (float)height};
+        hitbox_rect = {(float)(RENDER_OFFSET_X + x_offset) * ZOOM, (float)(RENDER_OFFSET_Y + y_offset) * ZOOM, (float)width * ZOOM, (float)height * ZOOM};
     } else {
-        hitbox_rect = {(float)(RENDER_OFFSET_X - CAMERA_POS.x + x_offset), (float)(RENDER_OFFSET_Y - CAMERA_POS.y + y_offset), (float)width, (float)height};
+        hitbox_rect = {(float)(RENDER_OFFSET_X - CAMERA_POS.x + x_offset) * ZOOM, (float)(RENDER_OFFSET_Y - CAMERA_POS.y + y_offset) * ZOOM, (float)width * ZOOM, (float)height * ZOOM};
     }
     SDL_RenderRect(renderer, &hitbox_rect);
 }

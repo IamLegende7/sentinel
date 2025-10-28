@@ -142,6 +142,35 @@ Tile Map::load_tile(nlohmann::json tile) {
         // ADD HITBOXES //
         if ((tile.contains("metadata") and tile["metadata"].contains("movebox")) or (json_tile_defaults.contains("metadata") and json_tile_defaults["metadata"].contains("movebox"))) {
             for (auto& movebox : new_tile.metadata.moveboxes) {
+                // rotate //
+                switch (new_tile.rotation) {
+                    case 90: {
+                        movebox.y_offset = 100 - (movebox.y_offset + movebox.height);
+                        XY offset =  {movebox.x_offset, movebox.y_offset};
+                        movebox.x_offset = offset.y;
+                        movebox.y_offset = offset.x;
+                        XY dimensions = {movebox.width, movebox.height};
+                        movebox.width  = dimensions.y;
+                        movebox.height = dimensions.x;
+                        break;
+                    }
+                    case 180: {
+                        movebox.x_offset = 100 - (movebox.x_offset + movebox.width);
+                        movebox.y_offset = 100 - (movebox.y_offset + movebox.height);
+                        break;
+                    }
+                    case 270: {
+                        movebox.x_offset = 100 - (movebox.x_offset + movebox.width);
+                        XY offset =  {movebox.x_offset, movebox.y_offset};
+                        movebox.x_offset = offset.y;
+                        movebox.y_offset = offset.x;
+                        XY dimensions = {movebox.width, movebox.height};
+                        movebox.width  = dimensions.y;
+                        movebox.height = dimensions.x;
+                        break;
+                    }
+                }
+                // offset //
                 movebox.x_offset += current_tile_x * new_tile.size;
                 movebox.y_offset += current_tile_y * new_tile.size;
 

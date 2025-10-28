@@ -5,7 +5,10 @@
             ],
 "tiles": [
             [
-                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 1}]
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 0}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 1}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 2}],
+                [{"id": "sentinel:dirt"}, {"id": "sentinel:wood_wall", "rotation": 3}]
             ]
         ]
 }

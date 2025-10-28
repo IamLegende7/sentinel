@@ -16,7 +16,8 @@ int main(int argc, char *argv[]) {
 
         // move to a ```start_combat``` function or something
         //render_combat_inital("campain/debug");
-        CombatLoop combat("debug/debug1.jsonc", MAIN_REN);
+        std::string map_name = "debug/debug1.jsonc";
+        CombatLoop combat(map_name, MAIN_REN);
         PLAYER = init_player_unit(DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.x, DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.y);
 
         // main game loop
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]) {
                             if ((e.type == SDL_EVENT_KEY_DOWN) and not reload_pressed) {
                                 reload_pressed = true;
                                 LOGGER.log(LogLevel::INFO, "Reloading the Map...");
-                                CombatLoop combat("debug/debug1.jsonc", MAIN_REN);
+                                CombatLoop combat(map_name, MAIN_REN);
                                 PLAYER = init_player_unit(DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.x, DEFAULT_SIZE_TILE * ZOOM * combat.main_map->settings.starting_pos.y);
                             } else if (e.type == SDL_EVENT_KEY_UP) {
                                 reload_pressed = false;

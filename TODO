@@ -6,7 +6,7 @@ TODO: add more cleanup to clases
 TODO: add enemys
 TODO: add enemy ai
 
-TODO: ajust speed to zoom
+TODO: make speed not dependent on zoom
 FIXME: crosshair is at slight offset
 FIXME: resizing the window is really laggy
 

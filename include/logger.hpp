@@ -19,7 +19,7 @@ enum class LogLevel {
     CRITICAL
 };
 
-class FileLogger {
+class Logger {
     public:
         void log(LogLevel level, const char* format, ...) {
             std::ostringstream oss;
@@ -61,33 +61,33 @@ class FileLogger {
                         colorCode = "\033[41;37m"; // Red background with white text
                         break;
             }
-            if (logFile.is_open()) {
-                logFile << prefix << ": " << message << std::endl;
+            if (log_file.is_open()) {
+                log_file << prefix << ": " << message << std::endl;
             }
             std::string fullLog = colorCode + prefix + "\033[0m" + ": " + message;
             SDL_Log("%s", fullLog.c_str());
         }
 
-        bool set_logfile(const std::string& filename) {
-            logFile.open(filename, std::ios::out | std::ios::app);
-            if (!logFile.is_open()) {
+        bool set_log_file(const std::string& filename) {
+            log_file.open(filename, std::ios::out | std::ios::app);
+            if (!log_file.is_open()) {
                 SDL_Log("\033[31mERROR\033[0m: Could not open log file: %s", filename.c_str());
                 return false;
             }
             return true;
         }
 
-        ~FileLogger() {
-            if (logFile.is_open()) {
-                logFile.close();
+        ~Logger() {
+            if (log_file.is_open()) {
+                log_file.close();
             }
         }
 
     private:
-        std::ofstream logFile;
+        std::ofstream log_file;
 };
 
 // The actual Logger instance //
-inline FileLogger LOGGER;
+inline Logger LOGGER;
 
 #endif

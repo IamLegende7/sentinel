@@ -23,6 +23,7 @@ const std::string PATH_DEFAULTS_TILES =             RESOURCE_DIR + "/registry/de
 //const std::string PATH_DEFAULTS_TILES =             RESOURCE_DIR + "/texturepacks/programerart/programer.jsonc"; // TODO: add a way to switch between texturepacks in-game
 
 // LOGGING //
-const std::string PATH_LOG_FILE =                   DATA_DIR     + "/main.log";
+const std::string PATH_LOG_FILE =                   DATA_DIR     + "/logs/current.log";
+const std::string PATH_LOG_CRASHES =                DATA_DIR     + "/logs/crashes";
 
 #endif

@@ -17,6 +17,8 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(PATH_TEXTURES)["name"].get<std::string>().c_str());
     LOGGER.log(LogLevel::INFO, "NOW LOADING THE MAP %s!", map_name.c_str());
     nlohmann::json json_map_data = get_json(MAP_DIR + "/" + map_name); // no worry about errors; handling in ```get_json```
+    LOGGER.log(LogLevel::INFO, "Map size: %dx%d", json_map_data["size"][0].get<int>(), json_map_data["size"][1].get<int>());
+    MOVEBOXES = new HitboxQuadtree({0, 0}, {json_map_data["size"][0].get<int>() * 100, json_map_data["size"][1].get<int>() * 100});
 
     // SETTINGS //
     nlohmann::json json_settings = json_map_data["settings"];
@@ -179,12 +181,17 @@ Tile Map::load_tile(nlohmann::json tile) {
                         }
                     }
                     // offset //
-                    movebox.x_offset += current_tile_x * new_tile.metadata.size;
-                    movebox.y_offset += current_tile_y * new_tile.metadata.size;
+                    movebox.x = current_tile_x * 100;
+                    movebox.y = current_tile_y * 100;
+                    movebox.x_offset += new_tile.metadata.size;
+                    movebox.y_offset += new_tile.metadata.size;
 
                     if (DEBUG_ALL_DEBUG_LOGS) {
-                        LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
+                        LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X,Y: %d %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x, movebox.y, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
                     }
+                }
+                for (Hitbox new_movebox : new_tile.metadata.moveboxes) {
+                    MOVEBOXES->insert(new_movebox);
                 }
                 MOVEBOXES_TILES.push_back(new_tile.metadata.moveboxes);
             }

@@ -1,4 +1,12 @@
-FIXME: SOmetimes stuttering while moving
+FIXME: Sometimes stuttering while moving
+
+FIXME: sometimes getting stuck on corners still
+FIXME: flickering after reloading map; only goes away after moving
+
+TODO: optimasation!
+    - TODO: Make hitboxes & nodes only render inside of view
+    - TODO: multithreading
+    - TODO: less movement ticks
 
 TODO: keyboard keybinds  --> list of SDL_Keycode
 

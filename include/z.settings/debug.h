@@ -13,6 +13,7 @@ inline bool DEBUG_SHOW_TILE_HIDING =        false;
 
 // Hitboxes //
 inline bool DEBUG_SHOW_HITBOXES =           true;
+inline bool DEBUG_SHOW_NODES =              true;
 
 // Movement //
 inline bool DEBUG_SHOW_COORDS =             true;

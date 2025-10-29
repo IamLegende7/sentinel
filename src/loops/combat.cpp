@@ -1,4 +1,5 @@
 #include "combat.hpp"
+#include "hitboxes.hpp"
 
 CombatLoop::CombatLoop(std::string map_name, SDL_Renderer* renderer) {
     MOVEBOXES_TILES.clear();
@@ -44,12 +45,17 @@ bool CombatLoop::tick() {
     SDL_RenderTexture(combat_renderer, background_texture, NULL, &full_window_rect);
 
     if (DEBUG_SHOW_HITBOXES) {
-        for (std::vector<Hitbox> hitbox_vector : MOVEBOXES_TILES) {
-            for (Hitbox hitbox : hitbox_vector) {
-                hitbox.render(combat_renderer);
-            }
+        MOVEBOXES->root->render_hitboxes(combat_renderer, "#CB1ED1");
+
+        std::vector<Hitbox> relevant_moveboxes = MOVEBOXES->get_relevant({PLAYER.x, PLAYER.y});
+        for (Hitbox relevant_movebox : relevant_moveboxes) {
+            relevant_movebox.render(MAIN_REN, "#32C5EF");
         }
-        PLAYER.movebox.render(combat_renderer, true);
+        PLAYER.movebox.render(combat_renderer, "#48ef32", true);
+    }
+
+    if (DEBUG_SHOW_NODES) {
+        MOVEBOXES->root->render("#ffffff");
     }
 
     // render debug information   // TODO: change to actual text, not SDL debug text

@@ -79,28 +79,3 @@ nlohmann::json get_json(std::string path_json_file) {
     }
     return json_data;
 }
-
-//////////////
-// HITBOXES //
-//////////////
-
-bool Hitbox::colliding(const Hitbox& B) {
-    int A_full_x = x; //+ x_offset; // dont know why this isnt needed
-    int A_full_y = y; //+ y_offset;
-    int B_full_x = B.x + B.x_offset;
-    int B_full_y = B.y + B.y_offset;
-    return !(A_full_x + width  < B_full_x || A_full_x > B_full_x + B.width ||
-             A_full_y + height < B_full_y || A_full_y > B_full_y + B.height
-            );
-}
-
-void Hitbox::render(SDL_Renderer* renderer, bool player) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);  // set coulor to pink/magenta/whatever
-    SDL_FRect hitbox_rect = {};
-    if (player) {
-        hitbox_rect = {(float)(RENDER_OFFSET_X + x_offset) * ZOOM, (float)(RENDER_OFFSET_Y + y_offset) * ZOOM, (float)width * ZOOM, (float)height * ZOOM};
-    } else {
-        hitbox_rect = {(float)(RENDER_OFFSET_X - CAMERA_POS.x + x_offset) * ZOOM, (float)(RENDER_OFFSET_Y - CAMERA_POS.y + y_offset) * ZOOM, (float)width * ZOOM, (float)height * ZOOM};
-    }
-    SDL_RenderRect(renderer, &hitbox_rect);
-}

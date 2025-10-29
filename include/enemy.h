@@ -6,7 +6,7 @@
 #include "helper_utils.h"
 #include "debug.h"
 #include "logger.hpp"
-#include "combat_vars_one.hpp"
+#include "hitboxes.hpp"
 
 struct Effect {
     std::string id;
@@ -163,41 +163,36 @@ class Unit {
             /// COLLISION ///
             bool colliding_x = false;
             bool colliding_y = false;
+            std::vector<Hitbox> relevant_moveboxes = MOVEBOXES->get_relevant({x, y});
             // X //
             Hitbox test_movebox = movebox;
             test_movebox.x += ceil(speed_x / diagonal_compensator_x) * directional_modifier_x;
-            for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
-                for (auto& tile_movebox : tile_movebox_vector) {
-                    if (test_movebox.colliding(tile_movebox)) {
-                        colliding_x = true;
-                        stuck_in_wall++;
-                        speed_x = 0;
-                        break;
-                    }
+            for (auto& tile_movebox : relevant_moveboxes) {
+                if (test_movebox.colliding(tile_movebox)) {
+                    colliding_x = true;
+                    //stuck_in_wall++;
+                    speed_x = 0;
+                    break;
                 }
-                if (colliding_x) break;
             }
 
             // Y //
             test_movebox = movebox;
             test_movebox.y += ceil(speed_y / diagonal_compensator_y) * directional_modifier_y;
-            for (auto& tile_movebox_vector : MOVEBOXES_TILES) {
-                for (auto& tile_movebox : tile_movebox_vector) {
-                    if (test_movebox.colliding(tile_movebox)) {
-                        colliding_y = true;
-                        stuck_in_wall++;
-                        speed_y = 0;
-                        break;
-                    }
+            for (auto& tile_movebox : relevant_moveboxes) {
+                if (test_movebox.colliding(tile_movebox)) {
+                    colliding_y = true;
+                    //stuck_in_wall++;
+                    speed_y = 0;
+                    break;
                 }
-                if (colliding_y) break;
             }
-
 
             // Unstuck //
             /* Sometimes the unit can get stuck in corners.
                This code makes shure you will be pushed outside the hitbox.
             */
+            /*
             if (!(colliding_x) and !(colliding_y)) stuck_in_wall = 0;
             if (DEBUG_ANNOYING_LOGS and (stuck_in_wall != 0)) LOGGER.log(LogLevel::DEBUG, "stuck_in_wall: %d", stuck_in_wall);
             bool still_colliding;
@@ -247,7 +242,7 @@ class Unit {
                 movebox.x = x + movebox.x_offset;
                 movebox.y = y + movebox.y_offset;
             }
-
+            */
 
             /// MOVE ///
             if ((direction.y == 0) or colliding_y) diagonal_compensator_x = 1;             // diagonal = false

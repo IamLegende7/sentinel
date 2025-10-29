@@ -19,16 +19,4 @@ struct XY {
     int y = 0;
 };
 
-class Hitbox {
-    public:
-        int type; // 0: none; 1: collides with walls & stuff; 2: takes damage from attacks
-        int x, y; // Stuck to the units x & y coords
-        int x_offset, y_offset;
-        int width, height;
-
-        bool colliding(const Hitbox& B);
-        void render(SDL_Renderer* renderer, bool player = false);
-};
-
-
 #endif

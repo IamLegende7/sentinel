@@ -10,8 +10,8 @@
 #include "player_info.h"
 #include "helper_utils.h"
 #include "texture_agent.hpp"
-#include "combat_vars_one.hpp"
-#include "combat_vars_two.hpp"
+#include "hitboxes.hpp"
+#include "combat_vars.hpp"
 
 inline bool NEED_MAP_UPDATE = true;
 

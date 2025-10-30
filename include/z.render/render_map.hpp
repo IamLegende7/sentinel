@@ -1,3 +1,6 @@
+#ifndef RENDER_MAP_HPP
+#define RENDER_MAP_HPP
+
 #include <SDL3/SDL.h>
 #include <vector>
 #include <string>
@@ -5,6 +8,7 @@
 #include <random>
 
 #include "main.h"
+#include "settings.hpp"
 #include "debug.h"
 #include "locations.hpp"
 #include "player_info.h"
@@ -49,8 +53,6 @@ class Map {
     private:
         TextureAgent* map_texture_agent;
         std::vector<std::vector<std::vector<Tile>>> map_tiles;
-        int current_tile_x;
-        int current_tile_y;
     public:
         // Vars //
         MapSettings settings;
@@ -59,9 +61,12 @@ class Map {
         ~Map();
 
         // Helper functions //
-        Tile load_tile(nlohmann::json tile);
+        std::vector<std::vector<Tile>> get_row(nlohmann::json row, XY current_tile);
+        Tile load_tile(nlohmann::json tile, XY current_tile);
         TileMetadata get_tile_metadata(nlohmann::json metadata_json);
 
         // Render Map //
         void render_map(int camera_x, int camera_y);
 };
+
+#endif

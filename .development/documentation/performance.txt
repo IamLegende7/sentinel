@@ -1,0 +1,9 @@
+!all of these values are on my system only!
+
+
+[Loading debug3 (aka 32x32 of sentinel:wood_wall_cross)]
+MAX THREADS  :  TIME
+no threads   :  [0.822]
+4            :  [0.301]
+5            :  [0.261]
+12           :  [0.178]

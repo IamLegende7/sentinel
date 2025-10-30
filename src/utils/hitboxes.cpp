@@ -73,10 +73,10 @@ void Node::render(const std::string& hex_colour) {
     uint8_t blue =  std::stoi(hex_colour.substr(5, 2), nullptr, 16);
 
     SDL_SetRenderDrawColor(MAIN_REN, red, green, blue, 255);
-    SDL_FRect rect = {(float)(min.x + RENDER_OFFSET_X - PLAYER.x),
-                      (float)(min.y + RENDER_OFFSET_Y - PLAYER.y), 
-                      (float)((max.x - min.x)),
-                      (float)((max.y - min.y))
+    SDL_FRect rect = {(float)(min.x + RENDER_OFFSET_X - PLAYER.x) * ZOOM,
+                      (float)(min.y + RENDER_OFFSET_Y - PLAYER.y) * ZOOM, 
+                      (float)((max.x - min.x)) * ZOOM,
+                      (float)((max.y - min.y)) * ZOOM
                      };
 
     SDL_RenderRect(MAIN_REN, &rect);

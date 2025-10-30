@@ -46,12 +46,14 @@ bool CombatLoop::tick() {
 
     if (DEBUG_SHOW_HITBOXES) {
         MOVEBOXES->root->render_hitboxes(combat_renderer, "#CB1ED1");
+        PLAYER.movebox.render(combat_renderer, "#48ef32", true);
+    }
 
+    if (DEBUG_SHOW_RELEVANT_HITBOXES) {
         std::vector<Hitbox> relevant_moveboxes = MOVEBOXES->get_relevant({PLAYER.x, PLAYER.y});
         for (Hitbox relevant_movebox : relevant_moveboxes) {
             relevant_movebox.render(MAIN_REN, "#32C5EF");
         }
-        PLAYER.movebox.render(combat_renderer, "#48ef32", true);
     }
 
     if (DEBUG_SHOW_NODES) {

@@ -6,6 +6,8 @@
 #include "player_info.h"
 #include "combat.hpp"
 
+#include "thread_pool.hpp"
+
 int main(int argc, char *argv[]) {
     if ( !setup() ) {
         float accumulator = 0.0f;
@@ -16,7 +18,7 @@ int main(int argc, char *argv[]) {
 
         // move to a ```start_combat``` function or something
         //render_combat_inital("campain/debug");
-        std::string map_name = "debug/debug1.jsonc";
+        std::string map_name = "debug/debug3.jsonc";
         CombatLoop* combat;
         combat = new CombatLoop(map_name, MAIN_REN);
         PLAYER = init_player_unit(100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y);

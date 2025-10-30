@@ -1,6 +1,8 @@
 #include "render_map.hpp"
 #include <iostream>
 
+#include "thread_pool.hpp"
+
 /* This class handels renderring and loading of the maps
    Use one instance for each map!
    ```map_name``` must be passed in WITH file extention
@@ -33,35 +35,65 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_tiles.clear();
 
     // GET ALL TILES IN MAP //
-    current_tile_y = 0;
-    for (const auto& row : json_tile_data) {
-        std::vector<std::vector<Tile>> new_row;
+    XY current_tile = {0, 0};
+    if (MULTITHREADING) {
+        ThreadPool* map_pool = new ThreadPool(NUM_TREADS);
+        std::vector<std::future<std::vector<std::vector<Tile>>> > futures;
 
-        // GET TILES IN ROW //
-        current_tile_x = 0;
-        for (const auto& tile_list : row) {
-            std::vector<Tile> new_tile_list;
-            if (tile_list.is_object()) {
-                nlohmann::json tile = tile_list;
-                Tile new_tile = load_tile(tile);
-                if (!new_tile.unit) new_tile_list.push_back(new_tile);
-            } else if (tile_list.is_array()) {
-                for (nlohmann::json tile : tile_list) {
-                    Tile new_tile = load_tile(tile);
-                    if (!new_tile.unit) new_tile_list.push_back(new_tile);
-                }
-            }
+        // Get data //
+        for (const auto& row : json_tile_data) {
+            current_tile.x = 0;
+            auto future = map_pool->enqueue([this, row, current_tile]() {
+                return get_row(row, current_tile);
+            });
 
-            // PUSH BACK //
-            new_row.push_back(new_tile_list);
+            futures.push_back(std::move(future));
 
-            current_tile_x++;
+            current_tile.y++;
         }
 
-        // PUSH BACK ROW //
-        map_tiles.push_back(new_row);
+        // Extract data //
+        for (auto& future : futures) {
+            std::vector<std::vector<Tile>> new_row = future.get();
 
-        current_tile_y++;
+            map_tiles.push_back(new_row);
+
+            for (auto new_tile_list : new_row) {
+                for (Tile new_tile : new_tile_list) {
+                    // ADD TO TEXTURE AGENT //
+                    if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.path) == 1) {
+                        LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
+                    }
+                    for (Hitbox new_movebox : new_tile.metadata.moveboxes)
+                        MOVEBOXES->insert(new_movebox);
+                }
+            }
+        }
+
+        delete map_pool;
+
+    } else {
+        current_tile = {0, 0};
+        for (const auto& row : json_tile_data) {
+            std::vector<std::vector<Tile>> new_row;
+
+            current_tile.x = 0;
+            new_row = get_row(row, current_tile);
+
+            for (auto new_tile_list : new_row) {
+                for (Tile new_tile : new_tile_list) {
+                    // ADD TO TEXTURE AGENT //
+                    if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.path) == 1) {
+                        LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
+                    }
+                    for (Hitbox new_movebox : new_tile.metadata.moveboxes)
+                        MOVEBOXES->insert(new_movebox);
+                }
+            }
+            map_tiles.push_back(new_row);
+
+            current_tile.y++;
+        }
     }
 
     LOGGER.log(LogLevel::DEBUG, "DONE LOADING THE MAP");
@@ -76,7 +108,33 @@ Map::~Map() {
 // HELPER FUNCTIONS //
 //////////////////////
 
-Tile Map::load_tile(nlohmann::json tile) {
+std::vector<std::vector<Tile>> Map::get_row(nlohmann::json row, XY current_tile) {
+    std::vector<std::vector<Tile>> new_row;
+
+    // GET TILES IN ROW //
+    for (const auto& tile_list : row) {
+        std::vector<Tile> new_tile_list;
+        if (tile_list.is_object()) {
+            nlohmann::json tile = tile_list;
+            Tile new_tile = load_tile(tile, current_tile);
+            if (!new_tile.unit) new_tile_list.push_back(new_tile);
+        } else if (tile_list.is_array()) {
+            for (nlohmann::json tile : tile_list) {
+                Tile new_tile = load_tile(tile, current_tile);
+                if (!new_tile.unit) new_tile_list.push_back(new_tile);
+            }
+        }
+
+        // PUSH BACK //
+        new_row.push_back(new_tile_list);
+
+        current_tile.x++;
+    }
+
+    return new_row;
+}
+
+Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
     Tile new_tile;
     try {
         // GET ID //
@@ -181,8 +239,8 @@ Tile Map::load_tile(nlohmann::json tile) {
                         }
                     }
                     // offset //
-                    movebox.x = current_tile_x * 100;
-                    movebox.y = current_tile_y * 100;
+                    movebox.x = current_tile.x * 100;
+                    movebox.y = current_tile.y * 100;
                     movebox.x_offset += new_tile.metadata.size;
                     movebox.y_offset += new_tile.metadata.size;
 
@@ -190,15 +248,6 @@ Tile Map::load_tile(nlohmann::json tile) {
                         LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X,Y: %d %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x, movebox.y, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
                     }
                 }
-                for (Hitbox new_movebox : new_tile.metadata.moveboxes) {
-                    MOVEBOXES->insert(new_movebox);
-                }
-                MOVEBOXES_TILES.push_back(new_tile.metadata.moveboxes);
-            }
-
-            // ADD TO TEXTURE AGENT //
-            if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.path) == 1) {
-                LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
             }
         }
     } catch (...) {

@@ -3,7 +3,7 @@
 
 #include "enemy.h"
 
-inline float ZOOM   = 1;
+inline float ZOOM   = 0.75;
 inline int PLAYER_X = 0;
 inline int PLAYER_Y = 0;
 

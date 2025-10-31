@@ -43,7 +43,7 @@ struct Node {
 
 inline std::vector<Node> RENDER_NODES;
 
-inline std::vector<std::vector<Hitbox>> MOVEBOXES_TILES;         // initially collects all Moveboxes in the game
+//inline std::vector<std::vector<Hitbox>> MOVEBOXES_TILES;         // initially collects all Moveboxes in the game
 
 class HitboxQuadtree {
     private:

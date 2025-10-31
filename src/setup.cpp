@@ -1,11 +1,13 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <string>
 
 #include "main.h"
 #include "logger.hpp"
 #include "locations.hpp"
 #include "info.h"
-#include "debug.h"
+#include "debug.hpp"
+#include "settings.hpp"
 
 int setup() {
     SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_NAME_STRING, INFO_NAME.c_str());
@@ -22,7 +24,6 @@ int setup() {
     } else {
         SDL_Log("INFO: SDL initialized successfully.");
     }
-    LOGGER.set_logfile(PATH_LOG_FILE); // Logger function has its own error handeling
 
     std::string windowTitle = INFO_NAME + " - " + INFO_VERSION.toString();
     MAIN_WIN = SDL_CreateWindow(windowTitle.c_str(), SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE);
@@ -31,14 +32,21 @@ int setup() {
         return 1;
     } else {
         MAIN_REN = SDL_CreateRenderer(MAIN_WIN, NULL);
-        std::string icon_path = std::string(RESOURCE_DIR) + "/icons/icon.png";
+        std::string icon_path = std::string(LOCATIONS["resource_dir"].get()) + "/icons/icon.png";
         SDL_Surface* icon = IMG_Load(icon_path.c_str());
         if ( !SDL_SetWindowIcon(MAIN_WIN, icon) ) {
             LOGGER.log(LogLevel::WARNING, "[setup.cpp:setup] Windowicon could not be set: %s\n", SDL_GetError());
         }
-        LOGGER.log(LogLevel::INFO, "Setup call done");
+        LOGGER.log(LogLevel::INFO, "SDL setup done!");
 
-        if ( DEBUG_TEST_LOGGER ) {
+        LOGGER.log(LogLevel::INFO, "Loading Settings");
+
+        init_locations_settings("data/config/locations.ini");
+        init_debug_settings(LOCATIONS["config_dir"].get() + "/debug.ini");
+        init_main_settings(LOCATIONS["config_dir"].get() + "/main.ini");
+
+        LOGGER.set_logfile(LOCATIONS["log_file"].get()); // Logger function has its own error handeling
+        if (DEBUG["test_logger"].get()) {
             LOGGER.log(LogLevel::DEBUG,    "Testing Logger");
             LOGGER.log(LogLevel::INFO,     "Testing Logger");
             LOGGER.log(LogLevel::WARNING,  "Testing Logger");

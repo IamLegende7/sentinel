@@ -2,12 +2,8 @@
 #include "hitboxes.hpp"
 
 CombatLoop::CombatLoop(std::string map_name, SDL_Renderer* renderer) {
-    MOVEBOXES_TILES.clear();
     combat_renderer = renderer;
     main_map = new Map(map_name, combat_renderer);
-    if (DEBUG_ALL_DEBUG_LOGS) {
-        LOGGER.log(LogLevel::DEBUG, "Length of MOVEBOXES_TILES: %d", MOVEBOXES_TILES.size());
-    }
 }
 
 CombatLoop::~CombatLoop() {
@@ -44,30 +40,30 @@ bool CombatLoop::tick() {
     }
     SDL_RenderTexture(combat_renderer, background_texture, NULL, &full_window_rect);
 
-    if (DEBUG_SHOW_HITBOXES) {
+    if (DEBUG["show_hitboxes"].get()) {
         MOVEBOXES->root->render_hitboxes(combat_renderer, "#CB1ED1");
         PLAYER.movebox.render(combat_renderer, "#48ef32", true);
     }
 
-    if (DEBUG_SHOW_RELEVANT_HITBOXES) {
+    if (DEBUG["show_relevant_hitboxes"].get()) {
         std::vector<Hitbox> relevant_moveboxes = MOVEBOXES->get_relevant({PLAYER.x, PLAYER.y});
         for (Hitbox relevant_movebox : relevant_moveboxes) {
             relevant_movebox.render(MAIN_REN, "#32C5EF");
         }
     }
 
-    if (DEBUG_SHOW_NODES) {
+    if (DEBUG["show_nodes"].get()) {
         MOVEBOXES->root->render("#ffffff");
     }
 
     // render debug information   // TODO: change to actual text, not SDL debug text
     SDL_SetRenderDrawColor(combat_renderer, 255, 255, 255, 255);  // set coulor to white
-    if (DEBUG_SHOW_COORDS) {
+    if (DEBUG["show_coords"].get()) {
         std::ostringstream coords;
         coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
         SDL_RenderDebugText(combat_renderer, 5, 5, coords.str().c_str());
     }
-    if (DEBUG_SHOW_SPEED) {
+    if (DEBUG["show_speed"].get()) {
         std::ostringstream speed;
         speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
         SDL_RenderDebugText(combat_renderer, 5, 20, speed.str().c_str());

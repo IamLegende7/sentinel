@@ -132,7 +132,7 @@ int TextureAgent::load_texture(const char* texture_path, std::string name) {
     // Check for existing textures //
     if (name != "none") {
         if (get_texture_exists(name)) {
-                if (DEBUG_ALL_DEBUG_LOGS) {
+                if (DEBUG["all_debug_logs"].get()) {
                     LOGGER.log(LogLevel::DEBUG, "[texture_agent.cpp:load_texture] Caught texture from loading twice!");
                 }
                 return 2;

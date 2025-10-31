@@ -8,6 +8,8 @@
 
 #include "thread_pool.hpp"
 
+#include "settings.hpp"
+
 int main(int argc, char *argv[]) {
     if ( !setup() ) {
         float accumulator = 0.0f;
@@ -18,7 +20,7 @@ int main(int argc, char *argv[]) {
 
         // move to a ```start_combat``` function or something
         //render_combat_inital("campain/debug");
-        std::string map_name = "debug/debug3.jsonc";
+        std::string map_name = "debug/debug1.jsonc";
         CombatLoop* combat;
         combat = new CombatLoop(map_name, MAIN_REN);
         PLAYER = init_player_unit(100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y);
@@ -47,9 +49,14 @@ int main(int argc, char *argv[]) {
                         }
                     }
                     if (MODE == 2) {
-                        if ((e.key.scancode == SDL_SCANCODE_R) and DEBUG_CAN_RELOAD) { // TODO: this is just a quick-and-dirty fix for now
+                        if ((e.key.scancode == SDL_SCANCODE_R) and DEBUG["can_reload_map"].get()) { // TODO: this is just a quick-and-dirty fix for now
                             if ((e.type == SDL_EVENT_KEY_DOWN) and not reload_pressed) {
                                 reload_pressed = true;
+                                // Settings //
+                                init_locations_settings("data/config/locations.ini");
+                                init_debug_settings(LOCATIONS["config_dir"].get() + "/debug.ini");
+                                init_main_settings(LOCATIONS["config_dir"].get() + "/main.ini");
+                                // Map //
                                 LOGGER.log(LogLevel::INFO, "Reloading the Map...");
                                 combat = new CombatLoop(map_name, MAIN_REN);
                                 PLAYER = init_player_unit(100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y);

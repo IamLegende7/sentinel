@@ -9,7 +9,7 @@
 
 #include "main.h"
 #include "settings.hpp"
-#include "debug.h"
+#include "debug.hpp"
 #include "locations.hpp"
 #include "player_info.h"
 #include "helper_utils.h"
@@ -36,7 +36,7 @@ struct TileMetadata {
 struct Tile {
     std::string id = "sentinel:missing";
     bool unit = false;
-    std::string path = PATH_MISSING_TEXTURE_TILE;
+    std::string path = LOCATIONS["missing_texture_tile"].get();
     int rotation = 0;
     TileMetadata metadata;
 

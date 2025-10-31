@@ -14,11 +14,11 @@
 
 Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_texture_agent = new TextureAgent(renderer);
-    map_texture_agent->load_texture(PATH_MISSING_TEXTURE_TILE.c_str(), PATH_MISSING_TEXTURE_TILE);
+    map_texture_agent->load_texture(LOCATIONS["missing_texture_tile"].get().c_str(), LOCATIONS["missing_texture_tile"].get());
     //// LOAD MAP ////
-    LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(PATH_TEXTURES)["name"].get<std::string>().c_str());
+    LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(LOCATIONS["textures_json"].get())["name"].get<std::string>().c_str());
     LOGGER.log(LogLevel::INFO, "NOW LOADING THE MAP %s!", map_name.c_str());
-    nlohmann::json json_map_data = get_json(MAP_DIR + "/" + map_name); // no worry about errors; handling in ```get_json```
+    nlohmann::json json_map_data = get_json(LOCATIONS["map_dir"].get() + "/" + map_name); // no worry about errors; handling in ```get_json```
     LOGGER.log(LogLevel::INFO, "Map size: %dx%d", json_map_data["size"][0].get<int>(), json_map_data["size"][1].get<int>());
     MOVEBOXES = new HitboxQuadtree({0, 0}, {json_map_data["size"][0].get<int>() * 100, json_map_data["size"][1].get<int>() * 100});
 
@@ -36,8 +36,8 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
 
     // GET ALL TILES IN MAP //
     XY current_tile = {0, 0};
-    if (MULTITHREADING) {
-        ThreadPool* map_pool = new ThreadPool(NUM_TREADS);
+    if (SETTINGS_BOOL["multithreading"].get()) {
+        ThreadPool* map_pool = new ThreadPool(SETTINGS_INT["multithreading"].get());
         std::vector<std::future<std::vector<std::vector<Tile>>> > futures;
 
         // Get data //
@@ -64,6 +64,7 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
                     if (map_texture_agent->load_texture(new_tile.path.c_str(), new_tile.path) == 1) {
                         LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Failed to load texture");
                     }
+                    // ADD TO QUADTREE //
                     for (Hitbox new_movebox : new_tile.metadata.moveboxes)
                         MOVEBOXES->insert(new_movebox);
                 }
@@ -145,21 +146,21 @@ Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
             new_tile.unit = true;
         } else {
             nlohmann::json json_tile_defaults = nlohmann::json{};
-            if (get_json(PATH_DEFAULTS_TILES).contains(new_tile.id)) {
-                json_tile_defaults = get_json(PATH_DEFAULTS_TILES)[new_tile.id];
+            if (get_json(LOCATIONS["default_tiles_json"].get()).contains(new_tile.id)) {
+                json_tile_defaults = get_json(LOCATIONS["default_tiles_json"].get())[new_tile.id];
             } else {
-                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", PATH_DEFAULTS_TILES.c_str(), new_tile.id.c_str());
+                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", LOCATIONS["default_tiles_json"].get().c_str(), new_tile.id.c_str());
             }
 
             nlohmann::json json_textures = nlohmann::json{};
-            if (get_json(PATH_TEXTURES)["data"].contains(new_tile.id)) {
-                json_textures = get_json(PATH_TEXTURES)["data"][new_tile.id];
+            if (get_json(LOCATIONS["textures_json"].get())["data"].contains(new_tile.id)) {
+                json_textures = get_json(LOCATIONS["textures_json"].get())["data"][new_tile.id];
             } else {
-                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", PATH_TEXTURES.c_str(), new_tile.id.c_str());
+                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", LOCATIONS["textures_json"].get().c_str(), new_tile.id.c_str());
             }
 
             // GET PATH //
-            std::string tile_path = PATH_MISSING_TEXTURE_TILE;
+            std::string tile_path = LOCATIONS["missing_texture_tile"].get();
             if (tile.contains("texture")) {
                 // Use the given texture path //
                 tile_path = tile.get<std::string>();
@@ -181,15 +182,13 @@ Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
                         LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
                     }
                 }
-                if (DEBUG_ALL_DEBUG_LOGS) {
+                if (DEBUG["all_debug_logs"].get()) {
                     LOGGER.log(LogLevel::DEBUG, "Tile path: %s", tile_path.c_str());
                 }
             }
             // replace substrings //
-            tile_path = replace_substring(tile_path, "$textures$", TEXTURE_DIR);
-            tile_path = replace_substring(tile_path, "$resources$", RESOURCE_DIR);
-            tile_path = replace_substring(tile_path, "$texturepacks$", TEXTUREPACK_DIR);
-            tile_path = replace_substring(tile_path, "$data$", DATA_DIR);
+            tile_path = replace_locations(tile_path);
+
             // give out //
             new_tile.path = tile_path;
 
@@ -244,7 +243,7 @@ Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
                     movebox.x_offset += new_tile.metadata.size;
                     movebox.y_offset += new_tile.metadata.size;
 
-                    if (DEBUG_ALL_DEBUG_LOGS) {
+                    if (DEBUG["all_debug_logs"].get()) {
                         LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X,Y: %d %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x, movebox.y, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
                     }
                 }
@@ -287,7 +286,7 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
                 hitbox_json_single[4].get<int>()
             };
             metadata.hitboxes.push_back(new_hitbox);
-            if (DEBUG_ALL_DEBUG_LOGS) {
+            if (DEBUG["all_debug_logs"].get()) {
                 LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", new_hitbox.type, new_hitbox.x_offset, new_hitbox.y_offset, new_hitbox.width, new_hitbox.height);
             }
         }
@@ -300,12 +299,12 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
 ////////////////
 
 void Map::render_map(int camera_x, int camera_y) {
-            int min_x = static_cast<int>(camera_x / 100);
-            int max_x = static_cast<int>((camera_x + (SCREEN_WIDTH / ZOOM))  / 100);
-            int min_y = static_cast<int>(camera_y / 100);
-            int max_y = static_cast<int>((camera_y + (SCREEN_HEIGHT / ZOOM)) / 100);
+            int min_x = (camera_x / 100);
+            int max_x = ((camera_x + (SCREEN_WIDTH / ZOOM))  / 100);
+            int min_y = (camera_y / 100);
+            int max_y = ((camera_y + (SCREEN_HEIGHT / ZOOM)) / 100);
 
-            if (DEBUG_SHOW_TILE_HIDING) {
+            if (DEBUG["show_tile_hiding"].get()) {
                 min_x += 1;
                 max_x -= 1;
                 min_y += 1;

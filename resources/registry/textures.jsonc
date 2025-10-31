@@ -3,17 +3,17 @@
     "description":  "The default Sentinel textures",
     "data": {
         // FLOOR / FULL TILES //
-        "sentinel:missing":             "$textures$/tiles/missing.png",
-        "sentinel:dirt":                ["$textures$/tiles/dirt1.png", "$textures$/tiles/dirt2.png"],
-        "sentinel:concrete":            "$textures$/tiles/concrete.png",
-        "sentinel:wood_floor":          "$textures$/tiles/wood_floor.png",
+        "sentinel:missing":             "$texture_dir$/tiles/missing.png",
+        "sentinel:dirt":                ["$texture_dir$/tiles/dirt1.png", "$texture_dir$/tiles/dirt2.png"],
+        "sentinel:concrete":            "$texture_dir$/tiles/concrete.png",
+        "sentinel:wood_floor":          "$texture_dir$/tiles/wood_floor.png",
         
         // WALLS //
-        "sentinel:wood_wall":           "$textures$/tiles/wood_wall/strait.png",
-        "sentinel:wood_wall_ending":    "$textures$/tiles/wood_wall/ending.png",
-        "sentinel:wood_wall_corner":    "$textures$/tiles/wood_wall/corner.png",
-        "sentinel:wood_wall_tpiece":    "$textures$/tiles/wood_wall/tpiece.png",
-        "sentinel:wood_wall_cross":     "$textures$/tiles/wood_wall/cross.png"
+        "sentinel:wood_wall":           "$texture_dir$/tiles/wood_wall/strait.png",
+        "sentinel:wood_wall_ending":    "$texture_dir$/tiles/wood_wall/ending.png",
+        "sentinel:wood_wall_corner":    "$texture_dir$/tiles/wood_wall/corner.png",
+        "sentinel:wood_wall_tpiece":    "$texture_dir$/tiles/wood_wall/tpiece.png",
+        "sentinel:wood_wall_cross":     "$texture_dir$/tiles/wood_wall/cross.png"
 
     }
 }

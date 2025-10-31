@@ -4,7 +4,7 @@
 #include <cmath>
 
 #include "helper_utils.h"
-#include "debug.h"
+#include "debug.hpp"
 #include "logger.hpp"
 #include "hitboxes.hpp"
 
@@ -194,7 +194,7 @@ class Unit {
             */
             /*
             if (!(colliding_x) and !(colliding_y)) stuck_in_wall = 0;
-            if (DEBUG_ANNOYING_LOGS and (stuck_in_wall != 0)) LOGGER.log(LogLevel::DEBUG, "stuck_in_wall: %d", stuck_in_wall);
+            if (DEBUG["annoying_logs"].get() and (stuck_in_wall != 0)) LOGGER.log(LogLevel::DEBUG, "stuck_in_wall: %d", stuck_in_wall);
             bool still_colliding;
             if (stuck_in_wall >= 15) {
                 if (colliding_x) {

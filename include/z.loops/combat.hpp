@@ -14,7 +14,7 @@
 #include "player_info.h"
 #include "locations.hpp"
 #include "info.h"
-#include "debug.h"
+#include "debug.hpp"
 #include "texture_agent.hpp"
 #include "render_map.hpp"
 #include "helper_utils.h"

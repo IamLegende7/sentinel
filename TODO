@@ -1,21 +1,20 @@
-FIXME: Sometimes stuttering while moving
+FIXME: sometimes flickering after reloading map; only goes away after moving
 
-FIXME: sometimes getting stuck on corners still
-FIXME: flickering after reloading map; only goes away after moving
-
-FIXME: Player pos; not player's movebox pos gets used to get relevant moveboxes
+FIXME: Player pos; not the average of the player's movebox positions gets used to get relevant moveboxes
 
 TODO: optimasation!
+    - TODO: renderring using SDL_GPU
     - TODO: make the background texture bake into a few textures, so that it doesnt have to be re-baked a lot
             --> then bake them in a big texture (while hinding off-srceen) and render that
     - TODO: Make hitboxes & nodes only render inside of view
     - TODO: less movement ticks
+    - TODO: more ideal types (size only needs byte max, not an int, for example)
 
 TODO: layering of textures (bottom of screen in front, top in back)
 
 TODO: keyboard keybinds  --> list of SDL_Keycode
 
-TODO: add logfile rotation logic (getting rid of unused logs)
+TODO: add logfile rotation logic (getting rid of unused logs, move logs of chrashes into data/logs/crashes)
 
 TODO: add enemys
 TODO: add enemy ai
@@ -33,5 +32,7 @@ TODO: translation framework (multilang framework)
 TODO: ui & mapselector
 TODO: make player not spawn as a new unit, but choose a unit to control
             --> IDEA: player spawns with limeted time as a particle cloud inviseble to enemys. them takes a host form this mode
+
+TODO: modding support (maybe using webassembly?)
 
 TODO: add controller support

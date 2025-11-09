@@ -2,7 +2,7 @@
 #include <SDL3/SDL_main.h>
 
 #include "main.h"
-#include "enemy.h"
+#include "unit.hpp"
 #include "player_info.h"
 #include "combat.hpp"
 
@@ -23,7 +23,8 @@ int main(int argc, char *argv[]) {
         std::string map_name = "debug/debug1.jsonc";
         CombatLoop* combat;
         combat = new CombatLoop(map_name, MAIN_REN);
-        PLAYER = init_player_unit(100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y);
+        PLAYER = new Unit("sentinel:soldier", nlohmann::json{}, {100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y}); // Temporary
+        PLAYER->become_player();
 
         // main game loop
         bool quit;
@@ -59,7 +60,8 @@ int main(int argc, char *argv[]) {
                                 // Map //
                                 LOGGER.log(LogLevel::INFO, "Reloading the Map...");
                                 combat = new CombatLoop(map_name, MAIN_REN);
-                                PLAYER = init_player_unit(100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y);
+                                PLAYER = new Unit("sentinel:soldier", nlohmann::json{}, {100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y}); // Temporary
+                                PLAYER->become_player();
                             } else if (e.type == SDL_EVENT_KEY_UP) {
                                 reload_pressed = false;
                             }
@@ -68,15 +70,15 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 if (MODE == 2) {
-                    move_player();
+                    PLAYER->tick();
                 }
                 accumulator -= TIME_STEP;
             }
 
             // RENDERING //
             if (MODE == 2) {
-                CAMERA_POS.x = PLAYER.x;
-                CAMERA_POS.y = PLAYER.y;
+                CAMERA_POS.x = PLAYER->x;
+                CAMERA_POS.y = PLAYER->y;
                 combat->tick();
             }
             SDL_RenderPresent(MAIN_REN);

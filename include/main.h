@@ -3,6 +3,10 @@
 
 #include <string>
 
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3/SDL_gpu.h>
+
 #include "helper_utils.h"
 
 /* this is where most functions are included
@@ -16,7 +20,7 @@ void cleanup(SDL_Renderer* renderer, SDL_Window* window);
 
 // Movement & Input //
 void inputs_player(const SDL_Event& e);
-void move_player();
+XY init_move();
 
 /*
     SOME VARS BELOW
@@ -34,7 +38,10 @@ inline SDL_Window* MAIN_WIN = nullptr;
 inline SDL_Renderer* MAIN_REN = nullptr;
 // inline SDL_Renderer* background_ren = nullptr;  // the render for making the map texture
 
-// 0: main menu; 1: in game, out of combat; 2: in "combat", in the map; 3: pause menu
+// GPU //
+inline SDL_GPUDevice* GPU = nullptr;
+
+// 0: main menu; 1: in game, out of combat; 2: in combat, in the map; 3: pause menu // FIXME: whats the porpose of 1?
 inline int MODE = 2;  // TODO: when main menu is added: change to 0
 
 inline XY CAMERA_POS = {0, 0};

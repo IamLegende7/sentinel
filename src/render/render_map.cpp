@@ -20,7 +20,7 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     LOGGER.log(LogLevel::INFO, "NOW LOADING THE MAP %s!", map_name.c_str());
     nlohmann::json json_map_data = get_json(LOCATIONS["map_dir"].get() + "/" + map_name); // no worry about errors; handling in ```get_json```
     LOGGER.log(LogLevel::INFO, "Map size: %dx%d", json_map_data["size"][0].get<int>(), json_map_data["size"][1].get<int>());
-    MOVEBOXES = new HitboxQuadtree({0, 0}, {json_map_data["size"][0].get<int>() * 100, json_map_data["size"][1].get<int>() * 100});
+    MOVEBOXES = new HitboxQuadtree({0, 0}, {json_map_data["size"][0].get<float>() * 100, json_map_data["size"][1].get<float>() * 100});
 
     // SETTINGS //
     nlohmann::json json_settings = json_map_data["settings"];
@@ -28,7 +28,7 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
         settings.starting_pos.x = json_settings["starting_pos"][0].get<int>();
         settings.starting_pos.y = json_settings["starting_pos"][1].get<int>();
     }
-    LOGGER.log(LogLevel::DEBUG, "Starting X: %d, Y: %d", settings.starting_pos.x, settings.starting_pos.y);
+    LOGGER.log(LogLevel::DEBUG, "Starting X: %d, Y: %d", (int)(settings.starting_pos.x), (int)(settings.starting_pos.y));
 
     // TILES //
     nlohmann::json json_tile_data = json_map_data["tiles"];
@@ -146,10 +146,10 @@ Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
             new_tile.unit = true;
         } else {
             nlohmann::json json_tile_defaults = nlohmann::json{};
-            if (get_json(LOCATIONS["default_tiles_json"].get()).contains(new_tile.id)) {
-                json_tile_defaults = get_json(LOCATIONS["default_tiles_json"].get())[new_tile.id];
+            if (get_json(LOCATIONS["tiles_json"].get()).contains(new_tile.id)) {
+                json_tile_defaults = get_json(LOCATIONS["tiles_json"].get())[new_tile.id];
             } else {
-                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", LOCATIONS["default_tiles_json"].get().c_str(), new_tile.id.c_str());
+                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", LOCATIONS["tiles_json"].get().c_str(), new_tile.id.c_str());
             }
 
             nlohmann::json json_textures = nlohmann::json{};
@@ -267,10 +267,10 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
             Hitbox new_movebox = {
                 movebox_json_single[0].get<int>(),
                 0, 0,
-                movebox_json_single[3].get<int>(),
-                movebox_json_single[4].get<int>(),
-                movebox_json_single[5].get<int>(),
-                movebox_json_single[6].get<int>()
+                movebox_json_single[3].get<float>(),
+                movebox_json_single[4].get<float>(),
+                movebox_json_single[5].get<float>(),
+                movebox_json_single[6].get<float>()
             };
             metadata.moveboxes.push_back(new_movebox);
         }
@@ -280,10 +280,10 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
             Hitbox new_hitbox = {
                 hitbox_json_single[0].get<int>(),
                 0, 0,
-                hitbox_json_single[1].get<int>(),
-                hitbox_json_single[2].get<int>(),
-                hitbox_json_single[3].get<int>(),
-                hitbox_json_single[4].get<int>()
+                hitbox_json_single[1].get<float>(),
+                hitbox_json_single[2].get<float>(),
+                hitbox_json_single[3].get<float>(),
+                hitbox_json_single[4].get<float>()
             };
             metadata.hitboxes.push_back(new_hitbox);
             if (DEBUG["all_debug_logs"].get()) {

@@ -39,12 +39,13 @@ inline void init_locations_settings(std::string config_file) {
     LOCATIONS["texture_dir"] =          Setting<std::string>("texture_dir",             config_file);
     LOCATIONS["texturepack_dir"] =      Setting<std::string>("texturepack_dir",         config_file);
     LOCATIONS["missing_texture_tile"] = Setting<std::string>("missing_texture_tile",    config_file);
-    LOCATIONS["default_tiles_json"] =   Setting<std::string>("default_tiles_json",      config_file);
     LOCATIONS["textures_json"] =        Setting<std::string>("textures_json",           config_file);
     // Logging //
     LOCATIONS["log_file"] =             Setting<std::string>("log_file",                config_file);
     LOCATIONS["log_crash_dir"] =        Setting<std::string>("log_crash_dir",           config_file);
-
+    // Registry //
+    LOCATIONS["units_json"] =          Setting<std::string>("units_json",               config_file);
+    LOCATIONS["tiles_json"] =          Setting<std::string>("tiles_json",               config_file);
 
     for (auto it = LOCATIONS.begin(); it != LOCATIONS.end(); ++it) {
         it->second.set(replace_locations(it->second.get()));

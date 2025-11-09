@@ -3,19 +3,16 @@
 
 #include "main.h"
 #include "player_info.h"
-#include "enemy.h"
+#include "unit.hpp"
 #include "helper_utils.h"
+#include "unit.hpp"
 
 struct MoveState {
     int x_direction = 0;
     int y_direction = 0;
 
     bool moving() {
-        if (!x_direction == 0 and !y_direction == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (x_direction != 0 and y_direction != 0);
     }
 };
 
@@ -48,52 +45,49 @@ XY init_move() {
 */
 void inputs_player(const SDL_Event& e) {
     SDL_PumpEvents();
-    if (e.type == SDL_EVENT_KEY_DOWN) {  // TODO: add keybinds
-        switch (e.key.scancode) {
-            case SDL_SCANCODE_W: 
-                KEY_STATE.up = true;
-                break;
-            case SDL_SCANCODE_S: 
-                KEY_STATE.down = true;
-                break;
-            case SDL_SCANCODE_A: 
-                KEY_STATE.left = true;
-                break;
-            case SDL_SCANCODE_D: 
-                KEY_STATE.right = true;
-                break;
-            case (SDL_SCANCODE_LCTRL): 
-                PLAYER.running = true;
-                break;
-            default:
-                break;
+    // COMBAT //
+    if (MODE == 2) {
+        if (e.type == SDL_EVENT_KEY_DOWN) {  // TODO: add keybinds
+            switch (e.key.scancode) {
+                case SDL_SCANCODE_W: 
+                    KEY_STATE.up = true;
+                    break;
+                case SDL_SCANCODE_S: 
+                    KEY_STATE.down = true;
+                    break;
+                case SDL_SCANCODE_A: 
+                    KEY_STATE.left = true;
+                    break;
+                case SDL_SCANCODE_D: 
+                    KEY_STATE.right = true;
+                    break;
+                case (SDL_SCANCODE_LCTRL): 
+                    PLAYER->running = true;
+                    break;
+                default:
+                    break;
+            }
         }
-    }
-    if (e.type == SDL_EVENT_KEY_UP) {
-        switch (e.key.scancode) {
-            case SDL_SCANCODE_W:
-                KEY_STATE.up = false;
-                break;
-            case SDL_SCANCODE_S:
-                KEY_STATE.down = false;
-                break;
-            case SDL_SCANCODE_A: 
-                KEY_STATE.left = false;
-                break;
-            case SDL_SCANCODE_D:
-                KEY_STATE.right = false;
-                break;
-            case (SDL_SCANCODE_LCTRL): 
-                PLAYER.running = false;
-                break;
-            default:
-                break;
+        if (e.type == SDL_EVENT_KEY_UP) {
+            switch (e.key.scancode) {
+                case SDL_SCANCODE_W:
+                    KEY_STATE.up = false;
+                    break;
+                case SDL_SCANCODE_S:
+                    KEY_STATE.down = false;
+                    break;
+                case SDL_SCANCODE_A: 
+                    KEY_STATE.left = false;
+                    break;
+                case SDL_SCANCODE_D:
+                    KEY_STATE.right = false;
+                    break;
+                case (SDL_SCANCODE_LCTRL): 
+                    PLAYER->running = false;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
-    
-void move_player() {
-    XY move_direction = init_move();
-    PLAYER.move(move_direction);
-}
-// PLAYER_SPEED_Y = PLAYER_SPEED_Y + PLAYER_BASE_SPEED;

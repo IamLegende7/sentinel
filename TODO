@@ -3,13 +3,15 @@ FIXME: Sometimes stuttering while moving
 FIXME: sometimes getting stuck on corners still
 FIXME: flickering after reloading map; only goes away after moving
 
-TODO: put settings in .conf files (or a equivalent)
+FIXME: Player pos; not player's movebox pos gets used to get relevant moveboxes
 
 TODO: optimasation!
     - TODO: make the background texture bake into a few textures, so that it doesnt have to be re-baked a lot
             --> then bake them in a big texture (while hinding off-srceen) and render that
     - TODO: Make hitboxes & nodes only render inside of view
     - TODO: less movement ticks
+
+TODO: layering of textures (bottom of screen in front, top in back)
 
 TODO: keyboard keybinds  --> list of SDL_Keycode
 

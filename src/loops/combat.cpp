@@ -42,12 +42,14 @@ bool CombatLoop::tick() {
 
     if (DEBUG["show_hitboxes"].get()) {
         MOVEBOXES->root->render_hitboxes(combat_renderer, "#CB1ED1");
-        PLAYER.movebox.render(combat_renderer, "#48ef32", true);
+        for (Hitbox& movebox : PLAYER->moveboxes) {
+            movebox.render(combat_renderer, "#48ef32", true);
+        }
     }
 
     if (DEBUG["show_relevant_hitboxes"].get()) {
-        std::vector<Hitbox> relevant_moveboxes = MOVEBOXES->get_relevant({PLAYER.x, PLAYER.y});
-        for (Hitbox relevant_movebox : relevant_moveboxes) {
+        std::vector<Hitbox> relevant_moveboxes = MOVEBOXES->get_relevant({(float)(PLAYER->x), (float)(PLAYER->y)});
+        for (Hitbox& relevant_movebox : relevant_moveboxes) {
             relevant_movebox.render(MAIN_REN, "#32C5EF");
         }
     }
@@ -60,12 +62,12 @@ bool CombatLoop::tick() {
     SDL_SetRenderDrawColor(combat_renderer, 255, 255, 255, 255);  // set coulor to white
     if (DEBUG["show_coords"].get()) {
         std::ostringstream coords;
-        coords << "X: " << PLAYER.x << " Y: " << PLAYER.y;
+        coords << "X: " << PLAYER->x << " Y: " << PLAYER->y;
         SDL_RenderDebugText(combat_renderer, 5, 5, coords.str().c_str());
     }
     if (DEBUG["show_speed"].get()) {
         std::ostringstream speed;
-        speed << "SpeedY: " << PLAYER.speed_y << " SpeedX: " << PLAYER.speed_x;
+        speed << "SpeedY: " << PLAYER->speed.y << " SpeedX: " << PLAYER->speed.x;
         SDL_RenderDebugText(combat_renderer, 5, 20, speed.str().c_str());
     }
     return true;

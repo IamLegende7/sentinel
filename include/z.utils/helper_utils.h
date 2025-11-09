@@ -15,8 +15,8 @@ nlohmann::json get_json(std::string path_json_file);
 
 // misc //
 struct XY {
-    int x = 0;
-    int y = 0;
+    float x = 0;
+    float y = 0;
 };
 
 #endif

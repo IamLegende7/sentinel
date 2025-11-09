@@ -18,9 +18,9 @@
 class Hitbox {
     public:
         int type; // 0: none; 1: collides with walls & stuff; 2: takes damage from attacks
-        int x, y; // Stuck to the units x & y coords
-        int x_offset, y_offset;
-        int width, height;
+        float x, y; // Stuck to the units x & y coords
+        float x_offset, y_offset;
+        float width, height;
 
         bool colliding(const Hitbox& B);
         void render(SDL_Renderer* renderer, const std::string& hex_colour, bool player = false);
@@ -42,8 +42,6 @@ struct Node {
 };
 
 inline std::vector<Node> RENDER_NODES;
-
-//inline std::vector<std::vector<Hitbox>> MOVEBOXES_TILES;         // initially collects all Moveboxes in the game
 
 class HitboxQuadtree {
     private:

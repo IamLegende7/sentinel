@@ -6,9 +6,9 @@
     "sentinel:wood_floor":          {},
     
     // WALLS //
-    "sentinel:wood_wall":           {"metadata": {"movebox": [[1, 0, 0,  0, 31, 100, 37]]}},
-    "sentinel:wood_wall_ending":    {"metadata": {"movebox": [[1, 0, 0,  0, 32,  50, 37]]}},
-    "sentinel:wood_wall_corner":    {"metadata": {"movebox": [[1, 0, 0,  0, 32,  68, 37], [1, 0, 0, 31,  0, 37,  31]]}},
-    "sentinel:wood_wall_tpiece":    {"metadata": {"movebox": [[1, 0, 0,  0, 31, 100, 37], [1, 0, 0, 31,  0, 37,  31]]}},
-    "sentinel:wood_wall_cross":     {"metadata": {"movebox": [[1, 0, 0,  0, 31, 100, 37], [1, 0, 0, 31,  0, 37, 100]]}}
+    "sentinel:wood_wall":           {"metadata": {"movebox": [[1, 0, 0,  0, 31.25, 100,    37.5]]}},
+    "sentinel:wood_wall_ending":    {"metadata": {"movebox": [[1, 0, 0,  0, 31.25,  50,    37.5]]}},
+    "sentinel:wood_wall_corner":    {"metadata": {"movebox": [[1, 0, 0,  0, 31.25,  68.75, 37.5], [1, 0, 0, 31.25,  0, 37.5,  31.25]]}},
+    "sentinel:wood_wall_tpiece":    {"metadata": {"movebox": [[1, 0, 0,  0, 31.25, 100,    37.5], [1, 0, 0, 31.25,  0, 37.5,  31.25]]}},
+    "sentinel:wood_wall_cross":     {"metadata": {"movebox": [[1, 0, 0,  0, 31.25, 100,    37.5], [1, 0, 0, 31.25,  0, 37.5, 100]]}}
 }

@@ -5,11 +5,14 @@
 
 */
 
+/*
+
 #include <SDL3/SDL.h>
 #include <stdio.h>
 
 #include "main.h"
-#include "enemy.h"
+#include "unit.hpp"
+
 
 // ## temporary
 Unit init_player_unit(int x_pos, int y_pos) { // TODO: remove this later
@@ -21,3 +24,4 @@ Unit init_player_unit(int x_pos, int y_pos) { // TODO: remove this later
     player.become_player();
     return player;
 }
+*/

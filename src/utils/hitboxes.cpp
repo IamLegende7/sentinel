@@ -11,13 +11,16 @@
 //////////////
 
 bool Hitbox::colliding(const Hitbox& B) {
-    int A_full_x = x; // + x_offset; // dont know why this isnt needed
-    int A_full_y = y; // + y_offset;
-    int B_full_x = B.x + B.x_offset - 100;
-    int B_full_y = B.y + B.y_offset - 100;
-    return !(A_full_x + width  < B_full_x || A_full_x > B_full_x + B.width ||
-             A_full_y + height < B_full_y || A_full_y > B_full_y + B.height
-            );
+    float A_full_x = x + x_offset;
+    float A_full_y = y + y_offset;
+    float B_full_x = B.x + B.x_offset - 100;
+    float B_full_y = B.y + B.y_offset - 100;
+    // AABB
+    return (A_full_x < B_full_x + B.width  &&
+            A_full_x + width > B_full_x    &&
+            A_full_y < B_full_y + B.height && 
+            A_full_y + height > B_full_y
+           );
 }
 
 void Hitbox::render(SDL_Renderer* renderer, const std::string& hex_colour, bool player) {
@@ -73,8 +76,8 @@ void Node::render(const std::string& hex_colour) {
     uint8_t blue =  std::stoi(hex_colour.substr(5, 2), nullptr, 16);
 
     SDL_SetRenderDrawColor(MAIN_REN, red, green, blue, 255);
-    SDL_FRect rect = {(float)(min.x + RENDER_OFFSET_X - PLAYER.x) * ZOOM,
-                      (float)(min.y + RENDER_OFFSET_Y - PLAYER.y) * ZOOM, 
+    SDL_FRect rect = {(float)(min.x + RENDER_OFFSET_X - PLAYER->x) * ZOOM, // FIXME: why is this PLAYER->x, not CAMERA.x?
+                      (float)(min.y + RENDER_OFFSET_Y - PLAYER->y) * ZOOM,
                       (float)((max.x - min.x)) * ZOOM,
                       (float)((max.y - min.y)) * ZOOM
                      };

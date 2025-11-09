@@ -1,0 +1,14 @@
+{
+    "sentinel:soldier": {// Basic Stats
+                         "hp_max": 300,
+                         "control_resistance": 2, 
+                         // Walking
+                         "slow_down": 1,
+                         "walk_acceleration": 0.3, // | Not 1:1!
+                         "run_acceleration": 0.1,  // |
+                         "walk_speed_max": 10,
+                         "run_speed_max":  17,
+                         "moveboxes": [[1, 0, 0, 0, 80, 100, 20]],
+                         "hitboxes":  [[2, 0, 0, 20, 20, 60, 60]]
+                        }
+}

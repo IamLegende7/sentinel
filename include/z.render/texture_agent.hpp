@@ -14,8 +14,8 @@
    Holds the Data of a ```SDL_Texture``` of ```TextureAgent```
 */
 struct AgentTextureData {
-     std::string name;
-     SDL_Texture* texture;
+    std::string name;
+    SDL_Texture* texture = NULL;
 };
 
 /*

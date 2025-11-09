@@ -1,17 +1,15 @@
 #ifndef PLAYER_INFO_H
 #define PLAYER_INFO_H
 
-#include "enemy.h"
+#include "unit.hpp"
 
 inline float ZOOM   = 0.75;
-inline int PLAYER_X = 0;
-inline int PLAYER_Y = 0;
 
-inline int PLAYER_WALK_SPEED_MAX = 10;  // modifier to base unit speed
-inline int PLAYER_RUNN_SPEED_MAX = 15;  // modifier to base unit speed
-inline int PLAYER_WALK_ACCELERATION = 15;  // modifier to base unit acceleration
-inline int PLAYER_RUNN_ACCELERATION = 15;  // modifier to base unit acceleration
-inline Unit PLAYER;
+inline int PLAYER_WALK_SPEED_MAX = 1;  // modifier to base unit speed
+inline int PLAYER_RUN_SPEED_MAX = 1;  // modifier to base unit speed
+inline int PLAYER_WALK_ACCELERATION = 1;  // modifier to base unit acceleration
+inline int PLAYER_RUN_ACCELERATION = 1;  // modifier to base unit acceleration
+inline Unit* PLAYER;
 
 struct KeyState {
     bool up = false;

@@ -1,3 +1,5 @@
+### DEPRECATED; DONT USE ###
+
 # Compiler and flags
 CXX = g++
 CXXFLAGS = -Iinclude -Wall -Wextra -std=c++17

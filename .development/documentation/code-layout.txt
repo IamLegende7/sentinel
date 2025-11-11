@@ -1,0 +1,4 @@
+Functions, local vars: snake_case
+Classes & Objects:     CamelCase
+Global Vars:           SCREAMING_CASE
+

@@ -1,5 +1,6 @@
 {
 "size": [32, 32],
+"type": "basic",
 "settings": {
                 "starting_pos": [-2, -2]
             },

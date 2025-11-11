@@ -1,3 +1,5 @@
+FIXME: This is all outdated
+
 Adding new tiles:
     - add texture to resources/textures/tiles (doesnt need to be /tiles, but it recommended)
     - add "namespace:id": "/path/to/texture.png" to resources/textures/defaults/texture_tile_defaults.json

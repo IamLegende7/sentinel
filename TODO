@@ -1,4 +1,6 @@
-FIXME: sometimes flickering after reloading map; only goes away after moving
+TODO: spritesheets & animated textures in TextureAgent
+
+FIXME: sometimes flickering after reloading map; only goes away after moving // Is this still an issue?
 
 FIXME: Player pos; not the average of the player's movebox positions gets used to get relevant moveboxes
 

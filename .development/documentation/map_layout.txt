@@ -1,3 +1,5 @@
+FIXME: This is all outdated
+
 layout:
     - tilestruct = {id, texture, size, metadata}   texture and size not needed, it will use texture from resources/textures/defaults/texture_tile_defaults.json and uses the default size.
         - default size = 100

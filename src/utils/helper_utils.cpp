@@ -4,9 +4,9 @@
 #include <string>
 #include <iostream>
 
-#include "helper_utils.h"
+#include "utils/helper_utils.h"
 #include "main.h"
-#include "logger.hpp"
+#include "utils/logger.hpp"
 #include "player_info.h"
 
 

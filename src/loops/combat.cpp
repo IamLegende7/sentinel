@@ -1,5 +1,5 @@
-#include "combat.hpp"
-#include "hitboxes.hpp"
+#include "loops/combat.hpp"
+#include "utils/hitboxes.hpp"
 
 CombatLoop::CombatLoop(std::string map_name, SDL_Renderer* renderer) {
     combat_renderer = renderer;

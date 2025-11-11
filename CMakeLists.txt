@@ -1,12 +1,8 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 4.0)
 project(Sentinel)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 17)
-
-## Librarys ##
-find_package(SDL3 REQUIRED)
-find_package(SDL3_image REQUIRED)
 
 ## Source & Header files ##
 file(GLOB_RECURSE SOURCES "src/*.cpp")
@@ -17,7 +13,7 @@ add_executable(Sentinel ${SOURCES} ${HEADERS})
 
 target_include_directories(Sentinel PRIVATE include)
 
-## Libs ##
+## Librarys ##
 # SDL
 add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
 # SDL image
@@ -29,6 +25,10 @@ target_link_libraries(Sentinel PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
 # Set compile options
 target_compile_options(Sentinel PRIVATE -Wall -Wextra)
 
-# set the output directory for built objects.
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/lib")
+set_target_properties(Sentinel
+    PROPERTIES
+        OUTPUT_NAME sentinel
+        RUNTIME_OUTPUT_DIRECTORY "../bin"
+        LIBRARY_OUTPUT_DIRECTORY "../bin/lib"
+        ARCHIVE_OUTPUT_DIRECTORY "../bin/lib"
+)

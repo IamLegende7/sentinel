@@ -1,4 +1,4 @@
-#include "hitboxes.hpp"
+#include "utils/hitboxes.hpp"
 
 // FOR HITBOX CLASS //
 #include "player_info.h"

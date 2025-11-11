@@ -1,4 +1,4 @@
-#include "render_map.hpp"
+#include "map/render_map.hpp"
 
 /* Some functions were moved here, because they are too long.
    They handle the loading logic of the map

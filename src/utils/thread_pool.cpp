@@ -1,5 +1,5 @@
-#include "thread_pool.hpp"
-#include "logger.hpp"
+#include "utils/thread_pool.hpp"
+#include "utils/logger.hpp"
 
 ThreadPool::ThreadPool(std::size_t count_threads) {
     int count_threads_int = count_threads;

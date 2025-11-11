@@ -3,12 +3,12 @@
 
 #include <cmath>
 
-#include "helper_utils.h"
-#include "logger.hpp"
-#include "hitboxes.hpp"
+#include "utils/helper_utils.h"
+#include "utils/logger.hpp"
+#include "utils/hitboxes.hpp"
 
-#include "debug.hpp"
-#include "locations.hpp"
+#include "settings/debug.hpp"
+#include "settings/locations.hpp"
 
 struct Effect {
     std::string id;

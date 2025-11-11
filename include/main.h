@@ -7,7 +7,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3/SDL_gpu.h>
 
-#include "helper_utils.h"
+#include "utils/helper_utils.h"
 
 /* this is where most functions are included
 

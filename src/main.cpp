@@ -4,11 +4,11 @@
 #include "main.h"
 #include "unit.hpp"
 #include "player_info.h"
-#include "combat.hpp"
+#include "loops/combat.hpp"
 
-#include "thread_pool.hpp"
+#include "utils/thread_pool.hpp"
 
-#include "settings.hpp"
+#include "settings/settings.hpp"
 
 int main(int argc, char *argv[]) {
     if ( !setup() ) {

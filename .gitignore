@@ -1,6 +1,7 @@
 .vscode
 obj/*
 bin/*
+build/*
 debug.txt
 data/logs/crashes/*
 data/logs/current.log

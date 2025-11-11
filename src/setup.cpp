@@ -3,11 +3,11 @@
 #include <string>
 
 #include "main.h"
-#include "logger.hpp"
-#include "locations.hpp"
-#include "info.h"
-#include "debug.hpp"
-#include "settings.hpp"
+#include "utils/logger.hpp"
+#include "settings/locations.hpp"
+#include "settings/info.h"
+#include "settings/debug.hpp"
+#include "settings/settings.hpp"
 
 int setup() {
     // APP METADATA //

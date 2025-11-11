@@ -4,8 +4,7 @@
 #include "main.h"
 #include "player_info.h"
 #include "unit.hpp"
-#include "helper_utils.h"
-#include "unit.hpp"
+#include "utils/helper_utils.h"
 
 struct MoveState {
     int x_direction = 0;

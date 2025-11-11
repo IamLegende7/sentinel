@@ -1,6 +1,6 @@
-#include "render_map.hpp"
+#include "map/render_map.hpp"
 
-#include "thread_pool.hpp"
+#include "utils/thread_pool.hpp"
 
 /* This class handels renderring and loading of the maps
    Use one instance for each map!

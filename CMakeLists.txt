@@ -11,6 +11,12 @@ file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.h")
 # Create the executable target
 add_executable(Sentinel ${SOURCES} ${HEADERS})
 
+set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin/lib)
+set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/lib)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
 target_include_directories(Sentinel PRIVATE include)
 
 ## Librarys ##
@@ -28,7 +34,5 @@ target_compile_options(Sentinel PRIVATE -Wall -Wextra)
 set_target_properties(Sentinel
     PROPERTIES
         OUTPUT_NAME sentinel
-        RUNTIME_OUTPUT_DIRECTORY "../bin"
-        LIBRARY_OUTPUT_DIRECTORY "../bin/lib"
-        ARCHIVE_OUTPUT_DIRECTORY "../bin/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../bin"
 )

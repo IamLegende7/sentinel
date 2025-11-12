@@ -23,7 +23,7 @@ is not in a "everything is a work-in-progress prove-of-concept" state
 
 **Linux:** run while inside the projects root directory:
 ```bash
-bash srcipts/build.sh
+bash scripts/build.sh
 ```
 
 **Currently, compiling & running the game has only been tested on x86_64 Arch Linux**

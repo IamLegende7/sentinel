@@ -22,11 +22,23 @@ is not in a "everything is a work-in-progress prove-of-concept" state
 ## Compiling
 
 **Linux:** run while inside the projects root directory:
+
 ```bash
 bash scripts/build.sh
 ```
 
+<details>
+  <summary> Build.sh arguments </summary>
+
+  - [-c|--clean]           Make a clean build (Remove all old build files & binarys)  
+
+  - [-p|--auto-package]    Package the compiled code using package.sh into a .tar.gz with only the importand files  
+
+  - [-d|--no-install-deps] (**Not Recomended!**) Don't install dependencies automatically
+
+  - [--cleanup]            Cleanup build files
+</details>
+
 **Currently, compiling & running the game has only been tested on x86_64 Arch Linux**
 
-TODO:
-build.sh doesn't do much except running CMake (so you will have to install dependencies on your own)
+**Please note**: there is no official MacOS compatability. You can try to compile it for MacOS, but be warned it might not work.

@@ -1,0 +1,1 @@
+This is just some stuff that is going to be used by the build, compile & package scripts, so ignore this folder; you aren't supposed to read this stuff. :)

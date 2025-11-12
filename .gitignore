@@ -1,7 +1,17 @@
+# Misc
 .vscode
-obj/*
+debug.txt
+
+# Builds
 bin/*
 build/*
-debug.txt
+
+# Packaging
+sentinel-linux
+sentinel-windows
+sentinel-linux.tar.gz
+sentinel-windows.zip
+
+# Logs
 data/logs/crashes/*
 data/logs/current.log

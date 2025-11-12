@@ -14,6 +14,9 @@ cp -r bin/lib $package_dir/
 cp -r resources $package_dir/
 cp -r data $package_dir/
 
+cp LICENSE $package_dir/
+#cp RELEASE_README.md $package_dir/README.d
+
 tar -czvf $package_dir.tar.gz $package_dir
 
 if [ $1 == "cleanup" ]; then

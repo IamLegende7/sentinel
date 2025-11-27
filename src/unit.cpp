@@ -173,7 +173,7 @@ void Unit::move(XY direction) {
             for (Hitbox& test_movebox : moveboxes) {
                 test_movebox.x += ceil(speed.x) * directional_modifier.x;
                 for (Hitbox& tile_movebox : relevant_moveboxes) {
-                    if (test_movebox.colliding(tile_movebox)) {
+                    if (colliding(test_movebox, tile_movebox)) {
                         is_colliding_x = true;
                         break;
                     }
@@ -186,7 +186,7 @@ void Unit::move(XY direction) {
             for (Hitbox& test_movebox : moveboxes) {
                 test_movebox.y += ceil(speed.y) * directional_modifier.y;
                 for (Hitbox& tile_movebox : relevant_moveboxes) {
-                    if (test_movebox.colliding(tile_movebox)) {
+                    if (colliding(test_movebox, tile_movebox)) {
                         is_colliding_y = true;
                         break;
                     }

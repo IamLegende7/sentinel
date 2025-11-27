@@ -24,19 +24,17 @@ is not in a "everything is a work-in-progress prove-of-concept" state
 **Linux:** run while inside the projects root directory:
 
 ```bash
-bash scripts/build.sh
+./
 ```
 
 <details>
   <summary> Build.sh arguments </summary>
 
-  - [-c|--clean]           Make a clean build (Remove all old build files & binarys)  
+- [-c|--clean]           Make a clean build (Remove all old build files & binarys)
+- [-p|--auto-package]    Package the compiled code using package.sh into a .tar.gz with only the importand files
+- [-d|--no-install-deps] (**Not Recomended!**) Don't install dependencies automatically
+- [--cleanup]            Cleanup build files
 
-  - [-p|--auto-package]    Package the compiled code using package.sh into a .tar.gz with only the importand files  
-
-  - [-d|--no-install-deps] (**Not Recomended!**) Don't install dependencies automatically
-
-  - [--cleanup]            Cleanup build files
 </details>
 
 **Currently, compiling & running the game has only been tested on x86_64 Arch Linux**

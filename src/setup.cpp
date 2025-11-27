@@ -33,6 +33,9 @@ int setup() {
     init_debug_settings(LOCATIONS["config_dir"].get() + "/debug.ini");
     init_main_settings(LOCATIONS["config_dir"].get() + "/main.ini");
 
+    // LOGGER //
+    LOGGER.set_logfile(LOCATIONS["log_file"].get()); // Logger function has its own error handeling
+
     // GPU DEVICE //
     if (!SETTINGS_BOOL["old_renderring"].get()) {
         GPU = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL | SDL_GPU_SHADERFORMAT_MSL, false, SETTINGS_STRING["gpu_driver"].get().c_str());
@@ -58,7 +61,7 @@ int setup() {
     if (!SETTINGS_BOOL["old_renderring"].get()) {
         if (!SDL_ClaimWindowForGPUDevice(GPU, MAIN_WIN)) {
             LOGGER.log(LogLevel::CRITICAL, "[setup.cpp:setup] Could not claim Main Window for GPU: %s", SDL_GetError());
-            return -1;
+            return 1;
         }
     }
 
@@ -71,8 +74,7 @@ int setup() {
     }
     LOGGER.log(LogLevel::INFO, "SDL setup done!");
 
-    // LOGGER //
-    LOGGER.set_logfile(LOCATIONS["log_file"].get()); // Logger function has its own error handeling
+    // SETTINGS //
     if (DEBUG["test_logger"].get()) {
         LOGGER.log(LogLevel::DEBUG,    "Testing Logger");
         LOGGER.log(LogLevel::INFO,     "Testing Logger");

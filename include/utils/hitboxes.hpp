@@ -22,9 +22,10 @@ class Hitbox {
         float x_offset, y_offset;
         float width, height;
 
-        bool colliding(const Hitbox& B);
         void render(SDL_Renderer* renderer, const std::string& hex_colour, bool player = false);
 };
+
+bool colliding(const Hitbox& a, const Hitbox& b);
 
 /////////////////////
 // HITBOX HANDLING //

@@ -10,16 +10,16 @@
 // HITBOXES //
 //////////////
 
-bool Hitbox::colliding(const Hitbox& B) {
-    float A_full_x = x + x_offset;
-    float A_full_y = y + y_offset;
-    float B_full_x = B.x + B.x_offset - 100;
-    float B_full_y = B.y + B.y_offset - 100;
+bool colliding(const Hitbox& a, const Hitbox& b) {
+    float a_full_x = a.x + a.x_offset;
+    float a_full_y = a.y + a.y_offset;
+    float b_full_x = b.x + b.x_offset - 100;
+    float b_full_y = b.y + b.y_offset - 100;
     // AABB
-    return (A_full_x < B_full_x + B.width  &&
-            A_full_x + width > B_full_x    &&
-            A_full_y < B_full_y + B.height && 
-            A_full_y + height > B_full_y
+    return (a_full_x < b_full_x + b.width  &&
+            a_full_x + a.width > b_full_x    &&
+            a_full_y < b_full_y + b.height && 
+            a_full_y + a.height > b_full_y
            );
 }
 

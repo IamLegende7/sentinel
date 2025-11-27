@@ -1,17 +1,15 @@
 #!/bin/bash
 set -e
 
-echo "THIS SCRIPT HAS ONLY BEEN TESTED ON ARCH LINUX. PROCEED WITH CAUTION!"
-read
-
 cd "$(dirname "$0")"
 
 do_clean_build=false
 auto_package=false
 install_build_dependencies=true
 do_cleanup=false
+show_warning=true
 
-OPTIONS=$(getopt -o c,p,d --long clean,auto-package,no-install-deps,cleanup -- "$@")
+OPTIONS=$(getopt -o c,p,d,h --long clean,auto-package,no-install-deps,cleanup,help,no-show-warning -- "$@")
 eval set -- "$OPTIONS"
 while true; do
   case "$1" in
@@ -31,11 +29,17 @@ while true; do
       do_cleanup=true
       shift
       ;;
+    --no-show-warning)
+      show_warning=false
+      shift
+      ;;
     --)
       shift
       break
       ;;
     -h|--help)
+      echo "Usage: $0 [-c|--clean] [-p|--auto-package] [-d|--no-install-deps] [--cleanup]"
+      echo ""
       echo "[-c|--clean]           Make a clean build (Remove all old build files & binarys)"
       echo "[-p|--auto-package]    Package the compiled code using package.sh into a .tar.gz with only the importand files"
       echo "[-d|--no-install-deps] (**Not Recomended!**) Don't install dependencies automatically"
@@ -49,6 +53,11 @@ while true; do
       ;;
   esac
 done
+
+if [ "$show_warning" = true ]; then
+    echo "THIS SCRIPT HAS ONLY BEEN TESTED ON ARCH LINUX. PROCEED WITH CAUTION!"
+    read
+fi
 
 # Detect distro
 if [[ "$OSTYPE" != "linux-gnu"* ]]; then

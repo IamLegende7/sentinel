@@ -11,10 +11,10 @@
 
 Unit::Unit(std::string id, nlohmann::json properties, XY starting_pos) {
     try {
-        if (!get_json(LOCATIONS["units_json"].get()).contains(id)) {
-            LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] Unit not found: %s in %s", id.c_str(), LOCATIONS["units_json"].get().c_str());
+        if (!get_json(LOCATIONS["units_json"]).contains(id)) {
+            LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] Unit not found: %s in %s", id.c_str(), std::string(LOCATIONS["units_json"]).c_str());
         } else {
-            nlohmann::json unit_defaults = get_json(LOCATIONS["units_json"].get())[id];
+            nlohmann::json unit_defaults = get_json(LOCATIONS["units_json"])[id];
 
             x = (int)(starting_pos.x);
             y = (int)(starting_pos.y);
@@ -23,35 +23,35 @@ Unit::Unit(std::string id, nlohmann::json properties, XY starting_pos) {
             // BASIC STATS //
             if (properties.contains("hp_max")) hp_max = properties["hp_max"].get<int>();
             else if (unit_defaults.contains("hp_max")) hp_max = unit_defaults["hp_max"].get<int>();
-            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <hp_max> in: %s", LOCATIONS["units_json"].get().c_str());
+            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <hp_max> in: %s", std::string(LOCATIONS["units_json"]).c_str());
 
             if (properties.contains("hp")) hp = properties["hp"].get<int>();
 
             if (properties.contains("control_resistance")) control_resistance = properties["control_resistance"].get<int>();
             else if (unit_defaults.contains("control_resistance")) control_resistance = unit_defaults["control_resistance"].get<int>();
-            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <control_resistance> in: %s", LOCATIONS["units_json"].get().c_str());
+            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <control_resistance> in: %s", std::string(LOCATIONS["units_json"]).c_str());
 
 
             // WALKING //
             if (properties.contains("slow_down")) slow_down = properties["slow_down"].get<float>();
             else if (unit_defaults.contains("slow_down")) slow_down = unit_defaults["slow_down"].get<float>();
-            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <slow_down> in: %s", LOCATIONS["units_json"].get().c_str());
+            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <slow_down> in: %s", std::string(LOCATIONS["units_json"]).c_str());
 
             if (properties.contains("walk_acceleration")) walk_acceleration = properties["walk_acceleration"].get<float>();
             else if (unit_defaults.contains("walk_acceleration")) walk_acceleration = unit_defaults["walk_acceleration"].get<float>();
-            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <walk_acceleration> in: %s", LOCATIONS["units_json"].get().c_str());
+            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <walk_acceleration> in: %s", std::string(LOCATIONS["units_json"]).c_str());
 
             if (properties.contains("run_acceleration")) run_acceleration = properties["run_acceleration"].get<float>();
             else if (unit_defaults.contains("run_acceleration")) run_acceleration = unit_defaults["run_acceleration"].get<float>();
-            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <run_acceleration> in: %s", LOCATIONS["units_json"].get().c_str());
+            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <run_acceleration> in: %s", std::string(LOCATIONS["units_json"]).c_str());
 
             if (properties.contains("walk_speed_max")) walk_speed_max = properties["walk_speed_max"].get<int>();
             else if (unit_defaults.contains("walk_speed_max")) walk_speed_max = unit_defaults["walk_speed_max"].get<int>();
-            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <walk_speed_max> in: %s", LOCATIONS["units_json"].get().c_str());
+            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <walk_speed_max> in: %s", std::string(LOCATIONS["units_json"]).c_str());
 
             if (properties.contains("run_speed_max")) run_speed_max = properties["run_speed_max"].get<int>();
             else if (unit_defaults.contains("run_speed_max")) run_speed_max = unit_defaults["run_speed_max"].get<int>();
-            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <run_speed_max> in: %s", LOCATIONS["units_json"].get().c_str());
+            else LOGGER.log(LogLevel::WARNING, "[unit.cpp:Unit] No option <run_speed_max> in: %s", std::string(LOCATIONS["units_json"]).c_str());
 
 
             // HITBOXES //

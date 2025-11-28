@@ -16,7 +16,7 @@
 #include "settings/info.h"
 #include "settings/debug.hpp"
 #include "render/texture_agent.hpp"
-#include "map/render_map.hpp"
+#include "map/map.hpp"
 #include "utils/helper_utils.h"
 
 class CombatLoop {

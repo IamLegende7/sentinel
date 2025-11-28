@@ -1,5 +1,7 @@
 TODO: spritesheets & animated textures in TextureAgent
 
+FIXME: cant move up/down when walking sideways into a wall
+
 FIXME: sometimes flickering after reloading map; only goes away after moving // Is this still an issue?
 
 FIXME: Player pos; not the average of the player's movebox positions gets used to get relevant moveboxes

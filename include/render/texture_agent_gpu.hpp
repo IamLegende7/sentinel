@@ -4,7 +4,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3/SDL.h>
 #include <string>
-
+#include <filesystem>
 
 #include "utils/logger.hpp"
 #include "settings/locations.hpp"

@@ -50,13 +50,13 @@ int main(int argc, char *argv[]) {
                         }
                     }
                     if (MODE == 2) {
-                        if ((e.key.scancode == SDL_SCANCODE_R) and DEBUG["can_reload_map"].get()) { // TODO: this is just a quick-and-dirty fix for now
+                        if ((e.key.scancode == SDL_SCANCODE_R) and DEBUG["can_reload_map"]) { // TODO: this is just a quick-and-dirty fix for now
                             if ((e.type == SDL_EVENT_KEY_DOWN) and not reload_pressed) {
                                 reload_pressed = true;
                                 // Settings //
                                 init_locations_settings("data/config/locations.ini");
-                                init_debug_settings(LOCATIONS["config_dir"].get() + "/debug.ini");
-                                init_main_settings(LOCATIONS["config_dir"].get() + "/main.ini");
+                                init_debug_settings(std::string(LOCATIONS["config_dir"]) + "/debug.ini");
+                                init_main_settings(std::string(LOCATIONS["config_dir"]) + "/main.ini");
                                 // Map //
                                 LOGGER.log(LogLevel::INFO, "Reloading the Map...");
                                 combat = new CombatLoop(map_name, MAIN_REN);

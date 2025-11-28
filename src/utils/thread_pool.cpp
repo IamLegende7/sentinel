@@ -1,14 +1,13 @@
 #include "utils/thread_pool.hpp"
 #include "utils/logger.hpp"
 
-ThreadPool::ThreadPool(std::size_t count_threads) {
-    int count_threads_int = count_threads;
-    if (count_threads_int == -1) {
-        count_threads_int = std::thread::hardware_concurrency();
-        LOGGER.log(LogLevel::DEBUG, "[utils/thread_pool.cpp:ThreadPool] Using max threads: %d", count_threads_int);
+ThreadPool::ThreadPool(int count_threads) {
+    if (count_threads == -1) {
+        count_threads = std::thread::hardware_concurrency();
+        LOGGER.log(LogLevel::DEBUG, "[utils/thread_pool.cpp:ThreadPool] Using max threads: %d", count_threads);
     }
     stop = false;
-    for (int i{ 0 }; i < count_threads_int; i++) {
+    for (int i{ 0 }; i < count_threads; i++) {
         worker_threads.emplace_back(&ThreadPool::worker, this);
     }
 }

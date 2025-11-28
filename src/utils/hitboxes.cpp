@@ -135,7 +135,7 @@ bool HitboxQuadtree::add_entry(Node* node, Hitbox hitbox) {
 
         int hitbox_length = node->hitboxes.size();
         if (hitbox_length > node_capacity) {
-            if (DEBUG["all_debug_logs"].get()) LOGGER.log(LogLevel::DEBUG, "[hitboxes.cpp:add_entry] Subdividing node at %d %d and %d %d", node->min.x, node->min.y, node->max.x, node->max.y);
+            if (DEBUG["all_debug_logs"]) LOGGER.log(LogLevel::DEBUG, "[hitboxes.cpp:add_entry] Subdividing node at %d %d and %d %d", node->min.x, node->min.y, node->max.x, node->max.y);
             subdivide(node);
 
             bool taken = false;
@@ -158,20 +158,20 @@ bool HitboxQuadtree::add_entry(Node* node, Hitbox hitbox) {
 }
 
 void HitboxQuadtree::subdivide(Node* node) {
-    if (DEBUG["annoying_logs"].get()) LOGGER.log(LogLevel::DEBUG, "Splitting node: %d %d to %d %d", node->min.x, node->min.y, node->max.x, node->max.y);
+    if (DEBUG["annoying_logs"]) LOGGER.log(LogLevel::DEBUG, "Splitting node: %d %d to %d %d", node->min.x, node->min.y, node->max.x, node->max.y);
 
     // Calculate midpoints //
     XY mid;
     mid.x = ceil((node->max.x - node->min.x) / 2) + node->min.x;
     mid.y = ceil((node->max.y - node->min.y) / 2) + node->min.y;
 
-    if (DEBUG["annoying_logs"].get()) LOGGER.log(LogLevel::DEBUG, "Mid of node: %d %d", mid.x, mid.y);
+    if (DEBUG["annoying_logs"]) LOGGER.log(LogLevel::DEBUG, "Mid of node: %d %d", mid.x, mid.y);
 
     // Create children //
-    if (DEBUG["annoying_logs"].get()) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", node->min.x, node->min.y, mid.x, mid.y);
-    if (DEBUG["annoying_logs"].get()) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", mid.x, node->min.y, node->max.x, mid.y);
-    if (DEBUG["annoying_logs"].get()) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", node->min.x, mid.y, mid.x, node->max.y);
-    if (DEBUG["annoying_logs"].get()) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", mid.x, mid.y, node->max.x, node->max.y);
+    if (DEBUG["annoying_logs"]) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", node->min.x, node->min.y, mid.x, mid.y);
+    if (DEBUG["annoying_logs"]) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", mid.x, node->min.y, node->max.x, mid.y);
+    if (DEBUG["annoying_logs"]) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", node->min.x, mid.y, mid.x, node->max.y);
+    if (DEBUG["annoying_logs"]) LOGGER.log(LogLevel::DEBUG, "New node: %d %d to %d %d", mid.x, mid.y, node->max.x, node->max.y);
 
     node->children[0] = new Node({node->min.x, node->min.y}, {mid.x, mid.y});             // top-left
     node->children[1] = new Node({mid.x, node->min.y},       {node->max.x, mid.y});       // top-right

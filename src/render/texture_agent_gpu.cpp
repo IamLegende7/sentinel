@@ -5,10 +5,12 @@ TextureAgentGPU::TextureAgentGPU(SDL_Renderer& renderer, TextureAgentGPUSettings
 }
 
 void TextureAgentGPU::load_texture(std::string path, std::string name) {
+    std::filesystem::path texture_path = path;
+
     // Check for existing textures //
     if (name != "none") {
         if (get_texture_exists(name)) {
-                if (DEBUG["all_debug_logs"].get()) {
+                if (DEBUG["all_debug_logs"]) {
                     LOGGER.log(LogLevel::DEBUG, "[texture_agent.cpp:load_texture] Caught texture from loading twice!");
                 }
                 return 2;
@@ -16,7 +18,7 @@ void TextureAgentGPU::load_texture(std::string path, std::string name) {
     }
 
     // Load Texture //
-    if (true) { // ends on .png / .jpg
+    if (texture_path.extension() == ".png") { // ends on .png --> simple texture
         std::string texture_path_full = texture_path;
         SDL_Texture* texture = IMG_LoadTexture(renderer, texture_path_full.c_str());
         if (!texture) {
@@ -24,10 +26,10 @@ void TextureAgentGPU::load_texture(std::string path, std::string name) {
             return 1;
         } else {
             SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
-            agent_textures.push_back({name, texture})
+            agent_textures.push_back({name, texture});
             return 0;
         }
-    } else if (false) { // ends on .json / .jsonc --> spritesheet / animated sprite / whatever
-
+    } else if (texture_path.extension() == ".json" || texture_path == ".jsonc" ) { // ends on .json / .jsonc --> spritesheet / animated sprite / whatever
+        LOGGER.log(LogLevel::ERROR, "Spritesheets not coded yet!");
     }
 }

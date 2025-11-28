@@ -1,4 +1,4 @@
-#include "map/render_map.hpp"
+#include "map/map.hpp"
 
 #include "utils/thread_pool.hpp"
 
@@ -15,11 +15,11 @@
 
 Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
     map_texture_agent = new TextureAgent(renderer);
-    map_texture_agent->load_texture(LOCATIONS["missing_texture_tile"].get().c_str(), LOCATIONS["missing_texture_tile"].get());
+    map_texture_agent->load_texture(std::string(LOCATIONS["missing_texture_tile"]).c_str(), std::string(LOCATIONS["missing_texture_tile"]));
     //// LOAD MAP ////
-    LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(LOCATIONS["textures_json"].get())["name"].get<std::string>().c_str());
+    LOGGER.log(LogLevel::INFO, "Using Texturepack: %s", get_json(std::string(LOCATIONS["textures_json"]))["name"].get<std::string>().c_str());
     LOGGER.log(LogLevel::INFO, "NOW LOADING THE MAP %s!", map_name.c_str());
-    nlohmann::json json_map_data = get_json(LOCATIONS["map_dir"].get() + "/" + map_name); // no worry about errors; handling in ```get_json```
+    nlohmann::json json_map_data = get_json(std::string(LOCATIONS["map_dir"]) + "/" + map_name); // no worry about errors; handling in ```get_json```
     LOGGER.log(LogLevel::INFO, "Map size: %dx%d", json_map_data["size"][0].get<int>(), json_map_data["size"][1].get<int>());
     MOVEBOXES = new HitboxQuadtree({0, 0}, {json_map_data["size"][0].get<float>() * 100, json_map_data["size"][1].get<float>() * 100});
 
@@ -37,9 +37,9 @@ Map::Map(const std::string& map_name, SDL_Renderer* renderer) {
 
     // GET ALL TILES IN MAP //
     XY current_tile = {0, 0};
-    if (SETTINGS_BOOL["multithreading"].get()) {
-        ThreadPool* map_pool = new ThreadPool(SETTINGS_INT["multithreading"].get());
-        std::vector<std::future<std::vector<std::vector<Tile>>> > futures;
+    if (SETTINGS["multithreading"]) {
+        ThreadPool* map_pool = new ThreadPool(SETTINGS["num_threads"]);
+        std::vector<std::future<std::vector<std::vector<Tile>>>> futures;
 
         // Get data //
         for (const auto& row : json_tile_data) {
@@ -122,7 +122,7 @@ void Map::render_map(int camera_x, int camera_y) {
             int min_y = (camera_y / 100);
             int max_y = ((camera_y + (SCREEN_HEIGHT / ZOOM)) / 100);
 
-            if (DEBUG["show_tile_hiding"].get()) {
+            if (DEBUG["show_tile_hiding"]) {
                 min_x += 1;
                 max_x -= 1;
                 min_y += 1;

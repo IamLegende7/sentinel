@@ -3,16 +3,17 @@
 
 #include "utils/config.hpp"
 
-inline std::unordered_map<std::string, Setting<bool>> SETTINGS_BOOL;
-inline std::unordered_map<std::string, Setting<int>> SETTINGS_INT;
-inline std::unordered_map<std::string, Setting<std::string>> SETTINGS_STRING;
+inline std::unordered_map<std::string, Setting> SETTINGS;
 
 inline void init_main_settings(std::string config_file) {
     // Mulithreading //
-    SETTINGS_BOOL["multithreading"] =             Setting<bool>("multithreading",       config_file);
-    SETTINGS_INT["multithreading"]  =             Setting<int>("num_threads",           config_file);
-    SETTINGS_BOOL["old_renderring"] =             Setting<bool>("old_renderring",       config_file);
-    SETTINGS_STRING["gpu_driver"]   =             Setting<std::string>("gpu_driver",    config_file);
+    SETTINGS["multithreading"] =   Setting(load_setting<bool>(config_file, "Mulithreading", "multithreading", false));
+    printf("Hello\n");
+    SETTINGS["num_threads"] =      Setting(load_setting<int>(config_file, "Mulithreading", "num_threads", 1));
+    printf("Bye\n");
+    // Renderring
+    SETTINGS["old_renderring"] =   Setting(load_setting<bool>(config_file, "Renderring", "old_renderring", true));
+    SETTINGS["gpu_driver"] =       Setting(load_setting<std::string>(config_file, "Renderring", "gpu_driver"));
 }
 
 #endif

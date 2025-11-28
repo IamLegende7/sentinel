@@ -36,7 +36,7 @@ struct TileMetadata {
 struct Tile {
     std::string id = "sentinel:missing";
     bool unit = false;
-    std::string path = LOCATIONS["missing_texture_tile"].get();
+    std::string path = LOCATIONS["missing_texture_tile"];
     int rotation = 0;
     TileMetadata metadata;
 

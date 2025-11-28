@@ -9,109 +9,83 @@
 #include "utils/logger.hpp"
 
 // loading / saving settings
-#include <fstream>
+#include <SimpleIni.h>
 #include <sstream>
-#include <vector>
+#include <iostream>
+#include <stdexcept>
 #include <type_traits>
 
 // for storing settings
 #include <unordered_map>
 
-// Setting struct //
-template <typename T>
-struct Setting {
-    std::string name;
-    std::string file;
-    T value;
+// Setting class //
+class Setting {
+    public:
+        using SettingType = std::variant<bool, int, std::string>;
 
-    Setting() : name(""), file("data/config/general.ini"), value(T()) {}
-
-    Setting(const std::string& name, const std::string file = "data/config/general.ini") : name(name), file(file) {
-        load_value();
-    }
-
-    T get() {
-        return value;
-    }
-
-    void set(T value) {
-        this->value = value;
-    }
-
-    void load_value() {
-        std::ifstream config_file(file);
-        std::string line;
-
-        if (config_file.is_open()) {
-            while (getline(config_file, line)) {
-                std::istringstream iss(line);
-                std::string key, equal, loaded_value;
-
-                if (std::getline(iss, key, '=') && std::getline(iss, loaded_value)) {
-                    if (key == name) {
-                        try {
-                            load_value_impl(loaded_value);
-                        } catch (...) {
-                            LOGGER.log(LogLevel::ERROR, "[utils/config.hpp:load_value] Could not load setting %s", name.c_str());
-                        }
-                        break;
-                    }
-                }
-            }
-            config_file.close();
-        } else {
-            LOGGER.log(LogLevel::ERROR, "[utils/config.hpp:load_value] Unable to open file: %s", file.c_str());
+        // based off https://devblogs.microsoft.com/oldnewthing/20191106-00/?p=103066
+        operator bool() const {
+            return std::get<bool>(value);
         }
-    }
+
+        operator int() const {
+            return std::get<int>(value);
+        }
+
+        operator std::string() const {
+            return std::get<std::string>(value);
+        }
+
+        Setting() {}
+
+        template<typename T>
+        Setting(T value) : value(value) {}
+
+        template<typename T>
+        void set(T new_value) {
+            value = new_value;
+        };
 
     private:
-        // bool //
-        template<typename U = T>
-        typename std::enable_if<std::is_same<U, bool>::value>::type
-        load_value_impl(const std::string& loaded_value) {
-            value = (loaded_value == "true");
-        }
-
-        // int //
-        template<typename U = T>
-        typename std::enable_if<std::is_same<U, int>::value>::type
-        load_value_impl(const std::string& loaded_value) {
-            value = std::stoi(loaded_value);
-        }
-
-        // float //
-        template<typename U = T>
-        typename std::enable_if<std::is_same<U, float>::value>::type
-        load_value_impl(const std::string& loaded_value) {
-            value = std::stof(loaded_value);
-        }
-
-        // std:.string //
-        template<typename U = T>
-        typename std::enable_if<std::is_same<U, std::string>::value>::type
-        load_value_impl(const std::string& loaded_value) {
-            value = loaded_value;
-        }
-
-        // unknown //
-        template<typename U = T>
-        typename std::enable_if<!std::is_same<U, bool>::value && 
-                                !std::is_same<U, int>::value && 
-                                !std::is_same<U, float>::value && 
-                                !std::is_same<U, std::string>::value>::type
-        load_value_impl(const std::string& loaded_value) {
-            LOGGER.log(LogLevel::ERROR, "[utils/config.hpp:load_value] Unknown type");
-        }
+        SettingType value;
 };
 
-using SettingVariant = std::variant<Setting<bool>, Setting<int>, Setting<float>, Setting<std::string>>;
+template<typename T>
+inline T load_setting(std::string file, std::string section, std::string name, const T default_value = T()) {
+    CSimpleIniA ini;
+	ini.SetUnicode();
 
-// WARNING: FAILS QUIETLY
-template <typename T>
-T getvariant(const SettingVariant& setting_variant) {
-    if (std::holds_alternative<Setting<T>>(setting_variant)) {
-        return std::get<Setting<T>>(setting_variant).get();
+    SI_Error rc = ini.LoadFile(file.c_str());
+    if (rc < 0) {
+        LOGGER.log(LogLevel::ERROR, "[utils/config.hpp] Could not load ini File %s", file.c_str());
+        return T();
     }
+
+    std::stringstream default_stream;
+    default_stream << default_value;
+    std::string default_value_string = default_stream.str();
+
+    const char* loaded_value = ini.GetValue(section.c_str(), name.c_str(), default_value_string.c_str());
+    if (!loaded_value) {
+        LOGGER.log(LogLevel::WARNING, "[utils/config.hpp] Key %s not found in section %s", name.c_str(), section.c_str());
+        return T();
+    }
+
+    T result;
+    if constexpr(std::is_same<T, std::string>::value) {
+        result = std::string(loaded_value);
+    } else if constexpr(std::is_same<T, int>::value) {
+        result = std::stoi(std::string(loaded_value));
+    } else if constexpr(std::is_same<T, bool>::value){
+        result = (std::strcmp(loaded_value, "true") == 0 || std::strcmp(loaded_value, "1") == 0);
+    } else {
+        LOGGER.log(LogLevel::ERROR, "[utils/config.hpp] Could not convert value to type T for key %s", name.c_str());
+        result = T();
+    }
+
+    printf("Soon to be setting: '%s'\n", loaded_value);
+
+    return result;
 }
 
 #endif

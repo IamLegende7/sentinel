@@ -1,4 +1,4 @@
-#include "map/render_map.hpp"
+#include "map/map.hpp"
 
 /* Some functions were moved here, because they are too long.
    They handle the loading logic of the map
@@ -47,21 +47,21 @@ Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
             new_tile.unit = true;
         } else {
             nlohmann::json json_tile_defaults = nlohmann::json{};
-            if (get_json(LOCATIONS["tiles_json"].get()).contains(new_tile.id)) {
-                json_tile_defaults = get_json(LOCATIONS["tiles_json"].get())[new_tile.id];
+            if (get_json(std::string(LOCATIONS["tiles_json"])).contains(new_tile.id)) {
+                json_tile_defaults = get_json(std::string(LOCATIONS["tiles_json"]))[new_tile.id];
             } else {
-                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", LOCATIONS["tiles_json"].get().c_str(), new_tile.id.c_str());
+                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", std::string(LOCATIONS["tiles_json"]).c_str(), new_tile.id.c_str());
             }
 
             nlohmann::json json_textures = nlohmann::json{};
-            if (get_json(LOCATIONS["textures_json"].get())["data"].contains(new_tile.id)) {
-                json_textures = get_json(LOCATIONS["textures_json"].get())["data"][new_tile.id];
+            if (get_json(LOCATIONS["textures_json"])["data"].contains(new_tile.id)) {
+                json_textures = get_json(std::string(LOCATIONS["textures_json"]))["data"][new_tile.id];
             } else {
-                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", LOCATIONS["textures_json"].get().c_str(), new_tile.id.c_str());
+                LOGGER.log(LogLevel::WARNING, "%s doesn't contain %s. Might use 'missing' tile", std::string(LOCATIONS["textures_json"]).c_str(), new_tile.id.c_str());
             }
 
             // GET PATH //
-            std::string tile_path = LOCATIONS["missing_texture_tile"].get();
+            std::string tile_path = LOCATIONS["missing_texture_tile"];
             if (tile.contains("texture")) {
                 // Use the given texture path //
                 tile_path = tile.get<std::string>();
@@ -83,7 +83,7 @@ Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
                         LOGGER.log(LogLevel::ERROR, "[render/render_map.cpp:Map] Could not load texture for tile: tile_paths empty");
                     }
                 }
-                if (DEBUG["all_debug_logs"].get()) {
+                if (DEBUG["all_debug_logs"]) {
                     LOGGER.log(LogLevel::DEBUG, "Tile path: %s", tile_path.c_str());
                 }
             }
@@ -144,7 +144,7 @@ Tile Map::load_tile(nlohmann::json tile, XY current_tile) {
                     movebox.x_offset += new_tile.metadata.size;
                     movebox.y_offset += new_tile.metadata.size;
 
-                    if (DEBUG["all_debug_logs"].get()) {
+                    if (DEBUG["all_debug_logs"]) {
                         LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X,Y: %d %d | X_off,Y_off: %d %d | Width,Height: %d %d", movebox.type, movebox.x, movebox.y, movebox.x_offset, movebox.y_offset, movebox.width, movebox.height);
                     }
                 }
@@ -187,7 +187,7 @@ TileMetadata Map::get_tile_metadata(nlohmann::json metadata_json) {
                 hitbox_json_single[4].get<float>()
             };
             metadata.hitboxes.push_back(new_hitbox);
-            if (DEBUG["all_debug_logs"].get()) {
+            if (DEBUG["all_debug_logs"]) {
                 LOGGER.log(LogLevel::DEBUG, "New Hitbox: Type: %d | X_off,Y_off: %d %d | Width,Height: %d %d", new_hitbox.type, new_hitbox.x_offset, new_hitbox.y_offset, new_hitbox.width, new_hitbox.height);
             }
         }

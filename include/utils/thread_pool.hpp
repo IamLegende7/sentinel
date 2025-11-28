@@ -23,7 +23,7 @@ class ThreadPool {
         void worker();
 
     public:
-        ThreadPool(size_t count_threads = std::thread::hardware_concurrency());
+        ThreadPool(int count_threads = int(std::thread::hardware_concurrency()));
         ~ThreadPool();
 
         template<typename F, typename... Args>

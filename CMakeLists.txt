@@ -70,9 +70,15 @@ target_include_directories(Sentinel PRIVATE include)
 ### Librarys ###
 add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
 add_subdirectory(lib/SDL_image EXCLUDE_FROM_ALL)
+add_subdirectory(lib/simpleini)
 
 # Link Librarys
-target_link_libraries(Sentinel PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
+target_link_libraries(Sentinel 
+                      PRIVATE 
+                      SDL3::SDL3
+                      SDL3_image::SDL3_image
+                      SimpleIni::SimpleIni
+                    )
 
 
 

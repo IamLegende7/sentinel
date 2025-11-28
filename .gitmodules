@@ -7,3 +7,6 @@
 [submodule "lib/simpleini"]
 	path = lib/simpleini
 	url = https://github.com/brofield/simpleini
+[submodule "lib/rapidjson"]
+	path = lib/rapidjson
+	url = https://github.com/Tencent/rapidjson

@@ -10,3 +10,6 @@
 [submodule "lib/rapidjson"]
 	path = lib/rapidjson
 	url = https://github.com/Tencent/rapidjson
+[submodule "lib/BS_thread_pool"]
+	path = lib/BS_thread_pool
+	url = https://github.com/bshoshany/thread-pool

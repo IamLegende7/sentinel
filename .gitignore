@@ -1,9 +1,3 @@
-# Misc
-.vscode
-debug.txt
-.development/sdl.cpp
-.development/important-sdl-stuff.cpp
-
 # Builds
 bin/*
 build/*

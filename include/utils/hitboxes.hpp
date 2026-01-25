@@ -8,7 +8,6 @@
 #include <vector>
 #include <cmath>
 
-#include "utils/helper_utils.h"
 #include "utils/logger.hpp"
 
 //////////////
@@ -69,4 +68,5 @@ class HitboxQuadtree {
 
 #endif
 
-extern HitboxQuadtree* MOVEBOXES;
+extern HitboxQuadtree* MOVEBOXES
+;

@@ -63,7 +63,11 @@ set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/lib)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
-target_include_directories(Sentinel PRIVATE include)
+target_include_directories(Sentinel PRIVATE 
+    include 
+        lib/rapidjson/include
+        lib/BS_thread_pool/include
+)
 
 
 
@@ -73,8 +77,7 @@ add_subdirectory(lib/SDL_image EXCLUDE_FROM_ALL)
 add_subdirectory(lib/simpleini)
 
 # Link Librarys
-target_link_libraries(Sentinel 
-                      PRIVATE 
+target_link_libraries(Sentinel PRIVATE 
                       SDL3::SDL3
                       SDL3_image::SDL3_image
                       SimpleIni::SimpleIni

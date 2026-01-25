@@ -1,0 +1,2 @@
+bool SDL_OpenURL(const char *url);  // Open a URL/URI in the browser or other appropriate external application.
+SDL_Locale ** SDL_GetPreferredLocales(int *count);  // Report the user's preferred locale.

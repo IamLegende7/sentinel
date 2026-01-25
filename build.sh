@@ -113,11 +113,11 @@ fi
 cmake -B build
 cmake --build build #--config Release
 
-cp build_data/run.sh bin/
-cp build_data/package.sh bin/
-cp build_data/RELEASE_README.md bin/README.md
+cp resources/build/run.sh bin/
+cp resources/build/package.sh bin/
+cp resources/build/RELEASE_README.md bin/README.md
 
-cp build_data/cleanup.sh build/
+cp resources/build/cleanup.sh build/
 
 echo "Succsessfully build Sentinel."
 if [ "$auto_package" = false ]; then

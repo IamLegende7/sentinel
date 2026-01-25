@@ -1,3 +1,23 @@
+TODO: VSync / Max Frame rate
+
+TODO: Load maps
+TODO: Diplay maps
+TODO: movement
+TODO: hitboxes
+
+TODO: Crash handler
+
+TODO: Add software renderring back
+
+
+
+
+
+
+
+
+### OLD: ###
+
 TODO: spritesheets & animated textures in TextureAgent
 
 FIXME: cant move up/down when walking sideways into a wall
@@ -6,11 +26,11 @@ FIXME: sometimes flickering after reloading map; only goes away after moving // 
 
 FIXME: Player pos; not the average of the player's movebox positions gets used to get relevant moveboxes
 
-TODO: optimasation!
+TODO: optimization!
     - TODO: renderring using SDL_GPU
     - TODO: make the background texture bake into a few textures, so that it doesnt have to be re-baked a lot
             --> then bake them in a big texture (while hinding off-srceen) and render that
-    - TODO: Make hitboxes & nodes only render inside of view
+    - TODO: Make hitboxes & nodes only render inside of view in Debug Mode
     - TODO: less movement ticks
     - TODO: more ideal types (size only needs byte max, not an int, for example)
 

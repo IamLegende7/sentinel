@@ -7,6 +7,12 @@
 #include <cstdarg>
 #include <SDL3/SDL.h>
 
+// Chrash handler
+#include <signal.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
 // Time
 #include <chrono>
 #include <iomanip>
@@ -27,6 +33,7 @@ class Logger {
     public:
         Logger() {
             start_time = std::chrono::steady_clock::now();
+            previous_time = std::chrono::steady_clock::now();
         }
 
         ~Logger() {
@@ -35,7 +42,7 @@ class Logger {
             }
         }
 
-        void log(LogLevel level, const char* format, ...) {
+        void log(const char* file, const char* func, LogLevel level, const char* format, ...) {
             std::ostringstream oss;
                 va_list args;
                 va_start(args, format);
@@ -78,7 +85,8 @@ class Logger {
 
             // Get elapsed time
             auto now = std::chrono::steady_clock::now();
-            auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
+            auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - previous_time).count();
+            previous_time = now;
 
             // Convert elapsed time into seconds and milliseconds
             long seconds = elapsed_ms / 1000;
@@ -88,13 +96,17 @@ class Logger {
             timeStream << seconds << '.' << std::setfill('0') << std::setw(3) << milliseconds;
 
             std::string timestamp = timeStream.str();
-            std::string full_log        = prefix + ": [" + timestamp + "] " + message;
-            std::string full_log_colour = color_code + prefix + "\033[0m" + ": [" + timestamp + "] " + message;
+            std::string full_log        = prefix + ": [" + timestamp + "]" + "[" + std::string(base_name(file)) + ":" + std::string(func) + "] " + message;
+            std::string full_log_colour = color_code + prefix + "\033[0m" + ": [" + timestamp + "]" + "[" + std::string(base_name(file)) + ":" + std::string(func) + "] " + message;
 
             if (log_file.is_open()) {
-                log_file << full_log << std::endl;
+                log_file << full_log << std::endl;  
             }
-            SDL_Log("%s", full_log_colour.c_str());
+            if (level == LogLevel::ERROR || level == LogLevel::CRITICAL) {
+                SDL_LogError(SDL_LOG_PRIORITY_ERROR, "%s", full_log_colour.c_str());
+            } else {
+                SDL_Log("%s", full_log_colour.c_str());
+            }
         }
 
         bool set_logfile(const std::string& filename) {
@@ -109,8 +121,15 @@ class Logger {
     private:
         std::ofstream log_file;
         std::chrono::steady_clock::time_point start_time;
+        std::chrono::steady_clock::time_point previous_time;
+        const char* base_name(const char* path) {
+            const char* p = strrchr(path, '/');
+            if (!p) p = strrchr(path, '\\');
+            return p ? p+1 : path;
+        }
 };
 
 inline Logger LOGGER;
+#define LOG(level, format, ...) LOGGER.log(__FILE__, __func__, level, format, ##__VA_ARGS__)
 
 #endif

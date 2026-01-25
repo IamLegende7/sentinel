@@ -57,7 +57,7 @@ inline T load_setting(std::string file, std::string section, std::string name, c
 
     SI_Error rc = ini.LoadFile(file.c_str());
     if (rc < 0) {
-        LOGGER.log(LogLevel::ERROR, "[utils/config.hpp] Could not load ini File %s", file.c_str());
+        LOG(LogLevel::ERROR, "Could not load ini File %s", file.c_str());
         return T();
     }
 
@@ -67,7 +67,7 @@ inline T load_setting(std::string file, std::string section, std::string name, c
 
     const char* loaded_value = ini.GetValue(section.c_str(), name.c_str(), default_value_string.c_str());
     if (!loaded_value) {
-        LOGGER.log(LogLevel::WARNING, "[utils/config.hpp] Key %s not found in section %s", name.c_str(), section.c_str());
+        LOG(LogLevel::WARNING, "Key %s not found in section %s", name.c_str(), section.c_str());
         return T();
     }
 
@@ -79,11 +79,9 @@ inline T load_setting(std::string file, std::string section, std::string name, c
     } else if constexpr(std::is_same<T, bool>::value){
         result = (std::strcmp(loaded_value, "true") == 0 || std::strcmp(loaded_value, "1") == 0);
     } else {
-        LOGGER.log(LogLevel::ERROR, "[utils/config.hpp] Could not convert value to type T for key %s", name.c_str());
+        LOG(LogLevel::ERROR, "Could not convert value to type T for key %s", name.c_str());
         result = T();
     }
-
-    printf("Soon to be setting: '%s'\n", loaded_value);
 
     return result;
 }

@@ -1,5 +1,5 @@
-#ifndef LOCATIONS_H
-#define LOCATIONS_H
+#ifndef SETTINGS_LOCATIONS_H
+#define SETTINGS_LOCATIONS_H
 
 #include "utils/config.hpp"
 

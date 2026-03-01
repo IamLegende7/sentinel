@@ -11,6 +11,7 @@
 #include "settings/locations.hpp"
 #include "settings/debug.hpp"
 #include "settings/main.hpp"
+#include "settings/render.hpp"
 
 
 // ██╗████████╗███████╗██████╗  █████╗ ████████╗███████╗
@@ -20,7 +21,7 @@
 // ██║   ██║   ███████╗██║  ██║██║  ██║   ██║   ███████╗
 // ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝
 SDL_AppResult SDL_AppIterate(void* appState) {
-
+    
     SDL_GPUCommandBuffer* cmd_buffer;
     cmd_buffer = SDL_AcquireGPUCommandBuffer(GPU);
     if (cmd_buffer == NULL) {
@@ -87,6 +88,16 @@ SDL_AppResult SDL_AppInit(void** appState, int argc, char** argv) {
     SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_URL_STRING, INFO_URL.c_str());
     SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_TYPE_STRING, "game");
 
+    // SETTINGS //
+    LOG(LogLevel::INFO, "Loading Settings");
+    init_locations_settings("data/config/locations.ini"); /* Not really ideal */
+    init_debug_settings(std::string(LOCATIONS["config_dir"]) + "/debug.ini");
+    init_main_settings(std::string(LOCATIONS["config_dir"]) + "/main.ini");
+    init_render_settings(std::string(LOCATIONS["config_dir"]) + "/render.ini");
+
+    // LOGGER //
+    LOGGER.set_logfile(LOCATIONS["log_file"]); // Logger function has its own error handeling
+
     // SDL //
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
         LOG(LogLevel::CRITICAL, "SDL could not initialize: %s\n", SDL_GetError());
@@ -95,27 +106,38 @@ SDL_AppResult SDL_AppInit(void** appState, int argc, char** argv) {
         LOG(LogLevel::INFO, "SDL initialized successfully.");
     }
 
-    // SETTINGS //
-    LOG(LogLevel::INFO, "Loading Settings");
-    init_locations_settings("data/config/locations.ini"); /* Not really ideal, right? */
-    init_debug_settings(std::string(LOCATIONS["config_dir"]) + "/debug.ini");
-    init_main_settings(std::string(LOCATIONS["config_dir"]) + "/main.ini");
-
-    // LOGGER //
-    LOGGER.set_logfile(LOCATIONS["log_file"]); // Logger function has its own error handeling
-
     // GPU DEVICE //
-    if (!SETTINGS["software_renderring"]) {
-        GPU = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL | SDL_GPU_SHADERFORMAT_MSL, false, std::string(SETTINGS["gpu_driver"]).c_str());
+    if (!RENDER_SETTINGS["software_renderring"]) {
+        GPU = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL | SDL_GPU_SHADERFORMAT_MSL, false, std::string(RENDER_SETTINGS["gpu_driver"]).c_str());
         if (GPU == NULL) {
             LOG(LogLevel::ERROR, "Could not create GPU device: %s", SDL_GetError());
-            SETTINGS["software_renderring"].set(true);
+            RENDER_SETTINGS["software_renderring"].set(true);
         } else {
             LOG(LogLevel::INFO, "Using GPU driver %s", SDL_GetGPUDeviceDriver(GPU));
         }
     }
 
-    if (SETTINGS["software_renderring"]) {
+    // LOAD SHADERS //
+    /*
+    vertexShader = LoadShader(device, "RawTriangle.vert", 0, 0, 0, 0);
+    if (vertexShader == NULL)
+    {
+        LOG(LogLevel::ERROR,"Failed to create vertex shader!");
+        RENDER_SETTINGS["software_renderring"].set(true);
+        SDL_DestroyGPUDevice(GPU);
+    }
+
+    fragmentShader = LoadShader(device, "SolidColor.frag", 0, 0, 0, 0);
+    if (fragmentShader == NULL)
+    {
+        LOG(LogLevel::ERROR, "Failed to create fragment shader!");
+        RENDER_SETTINGS["software_renderring"].set(true);
+        SDL_DestroyGPUDevice(GPU);
+    }
+    */
+
+    // SOFTWARE RENDERRING WARNING //
+    if (RENDER_SETTINGS["software_renderring"]) {
         LOG(LogLevel::WARNING, "Using software renderring");
     }
 
@@ -128,17 +150,17 @@ SDL_AppResult SDL_AppInit(void** appState, int argc, char** argv) {
     }
 
     // CLAIM WINDOW //
-    if (!SETTINGS["software_renderring"]) {
+    if (!RENDER_SETTINGS["software_renderring"]) {
         if (!SDL_ClaimWindowForGPUDevice(GPU, WINDOW)) {
             LOG(LogLevel::ERROR, "Could not claim Main Window for GPU: %s", SDL_GetError());
-            SETTINGS["software_renderring"].set(true);
+            RENDER_SETTINGS["software_renderring"].set(true);
             LOG(LogLevel::WARNING, "Using software renderring");
             // GPU device cleanup
             SDL_DestroyGPUDevice(GPU);
         }
     }
 
-    if (SETTINGS["software_renderring"]) {
+    if (RENDER_SETTINGS["software_renderring"]) {
         // RENDERER //
         RENDERER = SDL_CreateRenderer(WINDOW, NULL);
         if (RENDERER == NULL) {
@@ -157,7 +179,9 @@ SDL_AppResult SDL_AppInit(void** appState, int argc, char** argv) {
     if ( !SDL_SetWindowIcon(WINDOW, icon) ) {
         LOG(LogLevel::WARNING, "Windowicon could not be set: %s", SDL_GetError());
     }
-    LOG(LogLevel::INFO, "SDL setup done!");
+    LOG(LogLevel::INFO, "Setup all done!");
+
+
 
     // TESTS //
     if (DEBUG["test_logger"]) {
@@ -171,7 +195,7 @@ SDL_AppResult SDL_AppInit(void** appState, int argc, char** argv) {
 }
 
 
- // ██████╗ ██╗   ██╗██╗████████╗
+//  ██████╗ ██╗   ██╗██╗████████╗
 // ██╔═══██╗██║   ██║██║╚══██╔══╝
 // ██║   ██║██║   ██║██║   ██║   
 // ██║▄▄ ██║██║   ██║██║   ██║   

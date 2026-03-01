@@ -7,11 +7,8 @@
 #include <cstdarg>
 #include <SDL3/SDL.h>
 
-// Chrash handler
-#include <signal.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
+// Log rotation
+#include <cstdio>
 
 // Time
 #include <chrono>
@@ -110,11 +107,13 @@ class Logger {
         }
 
         bool set_logfile(const std::string& filename) {
+            remove(filename.c_str());
             log_file.open(filename, std::ios::out | std::ios::app);
             if (!log_file.is_open()) {
                 SDL_Log("\033[31mERROR\033[0m: Could not open log file: %s", filename.c_str());
                 return false;
             }
+            log_file << "--- Cleared and Set log file to " << filename << " ---"<< std::endl;
             return true;
         }
 

@@ -1,5 +1,5 @@
-#ifndef MAIN_HPP
-#define MAIN_HPP
+#ifndef SETTINGS_MAIN_HPP
+#define SETTINGS_MAIN_HPP
 
 #include "utils/config.hpp"
 

@@ -6,7 +6,7 @@
         {
             "label": "compile",
             "type": "shell",
-            "command": "bash build.sh -d --no-show-warning",
+            "command": "bash build.sh -d -s --no-show-warning",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -22,7 +22,7 @@
         {
             "label": "compile [clean]",
             "type": "shell",
-            "command": "bash build.sh -d --clean --no-show-warning",
+            "command": "bash build.sh -d -s --clean --no-show-warning",
             "group": {
                 "kind": "build",
                 "isDefault": true

@@ -1,5 +1,5 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef SETTINGS_DEBUG_H
+#define SETTINGS_DEBUG_H
 
 #include "utils/config.hpp"
 

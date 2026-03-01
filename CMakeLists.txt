@@ -5,55 +5,11 @@ project(Sentinel)
 set(CMAKE_CXX_STANDARD 17)
 
 
-
 ### Source & Header files ###
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 
-
-### CMakeignore ###
-# Read CMakeignore file
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/CMakeignore" CMAKEIGNORE_contents)
-
-# Convert contents to a list
-string(REPLACE "\n" ";" IGNORE_FILES "${CMAKEIGNORE_contents}")
-
-# Initialize an empty list for valid ignore files
-set(CMAKEIGNORE_FILES)
-
-# Filter valid file patterns from the ignore file
-foreach(file IN LISTS IGNORE_FILES)
-    # Remove comments and check for empty entries
-    string(STRIP "${file}" file_cleaned)
-    if(NOT file_cleaned STREQUAL "")
-        # Append valid cleaned file patterns to the list
-        list(APPEND CMAKEIGNORE_FILES "${file_cleaned}")
-    endif()
-endforeach()
-
-message(STATUS "Files to ignore: ${CMAKEIGNORE_FILES}")#
-
-# Remove unwanted files from the SOURCES list
-foreach(pattern IN LISTS CMAKEIGNORE_FILES)
-    # Trim whitespace around the pattern
-    string(STRIP "${pattern}" trimmed_pattern)
-
-    # Remove exact file matches
-    string(REGEX REPLACE "^" "${CMAKE_CURRENT_SOURCE_DIR}/" full_path "${trimmed_pattern}")
-    list(REMOVE_ITEM SOURCES ${full_path})
-
-    # Remove files matching patterns
-    foreach(file_to_remove IN LISTS SOURCES)
-        # Check if the file matches the trimmed pattern
-        if (file_to_remove MATCHES "${trimmed_pattern}$")
-            list(REMOVE_ITEM SOURCES ${file_to_remove})
-        endif()
-    endforeach()
-endforeach()
-
-
-
-### Paths & Executable ##
+### Paths & Executable ###
 # Create the executable target
 add_executable(Sentinel ${SOURCES})
 
@@ -67,8 +23,8 @@ target_include_directories(Sentinel PRIVATE
     include 
         lib/rapidjson/include
         lib/BS_thread_pool/include
+        lib/SDL_shadercross/include
 )
-
 
 
 ### Librarys ###
@@ -82,7 +38,6 @@ target_link_libraries(Sentinel PRIVATE
                       SDL3_image::SDL3_image
                       SimpleIni::SimpleIni
                     )
-
 
 
 ### Compile options ###

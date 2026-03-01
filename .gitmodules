@@ -13,3 +13,9 @@
 [submodule "lib/BS_thread_pool"]
 	path = lib/BS_thread_pool
 	url = https://github.com/bshoshany/thread-pool
+[submodule "lib/SDL_shadercross"]
+	path = lib/SDL_shadercross
+	url = https://github.com/libsdl-org/SDL_shadercross.git
+[submodule "lib/SPIRV-Cross"]
+	path = lib/SPIRV-Cross
+	url = https://github.com/KhronosGroup/SPIRV-Cross.git

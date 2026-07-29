@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         std::string map_name = "debug/debug1.jsonc";
         CombatLoop* combat;
         combat = new CombatLoop(map_name, MAIN_REN);
-        PLAYER = new Unit("sentinel:soldier", nlohmann::json{}, {100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y}); // Temporary
+        PLAYER = new Unit("sentinel:soldier", {100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y}); // Temporary
         PLAYER->become_player();
 
         // main game loop
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
                                 // Map //
                                 LOGGER.log(LogLevel::INFO, "Reloading the Map...");
                                 combat = new CombatLoop(map_name, MAIN_REN);
-                                PLAYER = new Unit("sentinel:soldier", nlohmann::json{}, {100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y}); // Temporary
+                                PLAYER = new Unit("sentinel:soldier", {100 * combat->main_map->settings.starting_pos.x, 100 * combat->main_map->settings.starting_pos.y}); // Temporary
                                 PLAYER->become_player();
                             } else if (e.type == SDL_EVENT_KEY_UP) {
                                 reload_pressed = false;

@@ -4,7 +4,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <string>
-#include <nlohmann/json.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -17,7 +16,6 @@
 #include "settings/debug.hpp"
 #include "render/texture_agent.hpp"
 #include "map/map.hpp"
-#include "utils/helper_utils.h"
 
 class CombatLoop {
     private:

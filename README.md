@@ -24,7 +24,7 @@ is not in a "everything is a work-in-progress prove-of-concept" state
 **Linux:** run while inside the projects root directory:
 
 ```bash
-./
+./build.sh --clean --cleanup
 ```
 
 <details>

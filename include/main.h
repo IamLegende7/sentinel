@@ -7,7 +7,10 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3/SDL_gpu.h>
 
-#include "utils/helper_utils.h"
+struct XY {
+    float x = 0;
+    float y = 0;
+};
 
 /* this is where most functions are included
 

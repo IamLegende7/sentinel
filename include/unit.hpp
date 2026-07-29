@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "utils/helper_utils.h"
+#include "utils/json.hpp"
 #include "utils/logger.hpp"
 #include "utils/hitboxes.hpp"
 
@@ -30,7 +30,7 @@ class Unit {
 
     public:
         // Init & Cleanup //
-        Unit(std::string id = "sentinel:none", nlohmann::json properties = nlohmann::json{}, XY starting_pos = {0, 0});
+        Unit(const std::string id = "sentinel:none", const XY starting_pos = {0, 0}, const rapidjson::Value properties = rapidjson::Value(rapidjson::kObjectType));
         ~Unit();
         // Varibles //
             // General

@@ -30,11 +30,8 @@ int setup() {
     // SETTINGS //
     LOGGER.log(LogLevel::INFO, "Loading Settings");
     init_locations_settings("data/config/locations.ini");
-    LOGGER.log(LogLevel::DEBUG,    "Hewwo");
     init_debug_settings(std::string(LOCATIONS["config_dir"]) + "/debug.ini");
-    LOGGER.log(LogLevel::DEBUG,    "UwU");
     init_main_settings(std::string(LOCATIONS["config_dir"]) + "/main.ini");
-    LOGGER.log(LogLevel::DEBUG,    "Done!");
 
     // LOGGER //
     LOGGER.set_logfile(LOCATIONS["log_file"]); // Logger function has its own error handeling

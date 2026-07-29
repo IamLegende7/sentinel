@@ -4,17 +4,16 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include <string>
-#include <nlohmann/json.hpp>
 #include <random>
 
 #include "main.h"
+#include "player_info.h"
 #include "settings/settings.hpp"
 #include "settings/debug.hpp"
 #include "settings/locations.hpp"
-#include "player_info.h"
-#include "utils/helper_utils.h"
-#include "render/texture_agent.hpp"
+#include "utils/json.hpp"
 #include "utils/hitboxes.hpp"
+#include "render/texture_agent.hpp"
 #include "loops/combat_vars.hpp"
 
 inline bool NEED_MAP_UPDATE = true;
@@ -24,13 +23,6 @@ bool render_combat(SDL_Renderer* renderer, int player_x, int player_y);
 
 struct TileMetadata {
     int size = DEFAULT_SIZE_TILE;
-    std::vector<Hitbox> moveboxes;
-    std::vector<Hitbox> hitboxes;
-    
-    std::string debug_out() {
-        std::string metadata_str = "{}";
-        return metadata_str;
-    }
 };
 
 struct Tile {
@@ -39,14 +31,10 @@ struct Tile {
     std::string path = LOCATIONS["missing_texture_tile"];
     int rotation = 0;
     TileMetadata metadata;
-
-    std::string debug_out() const {
-        return id + ", " + path + ", " + std::to_string(rotation) /*+ ", " + metadata.debug_out()*/; // TODO: fix metadata.debug_out()
-    }
 };
 
 struct MapSettings {
-    XY starting_pos = {0, 0};
+    XY starting_pos = XY{0, 0};
 };
 
 class Map {
@@ -61,9 +49,11 @@ class Map {
         ~Map();
 
         // Helper functions //
-        std::vector<std::vector<Tile>> get_row(nlohmann::json row, XY current_tile);
-        Tile load_tile(nlohmann::json tile, XY current_tile);
-        TileMetadata get_tile_metadata(nlohmann::json metadata_json);
+        std::vector<std::vector<Tile>> get_row(const rapidjson::Value& row, XY current_tile);
+        Tile load_tile(const rapidjson::Value& tile, const XY& current_tile);
+
+        TileMetadata get_tile_metadata(const rapidjson::Value& metadata_json);
+        Hitbox get_hitbox(const rapidjson::Value& hitbox_json, const Tile& new_tile, const XY& current_tile);
 
         // Render Map //
         void render_map(int camera_x, int camera_y);

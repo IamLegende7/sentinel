@@ -83,8 +83,6 @@ inline T load_setting(std::string file, std::string section, std::string name, c
         result = T();
     }
 
-    printf("Soon to be setting: '%s'\n", loaded_value);
-
     return result;
 }
 
